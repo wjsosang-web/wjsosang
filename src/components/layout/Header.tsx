@@ -52,7 +52,7 @@ export default function Header({ logo, phone }: Props) {
     <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-[68px] max-w-[1180px] items-center gap-4 px-5 md:h-[76px]">
         <Link href="/" aria-label="원주청년소상공인협회 메인홈" className="shrink-0">
-          <Logo src={logo} height={40} />
+          <Logo src={logo} height={44} className="max-h-[44px]" />
         </Link>
 
         {/* PC 메뉴 — 가운데 */}
