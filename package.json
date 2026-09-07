@@ -8,9 +8,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "seed:push": "node scripts/push-seed.mjs",
+    "admin:create": "node scripts/create-admin.mjs"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.6",
+    "@supabase/supabase-js": "^2.116.0",
     "next": "^15.5.25",
     "react": "19.1.1",
     "react-dom": "19.1.1"
@@ -20,6 +24,7 @@
     "@types/node": "22.18.1",
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.9",
+    "dotenv": "^17.4.2",
     "postcss": "8.5.6",
     "tailwindcss": "4.1.13",
     "typescript": "5.9.2"

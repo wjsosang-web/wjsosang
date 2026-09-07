@@ -15,22 +15,64 @@ const MAX_MESSAGE = 1000;
 /**
  * 문의하기 폼 (시안 기준).
  *
- * 지금은 접수 API가 없어서 실제 전송은 하지 않는다.
- * 2단계에서 inquiries 테이블에 저장하는 API를 붙이면 handleSubmit 만 바꾸면 된다.
+ * POST /api/inquiries 로 접수하면 관리자 문의관리 화면에 쌓인다.
  * 개인정보 동의를 받지 않으면 전송 버튼이 동작하지 않는다.
  */
 export default function InquiryForm({ email }: { email: string }) {
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [kind, setKind] = useState("");
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO(2단계): POST /api/inquiries 로 접수하고 관리자 문의함에 쌓는다.
-    setNotice(
-      `문의 접수 기능은 준비 중입니다. 지금은 ${email} 로 보내주시면 사무국에서 확인합니다.`,
-    );
+    setBusy(true);
+    setNotice(null);
+
+    const form = new FormData(e.currentTarget);
+    const payload = {
+      name: String(form.get("name") ?? ""),
+      phone: String(form.get("phone") ?? ""),
+      company: String(form.get("company") ?? ""),
+      kind: String(form.get("kind") ?? ""),
+      message: String(form.get("message") ?? ""),
+      privacyAgreed: agreed,
+    };
+
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = (await res.json()) as { error?: string };
+
+      if (!res.ok) {
+        setNotice({
+          ok: false,
+          text:
+            data.error ??
+            `접수에 실패했습니다. ${email} 로 보내주시면 사무국에서 확인합니다.`,
+        });
+      } else {
+        setNotice({
+          ok: true,
+          text: "문의가 접수되었습니다. 사무국에서 확인 후 연락드리겠습니다.",
+        });
+        e.currentTarget.reset();
+        setMessage("");
+        setAgreed(false);
+        setKind("");
+      }
+    } catch {
+      setNotice({
+        ok: false,
+        text: `접수에 실패했습니다. ${email} 로 보내주시면 사무국에서 확인합니다.`,
+      });
+    } finally {
+      setBusy(false);
+    }
   };
 
   const field =
@@ -126,16 +168,21 @@ export default function InquiryForm({ email }: { email: string }) {
 
       <button
         type="submit"
-        disabled={!agreed}
+        disabled={!agreed || busy}
         className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand py-4 text-[15px] font-bold text-white transition-colors hover:bg-brand-deep disabled:cursor-not-allowed disabled:bg-line-strong"
       >
         <SendIcon />
-        문의하기
+        {busy ? "보내는 중…" : "문의하기"}
       </button>
 
       {notice && (
-        <p role="status" className="rounded-lg bg-brand-tint px-4 py-3 text-[13px] text-brand-deep">
-          {notice}
+        <p
+          role="status"
+          className={`rounded-lg px-4 py-3 text-[13px] ${
+            notice.ok ? "bg-brand-tint text-brand-deep" : "bg-coral-tint text-coral"
+          }`}
+        >
+          {notice.text}
         </p>
       )}
 
