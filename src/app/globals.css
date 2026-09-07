@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* 브랜드 토큰 — 협회 로고(wj)의 초록 계열                              */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-ink: #1b2420;
+  --color-ink-soft: #3d4a45;
+  --color-forest: #16241f;
+  --color-brand: #0f9e80;
+  --color-brand-deep: #0a7c66;
+  --color-brand-light: #4fd0af;
+  --color-brand-tint: #e7f5f1;
+  --color-brand-tint-2: #f3faf8;
+  --color-leaf: #6dbe45;
+  --color-leaf-bright: #8fd46f;
+  --color-city: #1b3a6b;
+
+  /* 보조 색상 — 초록 한 가지로만 가지 않도록 아이콘·배지에 번갈아 쓴다.
+     채도를 브랜드 초록과 맞춰서 따로 노는 색이 없게 골랐다. */
+  --color-sky: #2f8fd0;
+  --color-sky-tint: #e7f2fa;
+  --color-amber: #dd9420;
+  --color-amber-tint: #fbf2df;
+  --color-coral: #dd6a55;
+  --color-coral-tint: #fbecea;
+  --color-violet: #7268c9;
+  --color-violet-tint: #eeecf9;
+  --color-leaf-tint: #eef7e6;
+  --color-paper: #ffffff;
+  --color-mist: #f6f8f7;
+  --color-line: #e5eae7;
+  --color-line-strong: #cbd5d0;
+  --color-muted: #6b7772;
+
+  --font-sans:
+    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+    "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-hand: "Nanum Pen Script", "Pretendard Variable", Pretendard, cursive;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/** 숫자는 자릿수가 흔들리지 않게 고정폭으로 */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/** 시안의 손글씨 포인트 문구 */
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* 가로 스크롤 영역에서 스크롤바를 감춘다 (칩 목록 등) */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* 사진이 아직 등록되지 않은 자리                                        */
+/* 실제 사진이 등록되면 이 클래스는 쓰이지 않는다.                        */
+/* ------------------------------------------------------------------ */
+.ph {
+  background-color: var(--color-mist);
+  background-image:
+    linear-gradient(135deg, rgba(15, 158, 128, 0.12), rgba(109, 190, 69, 0.1)),
+    repeating-linear-gradient(
+      45deg,
+      rgba(22, 36, 31, 0.04) 0 10px,
+      rgba(22, 36, 31, 0) 10px 20px
+    );
+}
+
+.ph-dark {
+  background-color: var(--color-forest);
+  background-image:
+    linear-gradient(135deg, rgba(15, 158, 128, 0.4), rgba(22, 36, 31, 0.94)),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.035) 0 12px,
+      rgba(255, 255, 255, 0) 12px 24px
+    );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

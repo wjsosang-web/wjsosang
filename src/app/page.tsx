@@ -1,0 +1,99 @@
+import BusinessCard from "@/components/common/BusinessCard";
+import SectionHead from "@/components/common/SectionHead";
+import SitePopup from "@/components/common/SitePopup";
+import HeroSlider from "@/components/home/HeroSlider";
+import NoticesAndActivities from "@/components/home/NoticesAndActivities";
+import StatsBand from "@/components/home/StatsBand";
+import UpcomingEventBanner from "@/components/home/UpcomingEventBanner";
+import YearCalendar from "@/components/home/YearCalendar";
+import {
+  getActivePopups,
+  getActivities,
+  getEventYears,
+  getEventsByYear,
+  getHeroSlides,
+  getNextEvent,
+  getNotices,
+  getOrgMembers,
+  getPublicBusinesses,
+  getStats,
+  toDateKey,
+} from "@/lib/repo";
+import { buildBusinessCards, orderBusinessCards, seedFromDateKey } from "@/lib/search";
+import type { Post } from "@/lib/types";
+
+// 하루 단위로 다시 만든다. 회원업장 랜덤 노출 순서도 이 주기로 바뀐다.
+export const revalidate = 86400;
+
+export default async function HomePage() {
+  const now = new Date();
+  const todayKey = toDateKey(now);
+
+  const [slides, stats, popups, notices, activities, nextEvent, businesses, org, years] =
+    await Promise.all([
+      getHeroSlides(),
+      getStats(),
+      getActivePopups(now),
+      getNotices(5),
+      getActivities(3),
+      getNextEvent(now),
+      getPublicBusinesses(),
+      getOrgMembers(),
+      getEventYears(),
+    ]);
+
+  // 검색 텍스트와 노출 순서를 서버에서 확정한다.
+  const cards = orderBusinessCards(
+    buildBusinessCards(businesses, org),
+    seedFromDateKey(todayKey),
+  );
+
+  const thisYear = now.getFullYear();
+  const calendarYears = years.length > 0 ? years : [thisYear];
+  const initialYear = calendarYears.includes(thisYear)
+    ? thisYear
+    : calendarYears[calendarYears.length - 1];
+
+  const eventsByYear: Record<number, Post[]> = Object.fromEntries(
+    await Promise.all(calendarYears.map(async (y) => [y, await getEventsByYear(y)] as const)),
+  );
+
+  return (
+    <>
+      <SitePopup popups={popups} />
+
+      <HeroSlider slides={slides} />
+      <StatsBand items={stats} />
+      <NoticesAndActivities notices={notices} activities={activities} />
+
+      {/* 회원업장 미리보기 */}
+      <section className="px-5 py-8 md:py-10">
+        <div className="mx-auto max-w-[1180px]">
+          <SectionHead
+            title="회원업장"
+            description="원주의 다양한 청년 소상공인들을 소개합니다."
+            moreHref="/business"
+          />
+
+          <ul className="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {cards.slice(0, 4).map((b) => (
+              <li key={b.id}>
+                <BusinessCard business={b} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* 예정된 행사가 없으면 이 영역 자체가 나오지 않는다 (기획안 9조). */}
+      {nextEvent && <UpcomingEventBanner event={nextEvent} />}
+
+      <YearCalendar
+        eventsByYear={eventsByYear}
+        years={calendarYears}
+        initialYear={initialYear}
+        todayKey={todayKey}
+      />
+    </>
+  );
+}

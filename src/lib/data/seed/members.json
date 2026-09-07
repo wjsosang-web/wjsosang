@@ -1,0 +1,18 @@
+{
+  "_comment": "회원과 업장은 별개의 데이터다. 소유관계는 아래 memberBusinesses 로만 표현한다. 이종현 회원이 픽폰·픽카 두 곳을 운영하는 사례가 들어 있다.",
+  "members": [
+    { "id": "m01", "name": "박승환", "accountId": null, "authProvider": null, "role": "admin", "status": "active", "phone": "010-0000-0001", "email": null, "joinedAt": "2017-05-01", "profileImage": null, "consents": [] },
+    { "id": "m02", "name": "박규태", "accountId": null, "authProvider": null, "role": "officer", "status": "active", "phone": "010-0000-0002", "email": null, "joinedAt": "2017-05-01", "profileImage": null, "consents": [] },
+    { "id": "m03", "name": "엄형일", "accountId": null, "authProvider": null, "role": "officer", "status": "active", "phone": "010-0000-0003", "email": null, "joinedAt": "2018-03-02", "profileImage": null, "consents": [] },
+    { "id": "m04", "name": "이종현", "accountId": null, "authProvider": null, "role": "officer", "status": "active", "phone": "010-0000-0004", "email": null, "joinedAt": "2019-03-14", "profileImage": null, "consents": [] },
+    { "id": "m05", "name": "김서연", "accountId": null, "authProvider": null, "role": "officer", "status": "active", "phone": "010-0000-0005", "email": null, "joinedAt": "2020-09-10", "profileImage": null, "consents": [] }
+  ],
+  "memberBusinesses": [
+    { "id": "mb01", "memberId": "m01", "businessId": "b01", "ownership": "owner", "canEdit": true },
+    { "id": "mb02", "memberId": "m02", "businessId": "b02", "ownership": "owner", "canEdit": true },
+    { "id": "mb03", "memberId": "m03", "businessId": "b03", "ownership": "owner", "canEdit": true },
+    { "id": "mb04", "memberId": "m04", "businessId": "b04", "ownership": "owner", "canEdit": true },
+    { "id": "mb05", "memberId": "m04", "businessId": "b05", "ownership": "owner", "canEdit": true },
+    { "id": "mb06", "memberId": "m05", "businessId": "b06", "ownership": "owner", "canEdit": true }
+  ]
+}
