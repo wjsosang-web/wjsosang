@@ -64,6 +64,22 @@ export default function OrgMemberForm({
           </div>
 
           <div>
+            <label htmlFor="subTitle" className={label}>
+              겸직 <span className="ml-1 font-normal text-muted">(선택)</span>
+            </label>
+            <input
+              id="subTitle"
+              name="subTitle"
+              defaultValue={person?.subTitle ?? ""}
+              placeholder="감사"
+              className={field}
+            />
+            <p className="mt-1 text-[11.5px] text-muted">
+              이름 옆에 작은 배지로 붙습니다. 예: 이사 + 감사
+            </p>
+          </div>
+
+          <div>
             <label htmlFor="group" className={label}>
               분류
             </label>

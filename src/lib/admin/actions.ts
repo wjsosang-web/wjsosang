@@ -384,6 +384,7 @@ export async function saveOrgMember(
       name,
       org_group: str(form, "group"),
       title,
+      sub_title: nullable(form, "subTitle"),
       department: nullable(form, "department"),
       business_id: nullable(form, "businessId"),
       photo: photoUrl,
