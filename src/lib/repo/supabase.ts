@@ -291,6 +291,7 @@ export function toOrgMember(r: Row): OrgMember {
     name: r.name as string,
     group: r.org_group as OrgMember["group"],
     title: r.title as string,
+    subTitle: (r.sub_title as string | null) ?? null,
     department: (r.department as string | null) ?? null,
     photo: (r.photo as string | null) ?? null,
     intro: (r.intro as string) ?? "",

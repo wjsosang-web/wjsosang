@@ -134,6 +134,7 @@ const org = officers.map((p, i) => ({
   name: p.name,
   group: orgGroupOf(p.group, p.title),
   title: p.title,
+  subTitle: null,
   department: DEPARTMENTS.includes(p.group) ? p.group : null,
   photo: null,
   intro: "",

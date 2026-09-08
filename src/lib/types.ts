@@ -243,8 +243,10 @@ export interface OrgMember {
   memberId: string | null;
   name: string;
   group: OrgGroup;
-  /** 협회 직책 — 회장 / 부회장 / 사무국장 / 감사 ... */
+  /** 협회 직책 — 회장 / 부회장 / 사무국장 / 이사 ... */
   title: string;
+  /** 겸직 표시. 예: 이사이면서 감사이면 title=이사, subTitle=감사 */
+  subTitle: string | null;
   /** 소속국 — 사무국 / 재무국 / 관리국 / 인사국 / 홍보국 / 기획국 */
   department: string | null;
   photo: string | null;

@@ -22,10 +22,9 @@ const DEPARTMENTS = [
 export default function OrgChart({ org }: { org: OrgMember[] }) {
   const president = org.find((o) => o.title === "회장");
   const vices = org.filter((o) => o.title === "부회장");
-  const directors = org.filter((o) => o.group === "이사회·감사" && o.title === "이사");
-  const auditors = org.filter((o) => o.group === "이사회·감사" && o.title === "감사");
-  const pastPresidents = org
-    .filter((o) => o.group === "역대 회장")
+  // 감사는 칸을 따로 두지 않는다. 겸직인 이사 이름 옆에 배지로 붙인다.
+  const directors = org
+    .filter((o) => o.group === "이사회·감사")
     .sort((a, b) => a.order - b.order);
 
   const byDepartment = DEPARTMENTS.map((d) => ({
@@ -45,58 +44,58 @@ export default function OrgChart({ org }: { org: OrgMember[] }) {
         </div>
 
         <div>
-          {/* 회장 + 고문단·자문위원 */}
-          <div className="flex flex-col items-center gap-4 lg:flex-row lg:items-start lg:justify-center">
+          {/* 회장 */}
+          <div className="flex justify-center">
             <div className="w-full max-w-[220px]">
-              <Node
-                title="회장"
-                name={president?.name}
-                tone="primary"
-                icon="users"
-              />
+              <Node title="회장" name={president?.name} tone="primary" icon="users" />
             </div>
+          </div>
 
-            {pastPresidents.length > 0 && (
-              <div className="w-full max-w-[240px] rounded-xl border border-dashed border-brand/35 bg-brand-tint p-4 lg:ml-16">
-                <p className="text-[12.5px] font-bold text-brand-deep">역대 회장</p>
-                <ul className="mt-2 space-y-1">
-                  {pastPresidents.map((p) => (
-                    <li key={p.id} className="flex items-baseline gap-2 text-[13px]">
-                      <span className="shrink-0 text-[11.5px] text-muted">{p.title}</span>
-                      <span className="font-semibold">{p.name}</span>
+          <Spine />
+
+          {/* 부회장 / 이사회 */}
+          <div className="grid gap-2.5 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+            <ul className="space-y-2.5">
+              {vices.map((v) => (
+                <li key={v.id}>
+                  <Node title="부회장" name={v.name} tone="tint" icon="users" />
+                </li>
+              ))}
+            </ul>
+
+            {directors.length > 0 && (
+              <div className="rounded-xl bg-brand-tint px-4 py-3.5">
+                <p className="flex items-center gap-2 text-[13.5px] font-bold">
+                  <span
+                    aria-hidden
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-brand"
+                  >
+                    <Icon name="users" className="h-[16px] w-[16px]" />
+                  </span>
+                  이사회
+                  <span className="tnum text-[12px] font-semibold text-ink-soft">
+                    {directors.length}명
+                  </span>
+                </p>
+
+                <ul className="mt-2.5 flex flex-wrap gap-1.5">
+                  {directors.map((d) => (
+                    <li
+                      key={d.id}
+                      className="flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-[12.5px]"
+                    >
+                      <span className="font-semibold">{d.name}</span>
+                      {d.subTitle && (
+                        <span className="rounded bg-violet-tint px-1.5 py-0.5 text-[10.5px] font-bold text-violet">
+                          {d.subTitle}
+                        </span>
+                      )}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
           </div>
-
-          <Spine />
-
-          {/* 부회장 / 이사회 / 감사 */}
-          <ul className="grid gap-2.5 sm:grid-cols-3">
-            {vices.map((v) => (
-              <li key={v.id}>
-                <Node title="부회장" name={v.name} tone="tint" icon="users" />
-              </li>
-            ))}
-            <li>
-              <Node
-                title="이사회"
-                name={directors.length > 0 ? `이사 ${directors.length}명` : undefined}
-                tone="tint"
-                icon="users"
-              />
-            </li>
-            <li>
-              <Node
-                title="감사"
-                name={auditors.map((a) => a.name).join(", ") || undefined}
-                tone="tint"
-                icon="check-user"
-              />
-            </li>
-          </ul>
 
           <Spine />
 
