@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import BusinessCard from "@/components/common/BusinessCard";
 import { Icon } from "@/components/common/Icons";
 import { filterBusinessCards, type BusinessCard as CardData } from "@/lib/search";
@@ -23,8 +23,34 @@ const CATEGORY_ICONS: Record<string, string> = {
   기타: "link",
 };
 
-/** 모바일 3열 × 5줄 = 15곳을 먼저 보여주고, 더보기로 같은 만큼씩 늘린다. */
-const PAGE_SIZE = 15;
+/**
+ * 한 번에 보여줄 개수.
+ *
+ * 화면 너비마다 한 줄에 들어가는 칸 수가 달라서, 개수를 하나로 고정하면
+ * 마지막 줄에 빈 자리가 생긴다(예: 6칸짜리 화면에 15곳 → 3칸이 빔).
+ * 그래서 열 수에 맞춰 줄 단위로 딱 떨어지게 끊는다.
+ */
+const PAGE_SIZES: { min: number; size: number }[] = [
+  { min: 1024, size: 18 }, // 6열 × 3줄
+  { min: 768, size: 16 }, //  4열 × 4줄
+  { min: 0, size: 15 }, //   3열 × 5줄 (모바일)
+];
+
+/** 지금 화면 너비에 맞는 개수. 서버에서는 가장 넓은 기준으로 그린다. */
+function usePageSize(): number {
+  const [size, setSize] = useState(PAGE_SIZES[0].size);
+
+  useEffect(() => {
+    const apply = () =>
+      setSize(PAGE_SIZES.find((p) => window.innerWidth >= p.min)?.size ?? 15);
+
+    apply();
+    window.addEventListener("resize", apply);
+    return () => window.removeEventListener("resize", apply);
+  }, []);
+
+  return size;
+}
 
 type SortKey = "recent" | "name";
 
@@ -48,7 +74,10 @@ export default function BusinessFinder({
   const [district, setDistrict] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>("recent");
   const [onlyNew, setOnlyNew] = useState(false);
-  const [visible, setVisible] = useState(PAGE_SIZE);
+  const pageSize = usePageSize();
+  // 개수가 아니라 "몇 쪽까지 봤는지"를 기억한다. 그래야 창 크기가 바뀌어도
+  // 줄이 딱 맞게 다시 계산된다.
+  const [pages, setPages] = useState(1);
 
   const newCount = useMemo(() => cards.filter((c) => c.isNew).length, [cards]);
 
@@ -61,12 +90,13 @@ export default function BusinessFinder({
       : filtered;
   }, [cards, query, category, district, sort, onlyNew]);
 
+  const visible = pages * pageSize;
   const shown = results.slice(0, visible);
   const isFiltered = query.trim() !== "" || category !== null || district !== null || onlyNew;
 
   const update = (fn: () => void) => {
     fn();
-    setVisible(PAGE_SIZE);
+    setPages(1);
   };
 
   const reset = () =>
@@ -231,7 +261,7 @@ export default function BusinessFinder({
             <div className="mt-8 text-center">
               <button
                 type="button"
-                onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                onClick={() => setPages((p) => p + 1)}
                 className="rounded-lg border border-line-strong px-8 py-3.5 text-[14.5px] font-bold transition-colors hover:border-brand hover:text-brand"
               >
                 회원업장 더보기{" "}

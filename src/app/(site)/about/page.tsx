@@ -19,7 +19,7 @@ import {
 } from "@/lib/repo";
 
 export const metadata: Metadata = { title: "협회소개" };
-export const revalidate = 86400;
+export const revalidate = 3600;
 
 export default async function AboutPage() {
   const [

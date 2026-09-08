@@ -6,7 +6,7 @@
  *  - 감사를 별도 항목으로 두지 않고 이사에 겸직 표시로 합친다
  *  - 빠진 임원을 채우고 직책 오타를 고친다
  *  - 표시 순서를 다시 매긴다: 국장 → 부국장 → 부장 → 부원
- *    (같은 직급 안에서는 사무·재무·관리·인사·홍보·기획 순)
+ *    (같은 직급 안에서는 사무·재무·기획·홍보·관리·인사 순)
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -20,7 +20,7 @@ const db = createClient(
   { auth: { persistSession: false } },
 );
 
-const DEPT_ORDER = ["사무국", "재무국", "관리국", "인사국", "홍보국", "기획국"];
+const DEPT_ORDER = ["사무국", "재무국", "기획국", "홍보국", "관리국", "인사국"];
 
 /** 직급이 높을수록 앞에 온다 */
 function rankOf(title) {
@@ -130,9 +130,9 @@ const { data: org } = await db.from("org_members").select("*");
     .sort((a, b) => (a.title === "회장" ? -1 : b.title === "회장" ? 1 : 0))
     .forEach((o, i) => updates.push({ id: o.id, sort_order: i + 1 }));
 
-  // 감사 겸직을 맨 앞에 두고 나머지 이사
+  // 감사 겸직은 맨 뒤에 둔다
   이사회
-    .sort((a, b) => (b.sub_title ? 1 : 0) - (a.sub_title ? 1 : 0))
+    .sort((a, b) => (a.sub_title ? 1 : 0) - (b.sub_title ? 1 : 0))
     .forEach((o, i) => updates.push({ id: o.id, sort_order: i + 1 }));
 
   // 국장 → 부국장 → 부장 → 부원, 같은 직급 안에서는 국 순서
