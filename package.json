@@ -13,7 +13,8 @@
     "admin:create": "node scripts/create-admin.mjs",
     "setup:check": "node scripts/check-setup.mjs",
     "db:migrate": "node scripts/db-migrate.mjs",
-    "roster:import": "node scripts/import-roster.mjs"
+    "roster:import": "node scripts/import-roster.mjs",
+    "roster:seed": "node scripts/roster-to-seed.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",
