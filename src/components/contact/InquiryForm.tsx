@@ -18,10 +18,17 @@ const MAX_MESSAGE = 1000;
  * POST /api/inquiries 로 접수하면 관리자 문의관리 화면에 쌓인다.
  * 개인정보 동의를 받지 않으면 전송 버튼이 동작하지 않는다.
  */
-export default function InquiryForm({ email }: { email: string }) {
+export default function InquiryForm({
+  email,
+  initialKind = "",
+}: {
+  email: string;
+  /** 다른 화면에서 넘어올 때 문의종류를 미리 골라준다 */
+  initialKind?: string;
+}) {
   const [message, setMessage] = useState("");
   const [agreed, setAgreed] = useState(false);
-  const [kind, setKind] = useState("");
+  const [kind, setKind] = useState(KINDS.includes(initialKind) ? initialKind : "");
   const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
 

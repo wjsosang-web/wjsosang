@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useState } from "react";
+import ImageInput from "@/components/admin/ImageInput";
 import { deletePostPhoto, savePost, type ActionResult } from "@/lib/admin/actions";
 import type { Post, PostType } from "@/lib/types";
 
@@ -72,6 +73,23 @@ export default function PostForm({ type, post }: { type: PostType; post?: Post }
 
           {type === "event" && (
             <>
+              <label className="flex items-start gap-2 self-end pb-3 text-[13px] sm:col-span-3">
+                <input
+                  type="checkbox"
+                  name="dateTbd"
+                  defaultChecked={post?.dateTbd}
+                  className="mt-0.5 h-4 w-4 accent-[color:var(--color-brand)]"
+                />
+                <span>
+                  <b>날짜 미정</b>
+                  <span className="mt-0.5 block text-[12px] text-muted">
+                    켜면 달력에 날짜가 찍히지 않고 &quot;○월 중&quot;으로만 안내됩니다.
+                    임원진 회의로 확정되면 끄고 날짜·시간·장소를 채우세요.
+                    (미정일 때도 위 날짜는 해당 월로 맞춰 주세요)
+                  </span>
+                </span>
+              </label>
+
               <div>
                 <label htmlFor="endDate" className={label}>
                   종료일 (여러 날이면)
@@ -203,21 +221,9 @@ export default function PostForm({ type, post }: { type: PostType; post?: Post }
         <h2 className="text-[15px] font-bold">대표사진</h2>
         <p className="mt-1 text-[12.5px] text-muted">목록 카드와 상세 상단에 크게 보입니다.</p>
 
-        {post?.coverImage && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={post.coverImage}
-            alt=""
-            className="mt-3 aspect-[16/9] w-full max-w-[380px] rounded-lg object-cover"
-          />
-        )}
-
-        <input
-          type="file"
-          name="coverFile"
-          accept="image/*"
-          className="mt-3 block w-full text-[13px] file:mr-3 file:rounded-md file:border-0 file:bg-brand file:px-4 file:py-2 file:text-[13px] file:font-bold file:text-white"
-        />
+        <div className="mt-3">
+          <ImageInput name="coverFile" currentUrl={post?.coverImage} />
+        </div>
       </section>
 
       {/* 활동사진 — 사진마다 설명 */}
@@ -259,12 +265,7 @@ export default function PostForm({ type, post }: { type: PostType; post?: Post }
           <ul className="mt-4 space-y-3">
             {slots.map((slot, i) => (
               <li key={slot.key} className="grid gap-2 sm:grid-cols-[1fr_1.4fr_auto] sm:items-center">
-                <input
-                  type="file"
-                  name="photoFiles"
-                  accept="image/*"
-                  className="block w-full text-[13px] file:mr-3 file:rounded-md file:border-0 file:bg-mist file:px-3 file:py-2 file:text-[12.5px] file:font-bold"
-                />
+                <ImageInput name="photoFiles" />
                 <input
                   name="photoCaptions"
                   placeholder={`사진 ${i + 1} 설명 (예: 개회식 모습)`}

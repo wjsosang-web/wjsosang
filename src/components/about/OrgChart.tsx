@@ -24,10 +24,9 @@ export default function OrgChart({ org }: { org: OrgMember[] }) {
   const vices = org.filter((o) => o.title === "부회장");
   const directors = org.filter((o) => o.group === "이사회·감사" && o.title === "이사");
   const auditors = org.filter((o) => o.group === "이사회·감사" && o.title === "감사");
-  const advisorGroups = [
-    { label: "고문단", people: org.filter((o) => o.group === "고문단") },
-    { label: "자문위원", people: org.filter((o) => o.group === "자문위원") },
-  ].filter((g) => g.people.length > 0);
+  const pastPresidents = org
+    .filter((o) => o.group === "역대 회장")
+    .sort((a, b) => a.order - b.order);
 
   const byDepartment = DEPARTMENTS.map((d) => ({
     ...d,
@@ -57,18 +56,17 @@ export default function OrgChart({ org }: { org: OrgMember[] }) {
               />
             </div>
 
-            {advisorGroups.length > 0 && (
-              <div className="flex w-full max-w-[220px] flex-col gap-2 lg:ml-16">
-                {advisorGroups.map((g) => (
-                  <Node
-                    key={g.label}
-                    title={g.label}
-                    name={g.people.map((p) => p.name).join(", ")}
-                    tone="tint"
-                    icon="users"
-                    dashed
-                  />
-                ))}
+            {pastPresidents.length > 0 && (
+              <div className="w-full max-w-[240px] rounded-xl border border-dashed border-brand/35 bg-brand-tint p-4 lg:ml-16">
+                <p className="text-[12.5px] font-bold text-brand-deep">역대 회장</p>
+                <ul className="mt-2 space-y-1">
+                  {pastPresidents.map((p) => (
+                    <li key={p.id} className="flex items-baseline gap-2 text-[13px]">
+                      <span className="shrink-0 text-[11.5px] text-muted">{p.title}</span>
+                      <span className="font-semibold">{p.name}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>

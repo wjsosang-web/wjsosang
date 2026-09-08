@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useState } from "react";
+import ImageInput from "@/components/admin/ImageInput";
 import { fetchPlaceDraft, saveBusiness, type ActionResult } from "@/lib/admin/actions";
 import { BUSINESS_CATEGORIES, type Business, type PlaceDraft } from "@/lib/types";
 
@@ -78,6 +79,7 @@ export default function BusinessForm({ business }: { business?: Business }) {
       {business?.coverImage && (
         <input type="hidden" name="coverImage" value={business.coverImage} />
       )}
+      {business?.logoImage && <input type="hidden" name="logoImage" value={business.logoImage} />}
       <input type="hidden" name="placeId" value={v("placeId", business?.placeId)} />
       <input type="hidden" name="placeType" value={v("placeType", business?.placeType)} />
       <input type="hidden" name="placePhoto" value={v("photo", business?.placePhoto)} />
@@ -320,24 +322,53 @@ export default function BusinessForm({ business }: { business?: Business }) {
           />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="homepageUrl" className={label}>
-              홈페이지
-            </label>
+        <div>
+          <p className={label}>바로가기 링크</p>
+          <p className="-mt-1 mb-2 text-[11.5px] text-muted">
+            입력한 것만 업장 페이지에 버튼으로 나옵니다. 비워두면 나오지 않습니다.
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
             <input
-              id="homepageUrl"
               name="homepageUrl"
               defaultValue={v("homepageUrl", business?.homepageUrl)}
+              placeholder="홈페이지 주소"
+              className={field}
+            />
+            <input
+              name="instagramUrl"
+              defaultValue={business?.instagramUrl ?? ""}
+              placeholder="인스타그램 주소"
+              className={field}
+            />
+            <input
+              name="blogUrl"
+              defaultValue={business?.blogUrl ?? ""}
+              placeholder="블로그 주소"
+              className={field}
+            />
+            <input
+              name="snsUrl"
+              defaultValue={business?.snsUrl ?? ""}
+              placeholder="그 밖의 SNS 주소"
               className={field}
             />
           </div>
-          <div>
-            <label htmlFor="snsUrl" className={label}>
-              SNS
-            </label>
-            <input id="snsUrl" name="snsUrl" defaultValue={business?.snsUrl ?? ""} className={field} />
-          </div>
+        </div>
+
+        <div>
+          <label htmlFor="benefit" className={label}>
+            원청협 회원 혜택 <span className="ml-1 font-normal text-muted">(선택)</span>
+          </label>
+          <input
+            id="benefit"
+            name="benefit"
+            defaultValue={business?.benefit ?? ""}
+            placeholder="예: 원청협 회원 카드 제시 시 10% 할인"
+            className={field}
+          />
+          <p className="mt-1 text-[11.5px] text-muted">
+            적어두면 업장 페이지에 눈에 띄게 표시됩니다. 비워두면 나오지 않습니다.
+          </p>
         </div>
 
         <div>
@@ -392,33 +423,49 @@ export default function BusinessForm({ business }: { business?: Business }) {
           여기에 올린 사진이 플레이스 사진보다 먼저 쓰입니다.
         </p>
 
-        <div className="mt-4">
-          <p className={label}>대표사진</p>
-          {business?.coverImage && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={business.coverImage}
-              alt=""
-              className="mb-2 aspect-[4/3] w-[200px] rounded-lg object-cover"
+        <ul className="mt-3 rounded-lg bg-mist p-4 text-[12px] leading-[1.7] text-ink-soft">
+          <li>· 대표사진 권장 크기 <b>1200 × 900px</b> (가로형 4:3), 2MB 이하</li>
+          <li>· 추가 사진 권장 크기 <b>1200 × 900px</b>, 장당 2MB 이하, 2~3장이면 충분합니다</li>
+          <li>· 로고는 <b>배경이 투명한 PNG</b> 또는 정사각형 이미지가 좋습니다 (512 × 512px)</li>
+          <li>· JPG · PNG · WEBP 를 지원하며, 한 장에 10MB 를 넘을 수 없습니다</li>
+        </ul>
+
+        {(draft?.photo || business?.placePhoto) && (
+          <label className="mt-4 flex items-start gap-2.5 rounded-lg border border-line p-4 text-[13px]">
+            <input
+              type="checkbox"
+              name="dropPlacePhoto"
+              defaultChecked={false}
+              className="mt-0.5 h-4 w-4 accent-[color:var(--color-brand)]"
             />
-          )}
-          <input
-            type="file"
-            name="coverFile"
-            accept="image/*"
-            className="block w-full text-[13px] file:mr-3 file:rounded-md file:border-0 file:bg-brand file:px-4 file:py-2 file:text-[13px] file:font-bold file:text-white"
+            <span>
+              <b>플레이스 대표사진을 쓰지 않습니다.</b>
+              <span className="mt-0.5 block text-[12px] text-muted">
+                직접 올린 사진만 쓰고 싶을 때 켜세요. 켜고 저장하면 플레이스 사진이 지워집니다.
+              </span>
+            </span>
+          </label>
+        )}
+
+        <div className="mt-4">
+          <ImageInput name="coverFile" label="대표사진" currentUrl={business?.coverImage} />
+        </div>
+
+        <div className="mt-4">
+          <ImageInput
+            name="logoFile"
+            label="업장 로고 (선택)"
+            hint="투명 배경 PNG 는 그대로 올립니다."
+            currentUrl={business?.logoImage}
+            keepTransparency
+            compact
           />
         </div>
 
         <ul className="mt-4 space-y-3">
           {photoSlots.map((key, i) => (
             <li key={key} className="grid gap-2 sm:grid-cols-[1fr_1.4fr_auto] sm:items-center">
-              <input
-                type="file"
-                name="photoFiles"
-                accept="image/*"
-                className="block w-full text-[13px] file:mr-3 file:rounded-md file:border-0 file:bg-mist file:px-3 file:py-2 file:text-[12.5px] file:font-bold"
-              />
+              <ImageInput name="photoFiles" />
               <input name="photoCaptions" placeholder={`사진 ${i + 1} 설명`} className={field} />
               <button
                 type="button"

@@ -37,8 +37,16 @@ const JOIN_POINTS = [
   },
 ];
 
-export default async function ContactPage() {
-  const [site, faqs] = await Promise.all([getSiteInfo(), getFaqs()]);
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ kind?: string }>;
+}) {
+  const [{ kind }, site, faqs] = await Promise.all([
+    searchParams,
+    getSiteInfo(),
+    getFaqs(),
+  ]);
 
   const contacts = [
     {
@@ -128,7 +136,7 @@ export default async function ContactPage() {
       {/* 문의하기 + 회원가입 문의 */}
       <section className="px-5 py-12 md:py-16">
         <div className="mx-auto grid max-w-[1180px] gap-6 lg:grid-cols-2 lg:gap-8">
-          <div>
+          <div id="contact-form" className="scroll-mt-24">
             <p className="text-[12px] font-bold tracking-[0.12em] text-brand">CONTACT US</p>
             <h2 className="mt-3 text-[24px] font-bold tracking-[-0.02em] md:text-[28px]">
               문의하기
@@ -139,7 +147,7 @@ export default async function ContactPage() {
               아래 양식을 작성해 주시면, 빠르고 성실하게 답변드리겠습니다.
             </p>
 
-            <InquiryForm email={site.email} />
+            <InquiryForm email={site.email} initialKind={kind ?? ""} />
           </div>
 
           <div className="relative isolate overflow-hidden rounded-2xl bg-brand-tint p-6 md:p-8">

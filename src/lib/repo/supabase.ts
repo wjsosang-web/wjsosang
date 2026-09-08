@@ -207,7 +207,11 @@ export function toBusiness(r: Row): Business {
     hours: (r.hours as string | null) ?? null,
     placeUrl: (r.place_url as string | null) ?? null,
     homepageUrl: (r.homepage_url as string | null) ?? null,
+    instagramUrl: (r.instagram_url as string | null) ?? null,
+    blogUrl: (r.blog_url as string | null) ?? null,
     snsUrl: (r.sns_url as string | null) ?? null,
+    logoImage: (r.logo_image as string | null) ?? null,
+    benefit: (r.benefit as string | null) ?? null,
     coverImage: (r.cover_image as string | null) ?? null,
     photos,
     promo,
@@ -325,6 +329,7 @@ export function toPost(r: Row): Post {
     date: r.date as string,
     startDate: (r.start_date as string | null) ?? null,
     endDate: (r.end_date as string | null) ?? null,
+    dateTbd: Boolean(r.date_tbd),
     time: (r.time as string | null) ?? null,
     place: (r.place as string | null) ?? null,
     participants: (r.participants as number | null) ?? null,
@@ -414,6 +419,26 @@ export async function getEventYears(): Promise<number[]> {
   return [...years].sort((a, b) => a - b);
 }
 
+/** 오늘 열리는 행사. 있으면 홈페이지 접속 시 팝업으로 안내한다. */
+export async function getTodayEvents(now = new Date()): Promise<Post[]> {
+  const today = toDateKey(now);
+  const { data, error } = await db()
+    .from("posts")
+    .select(POST_SELECT)
+    .eq("type", "event")
+    .eq("status", "public")
+    .eq("date_tbd", false)
+    .lte("date", today)
+    .order("date");
+
+  if (error || !data) return seed.getTodayEvents(now);
+
+  // 종료일까지 걸쳐 있는 행사도 오늘 열리는 것으로 본다
+  return data
+    .map((r) => toPost(r as Row))
+    .filter((p) => (p.endDate ?? p.startDate ?? p.date) >= today);
+}
+
 export async function getNextEvent(now = new Date()): Promise<Post | null> {
   const today = toDateKey(now);
   const { data } = await db()
@@ -421,6 +446,7 @@ export async function getNextEvent(now = new Date()): Promise<Post | null> {
     .select(POST_SELECT)
     .eq("type", "event")
     .eq("status", "public")
+    .eq("date_tbd", false)
     .gte("date", today)
     .order("date")
     .limit(1)

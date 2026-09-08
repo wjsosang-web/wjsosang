@@ -173,7 +173,14 @@ export interface Business {
   hours: string | null;
   placeUrl: string | null;
   homepageUrl: string | null;
+  /** 인스타그램 / 블로그 / 그 밖의 SNS. 값이 없으면 화면에 나오지 않는다. */
+  instagramUrl: string | null;
+  blogUrl: string | null;
   snsUrl: string | null;
+  /** 업장 로고 (대표사진과 별개) */
+  logoImage: string | null;
+  /** 원청협 회원에게 주는 혜택. 비어 있으면 표시하지 않는다. */
+  benefit: string | null;
 
   /**
    * 회원 또는 관리자가 직접 올린 대표사진.
@@ -222,7 +229,7 @@ export interface Business {
 /* 조직                                                                */
 /* ------------------------------------------------------------------ */
 
-export type OrgGroup = "회장단" | "이사회·감사" | "운영진" | "고문단" | "자문위원";
+export type OrgGroup = "회장단" | "이사회·감사" | "운영진" | "역대 회장";
 
 export interface OrgMember {
   id: string;
@@ -277,6 +284,8 @@ export interface Post {
   /** 행사 시작/종료 — event 타입에서 사용 */
   startDate: string | null;
   endDate: string | null;
+  /** 날짜 미정. 켜져 있으면 "○월 중"으로 표시한다. */
+  dateTbd: boolean;
   /** 행사 시작 시각 ("18:00") */
   time: string | null;
   place: string | null;

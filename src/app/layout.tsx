@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   },
   description:
     "원주에서 청년으로, 소상공인으로 살아가는 사람들. 원주청년소상공인협회 공식 홈페이지입니다.",
+  // 홈화면에 추가했을 때 앱처럼 열리게 한다
+  manifest: "/manifest.webmanifest",
+  appleWebApp: { capable: true, title: "원청협", statusBarStyle: "default" },
 };
 
 /**

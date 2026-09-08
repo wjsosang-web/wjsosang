@@ -99,6 +99,7 @@ export async function savePost(_prev: ActionResult | null, form: FormData): Prom
       slug: nullable(form, "slug") ?? makeSlug(title, date),
       category: type === "notice" ? nullable(form, "category") : nullable(form, "activityCategory"),
       date,
+      date_tbd: type === "event" && bool(form, "dateTbd"),
       start_date: type === "event" ? date : null,
       end_date: type === "event" ? nullable(form, "endDate") : null,
       time: nullable(form, "time"),
@@ -205,6 +206,12 @@ export async function saveBusiness(
         ? await uploadOne(cover, "businesses")
         : nullable(form, "coverImage");
 
+    const logo = form.get("logoFile");
+    const logoUrl =
+      logo instanceof File && logo.size > 0
+        ? await uploadOne(logo, "businesses")
+        : nullable(form, "logoImage");
+
     const keywords = str(form, "keywords")
       .split(/[,\n]/)
       .map((k) => k.trim())
@@ -225,11 +232,16 @@ export async function saveBusiness(
       hours: nullable(form, "hours"),
       place_url: nullable(form, "placeUrl"),
       homepage_url: nullable(form, "homepageUrl"),
+      instagram_url: nullable(form, "instagramUrl"),
+      blog_url: nullable(form, "blogUrl"),
       sns_url: nullable(form, "snsUrl"),
+      benefit: nullable(form, "benefit"),
       cover_image: coverUrl,
+      logo_image: logoUrl,
       place_id: nullable(form, "placeId"),
       place_type: nullable(form, "placeType"),
-      place_photo: nullable(form, "placePhoto"),
+      // "플레이스 사진 사용 안 함"을 켜면 비운다. 직접 올린 사진만 쓰게 된다.
+      place_photo: bool(form, "dropPlacePhoto") ? null : nullable(form, "placePhoto"),
       place_keywords: str(form, "placeKeywords")
         .split(/[,\n]/)
         .map((k) => k.trim())
@@ -336,4 +348,68 @@ export async function deleteInquiry(form: FormData) {
   const id = String(form.get("id") ?? "");
   if (id) await db.from("inquiries").delete().eq("id", id);
   revalidatePath("/admin/inquiries");
+}
+
+/* ------------------------------------------------------------------ */
+/* 조직도 · 임원                                                        */
+/* ------------------------------------------------------------------ */
+
+export async function saveOrgMember(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    const db = getAdminSupabase();
+
+    const id = nullable(form, "id");
+    const name = str(form, "name");
+    const title = str(form, "title");
+
+    if (!name) return { ok: false, message: "이름을 입력해 주세요." };
+    if (!title) return { ok: false, message: "직책을 입력해 주세요." };
+
+    const photo = form.get("photoFile");
+    const photoUrl =
+      photo instanceof File && photo.size > 0
+        ? await uploadOne(photo, "org")
+        : nullable(form, "photo");
+
+    const payload = {
+      name,
+      org_group: str(form, "group"),
+      title,
+      department: nullable(form, "department"),
+      business_id: nullable(form, "businessId"),
+      photo: photoUrl,
+      intro: str(form, "intro"),
+      expertise: nullable(form, "expertise"),
+      sort_order: num(form, "sortOrder") ?? 99,
+    };
+
+    if (id) {
+      const { error } = await db.from("org_members").update(payload).eq("id", id);
+      if (error) throw new Error(error.message);
+    } else {
+      const { error } = await db.from("org_members").insert(payload);
+      if (error) throw new Error(error.message);
+    }
+
+    refreshPublicPages();
+    revalidatePath("/admin/org");
+
+    return { ok: true, message: id ? "수정했습니다." : "추가했습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+export async function deleteOrgMember(form: FormData) {
+  await requireAdmin();
+  const db = getAdminSupabase();
+  const id = String(form.get("id") ?? "");
+  if (id) await db.from("org_members").delete().eq("id", id);
+  refreshPublicPages();
+  revalidatePath("/admin/org");
+  redirect("/admin/org");
 }

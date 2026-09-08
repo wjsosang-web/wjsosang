@@ -17,7 +17,8 @@
     "photos": [],
     "pinned": true,
     "important": true,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "n02",
@@ -37,7 +38,8 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "n03",
@@ -57,7 +59,8 @@
     "photos": [],
     "pinned": false,
     "important": true,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "n04",
@@ -77,7 +80,8 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "n05",
@@ -97,7 +101,8 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "n06",
@@ -117,9 +122,9 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
-
   {
     "id": "a01",
     "type": "activity",
@@ -136,14 +141,35 @@
     "body": "원주청년소상공인협회는 8월 24일, 회원들과 함께 원주천 일대 환경정화 봉사활동을 진행했습니다. 무더운 날씨에도 불구하고 30여 명의 회원이 참여하여, 더 깨끗한 원주를 만들기 위해 구슬땀을 흘렸습니다.\n\n앞으로도 원청협은 지역사회와 함께 성장하며, 나눔과 실천을 계속 이어가겠습니다.",
     "coverImage": null,
     "photos": [
-      { "id": "a01-p1", "url": null, "caption": "개회식 모습 — 함께 만드는 더 좋은 원주, 원청협이 앞장섭니다.", "order": 1 },
-      { "id": "a01-p2", "url": null, "caption": "환경정화 활동 — 회원들이 함께 구역별로 정화 활동을 진행했습니다.", "order": 2 },
-      { "id": "a01-p3", "url": null, "caption": "회원 네트워크 시간 — 봉사 후에도 이어진 따뜻한 교류의 시간.", "order": 3 },
-      { "id": "a01-p4", "url": null, "caption": "함께한 단체사진 — 작은 실천이 만드는 큰 변화, 원청협이 함께합니다.", "order": 4 }
+      {
+        "id": "a01-p1",
+        "url": null,
+        "caption": "개회식 모습 — 함께 만드는 더 좋은 원주, 원청협이 앞장섭니다.",
+        "order": 1
+      },
+      {
+        "id": "a01-p2",
+        "url": null,
+        "caption": "환경정화 활동 — 회원들이 함께 구역별로 정화 활동을 진행했습니다.",
+        "order": 2
+      },
+      {
+        "id": "a01-p3",
+        "url": null,
+        "caption": "회원 네트워크 시간 — 봉사 후에도 이어진 따뜻한 교류의 시간.",
+        "order": 3
+      },
+      {
+        "id": "a01-p4",
+        "url": null,
+        "caption": "함께한 단체사진 — 작은 실천이 만드는 큰 변화, 원청협이 함께합니다.",
+        "order": 4
+      }
     ],
     "pinned": true,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "a02",
@@ -161,12 +187,23 @@
     "body": "업종을 넘어 서로의 사업 이야기를 나누는 자리를 가졌습니다. 처음 참석한 신규 회원들도 자연스럽게 어울릴 수 있도록 소그룹으로 진행했습니다.",
     "coverImage": null,
     "photos": [
-      { "id": "a02-p1", "url": null, "caption": "소그룹 테이블별 소개 시간", "order": 1 },
-      { "id": "a02-p2", "url": null, "caption": "업종별 고민을 나누는 회원들", "order": 2 }
+      {
+        "id": "a02-p1",
+        "url": null,
+        "caption": "소그룹 테이블별 소개 시간",
+        "order": 1
+      },
+      {
+        "id": "a02-p2",
+        "url": null,
+        "caption": "업종별 고민을 나누는 회원들",
+        "order": 2
+      }
     ],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "a03",
@@ -184,13 +221,29 @@
     "body": "회원과 가족 200여 명이 함께한 하루였습니다. 팀별 경기와 단체 게임으로 서로 얼굴을 익히고, 업종을 넘어 이야기를 나누는 자리가 되었습니다.",
     "coverImage": null,
     "photos": [
-      { "id": "a03-p1", "url": null, "caption": "개회식 모습", "order": 1 },
-      { "id": "a03-p2", "url": null, "caption": "회원 팀별 경기", "order": 2 },
-      { "id": "a03-p3", "url": null, "caption": "함께한 회원들", "order": 3 }
+      {
+        "id": "a03-p1",
+        "url": null,
+        "caption": "개회식 모습",
+        "order": 1
+      },
+      {
+        "id": "a03-p2",
+        "url": null,
+        "caption": "회원 팀별 경기",
+        "order": 2
+      },
+      {
+        "id": "a03-p3",
+        "url": null,
+        "caption": "함께한 회원들",
+        "order": 3
+      }
     ],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "a04",
@@ -208,12 +261,23 @@
     "body": "부가가치세와 종합소득세 신고 시 자주 놓치는 항목, 그리고 소상공인이 알아야 할 노무 기초를 중심으로 강의를 진행했습니다.",
     "coverImage": null,
     "photos": [
-      { "id": "a04-p1", "url": null, "caption": "강의를 듣는 회원들", "order": 1 },
-      { "id": "a04-p2", "url": null, "caption": "질의응답 시간", "order": 2 }
+      {
+        "id": "a04-p1",
+        "url": null,
+        "caption": "강의를 듣는 회원들",
+        "order": 1
+      },
+      {
+        "id": "a04-p2",
+        "url": null,
+        "caption": "질의응답 시간",
+        "order": 2
+      }
     ],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "a05",
@@ -231,13 +295,18 @@
     "body": "상반기 환경정화 활동을 진행했습니다. 회원들이 구역을 나눠 원주천 주변을 정비했습니다.",
     "coverImage": null,
     "photos": [
-      { "id": "a05-p1", "url": null, "caption": "구역별 정화 활동", "order": 1 }
+      {
+        "id": "a05-p1",
+        "url": null,
+        "caption": "구역별 정화 활동",
+        "order": 1
+      }
     ],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
-
   {
     "id": "e01",
     "type": "event",
@@ -256,7 +325,8 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "e02",
@@ -276,7 +346,8 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "e03",
@@ -296,7 +367,8 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "e04",
@@ -316,7 +388,8 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "e05",
@@ -336,7 +409,8 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "e06",
@@ -344,11 +418,11 @@
     "slug": "2026-flea-market",
     "title": "원주 청년 소상공인 플리마켓",
     "category": null,
-    "date": "2026-10-17",
-    "startDate": "2026-10-17",
-    "endDate": "2026-10-18",
-    "time": "11:00",
-    "place": "원주시 ○○광장",
+    "date": "2026-10-01",
+    "startDate": "2026-10-01",
+    "endDate": null,
+    "time": null,
+    "place": "장소 미정",
     "participants": null,
     "summary": "회원사가 함께 참여하는 청년 소상공인 플리마켓입니다.",
     "body": "",
@@ -356,7 +430,8 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": true
   },
   {
     "id": "e07",
@@ -376,7 +451,8 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   },
   {
     "id": "e08",
@@ -396,6 +472,7 @@
     "photos": [],
     "pinned": false,
     "important": false,
-    "status": "public"
+    "status": "public",
+    "dateTbd": false
   }
 ]

@@ -8,11 +8,10 @@ import type { Member, OrgGroup, OrgMember } from "@/lib/types";
 
 /**
  * 각자의 자리에서, 하나의 이름으로 (기획안 15~18조 / 시안 기준).
- * 그룹 탭으로 회장단 / 이사회·감사 / 운영진 / 고문단 / 자문위원을 나눠 본다.
- * 자문위원과 고문은 업장보다 전문성을 먼저 드러낸다.
+ * 그룹 탭으로 회장단 / 이사회·감사 / 운영진 / 역대 회장을 나눠 본다.
  */
 
-const GROUP_ORDER: OrgGroup[] = ["회장단", "이사회·감사", "운영진", "고문단", "자문위원"];
+const GROUP_ORDER: OrgGroup[] = ["회장단", "이사회·감사", "운영진", "역대 회장"];
 
 export default function PeopleGroups({
   org,
@@ -34,7 +33,7 @@ export default function PeopleGroups({
 
   if (groups.length === 0) return null;
   const current = groups[Math.min(active, groups.length - 1)];
-  const expertiseFirst = current.name === "자문위원" || current.name === "고문단";
+  const expertiseFirst = current.name === "역대 회장";
 
   return (
     <section className="bg-mist px-5 py-12 md:py-16">

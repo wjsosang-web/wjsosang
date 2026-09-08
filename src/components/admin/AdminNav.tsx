@@ -7,6 +7,7 @@ const ITEMS = [
   { href: "/admin", label: "관리자 홈", exact: true },
   { href: "/admin/posts?type=notice", label: "공지사항", match: "/admin/posts" },
   { href: "/admin/businesses", label: "회원업장" },
+  { href: "/admin/org", label: "조직도" },
   { href: "/admin/inquiries", label: "문의관리" },
 ];
 

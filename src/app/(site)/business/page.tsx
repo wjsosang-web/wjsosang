@@ -138,10 +138,13 @@ export default async function BusinessListPage({
             </ol>
 
             <Link
-              href="/contact"
-              className="shrink-0 justify-self-start rounded-lg bg-brand px-6 py-3.5 text-[14.5px] font-bold text-white transition-colors hover:bg-brand-deep lg:justify-self-auto"
+              href="/contact?kind=%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%20%EB%AC%B8%EC%9D%98#contact-form"
+              className="shrink-0 justify-self-start rounded-lg bg-brand px-6 py-3.5 text-center text-[14.5px] font-bold text-white transition-colors hover:bg-brand-deep lg:justify-self-auto"
             >
-              회원업장 등록하기
+              등록 문의하기
+              <span className="mt-0.5 block text-[11.5px] font-normal opacity-80">
+                사무국에서 대신 등록해 드립니다
+              </span>
             </Link>
           </div>
         </div>

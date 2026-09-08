@@ -22,21 +22,62 @@
     "placeId": null,
     "placeType": null,
     "placePhoto": null,
-    "placeKeywords": ["스페셜티커피", "직접로스팅", "디저트", "콘센트", "주차가능"],
+    "placeKeywords": [
+      "스페셜티커피",
+      "직접로스팅",
+      "디저트",
+      "콘센트",
+      "주차가능"
+    ],
     "menus": [
-      { "id": "b01-m1", "name": "아메리카노", "price": "4,500원", "description": null, "imageUrl": null, "source": "place", "order": 1 },
-      { "id": "b01-m2", "name": "핸드드립", "price": "6,500원", "description": null, "imageUrl": null, "source": "place", "order": 2 },
-      { "id": "b01-m3", "name": "바스크치즈케이크", "price": "7,000원", "description": null, "imageUrl": null, "source": "place", "order": 3 }
+      {
+        "id": "b01-m1",
+        "name": "아메리카노",
+        "price": "4,500원",
+        "description": null,
+        "imageUrl": null,
+        "source": "place",
+        "order": 1
+      },
+      {
+        "id": "b01-m2",
+        "name": "핸드드립",
+        "price": "6,500원",
+        "description": null,
+        "imageUrl": null,
+        "source": "place",
+        "order": 2
+      },
+      {
+        "id": "b01-m3",
+        "name": "바스크치즈케이크",
+        "price": "7,000원",
+        "description": null,
+        "imageUrl": null,
+        "source": "place",
+        "order": 3
+      }
     ],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["카페", "커피", "로스팅", "원두", "디저트", "브런치"],
+    "keywords": [
+      "카페",
+      "커피",
+      "로스팅",
+      "원두",
+      "디저트",
+      "브런치"
+    ],
     "priority": 1,
     "featured": true,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2024-11-02",
-    "updatedAt": "2026-08-20"
+    "updatedAt": "2026-08-20",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": "원청협 회원 카드 제시 시 음료 10% 할인"
   },
   {
     "id": "b02",
@@ -65,13 +106,23 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["도소매", "유통", "생활용품", "식자재", "납품"],
+    "keywords": [
+      "도소매",
+      "유통",
+      "생활용품",
+      "식자재",
+      "납품"
+    ],
     "priority": 2,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2024-12-10",
-    "updatedAt": "2026-07-11"
+    "updatedAt": "2026-07-11",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b03",
@@ -96,17 +147,34 @@
     "placeId": null,
     "placeType": null,
     "placePhoto": null,
-    "placeKeywords": ["정육점", "한우", "한돈", "구이용", "선물세트"],
+    "placeKeywords": [
+      "정육점",
+      "한우",
+      "한돈",
+      "구이용",
+      "선물세트"
+    ],
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["정육", "고기", "한우", "한돈", "식품", "선물세트"],
+    "keywords": [
+      "정육",
+      "고기",
+      "한우",
+      "한돈",
+      "식품",
+      "선물세트"
+    ],
     "priority": 3,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2024-10-05",
-    "updatedAt": "2026-06-30"
+    "updatedAt": "2026-06-30",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b04",
@@ -135,13 +203,25 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["휴대폰", "핸드폰", "성지", "개통", "요금제", "알뜰폰", "액정수리"],
+    "keywords": [
+      "휴대폰",
+      "핸드폰",
+      "성지",
+      "개통",
+      "요금제",
+      "알뜰폰",
+      "액정수리"
+    ],
     "priority": 4,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2025-03-11",
-    "updatedAt": "2026-08-20"
+    "updatedAt": "2026-08-20",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": "원청협 회원 기기 변경 시 액세서리 1종 증정"
   },
   {
     "id": "b05",
@@ -170,13 +250,24 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["장기렌트", "리스", "신차", "중고차", "법인차", "견적"],
+    "keywords": [
+      "장기렌트",
+      "리스",
+      "신차",
+      "중고차",
+      "법인차",
+      "견적"
+    ],
     "priority": 5,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2025-03-11",
-    "updatedAt": "2026-08-20"
+    "updatedAt": "2026-08-20",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b06",
@@ -201,17 +292,33 @@
     "placeId": null,
     "placeType": null,
     "placePhoto": null,
-    "placeKeywords": ["베이커리", "천연발효", "케이크", "답례품"],
+    "placeKeywords": [
+      "베이커리",
+      "천연발효",
+      "케이크",
+      "답례품"
+    ],
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["빵집", "베이커리", "제과", "케이크", "발효빵", "답례품"],
+    "keywords": [
+      "빵집",
+      "베이커리",
+      "제과",
+      "케이크",
+      "발효빵",
+      "답례품"
+    ],
     "priority": 6,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2025-06-01",
-    "updatedAt": "2026-02-14"
+    "updatedAt": "2026-02-14",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b07",
@@ -240,13 +347,23 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["휴대폰", "개통", "요금제", "액세서리", "필름"],
+    "keywords": [
+      "휴대폰",
+      "개통",
+      "요금제",
+      "액세서리",
+      "필름"
+    ],
     "priority": null,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2025-04-18",
-    "updatedAt": "2026-04-18"
+    "updatedAt": "2026-04-18",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b08",
@@ -275,13 +392,25 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["카센터", "정비", "판금", "도색", "보험수리", "엔진오일", "타이어"],
+    "keywords": [
+      "카센터",
+      "정비",
+      "판금",
+      "도색",
+      "보험수리",
+      "엔진오일",
+      "타이어"
+    ],
     "priority": null,
     "featured": true,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2025-08-14",
-    "updatedAt": "2026-01-05"
+    "updatedAt": "2026-01-05",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b09",
@@ -310,13 +439,25 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["세무사", "기장", "부가세", "종합소득세", "절세", "창업", "사업자등록"],
+    "keywords": [
+      "세무사",
+      "기장",
+      "부가세",
+      "종합소득세",
+      "절세",
+      "창업",
+      "사업자등록"
+    ],
     "priority": null,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2024-09-05",
-    "updatedAt": "2026-05-02"
+    "updatedAt": "2026-05-02",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b10",
@@ -345,13 +486,24 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["꽃집", "화환", "개업화환", "근조화환", "꽃다발", "배송"],
+    "keywords": [
+      "꽃집",
+      "화환",
+      "개업화환",
+      "근조화환",
+      "꽃다발",
+      "배송"
+    ],
     "priority": null,
     "featured": true,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-05-16",
-    "updatedAt": "2026-09-01"
+    "updatedAt": "2026-09-01",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b11",
@@ -380,13 +532,24 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["사진관", "증명사진", "프로필", "촬영", "상업사진", "메뉴판촬영"],
+    "keywords": [
+      "사진관",
+      "증명사진",
+      "프로필",
+      "촬영",
+      "상업사진",
+      "메뉴판촬영"
+    ],
     "priority": null,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2025-10-12",
-    "updatedAt": "2026-04-02"
+    "updatedAt": "2026-04-02",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b12",
@@ -415,13 +578,25 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["인테리어", "리모델링", "상가", "매장공사", "시공", "도배", "샷시"],
+    "keywords": [
+      "인테리어",
+      "리모델링",
+      "상가",
+      "매장공사",
+      "시공",
+      "도배",
+      "샷시"
+    ],
     "priority": null,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2025-04-18",
-    "updatedAt": "2026-04-18"
+    "updatedAt": "2026-04-18",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b13",
@@ -446,21 +621,60 @@
     "placeId": null,
     "placeType": null,
     "placePhoto": null,
-    "placeKeywords": ["한식", "백반", "가족식사", "단체석"],
+    "placeKeywords": [
+      "한식",
+      "백반",
+      "가족식사",
+      "단체석"
+    ],
     "menus": [
-      { "id": "b13-m1", "name": "제육백반", "price": "10,000원", "description": null, "imageUrl": null, "source": "place", "order": 1 },
-      { "id": "b13-m2", "name": "된장찌개", "price": "9,000원", "description": null, "imageUrl": null, "source": "place", "order": 2 },
-      { "id": "b13-m3", "name": "생선구이정식", "price": "13,000원", "description": null, "imageUrl": null, "source": "place", "order": 3 }
+      {
+        "id": "b13-m1",
+        "name": "제육백반",
+        "price": "10,000원",
+        "description": null,
+        "imageUrl": null,
+        "source": "place",
+        "order": 1
+      },
+      {
+        "id": "b13-m2",
+        "name": "된장찌개",
+        "price": "9,000원",
+        "description": null,
+        "imageUrl": null,
+        "source": "place",
+        "order": 2
+      },
+      {
+        "id": "b13-m3",
+        "name": "생선구이정식",
+        "price": "13,000원",
+        "description": null,
+        "imageUrl": null,
+        "source": "place",
+        "order": 3
+      }
     ],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["한식", "백반", "점심", "정식", "가정식"],
+    "keywords": [
+      "한식",
+      "백반",
+      "점심",
+      "정식",
+      "가정식"
+    ],
     "priority": null,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-07",
-    "updatedAt": "2026-07-15"
+    "updatedAt": "2026-07-15",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": "원청협 회원 점심 정식 1,000원 할인"
   },
   {
     "id": "b14",
@@ -489,13 +703,25 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["미용실", "헤어", "커트", "펌", "염색", "두피", "네일"],
+    "keywords": [
+      "미용실",
+      "헤어",
+      "커트",
+      "펌",
+      "염색",
+      "두피",
+      "네일"
+    ],
     "priority": null,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2025-02-20",
-    "updatedAt": "2026-06-11"
+    "updatedAt": "2026-06-11",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   },
   {
     "id": "b15",
@@ -524,12 +750,23 @@
     "menus": [],
     "placeSyncedAt": null,
     "fieldSources": {},
-    "keywords": ["보험", "화재보험", "배상책임", "자동차보험", "보장분석", "재무설계"],
+    "keywords": [
+      "보험",
+      "화재보험",
+      "배상책임",
+      "자동차보험",
+      "보장분석",
+      "재무설계"
+    ],
     "priority": null,
     "featured": false,
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2025-05-22",
-    "updatedAt": "2026-03-09"
+    "updatedAt": "2026-03-09",
+    "instagramUrl": null,
+    "blogUrl": null,
+    "logoImage": null,
+    "benefit": null
   }
 ]

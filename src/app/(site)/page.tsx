@@ -5,7 +5,7 @@ import HeroSlider from "@/components/home/HeroSlider";
 import NoticesAndActivities from "@/components/home/NoticesAndActivities";
 import StatsBand from "@/components/home/StatsBand";
 import UpcomingEventBanner from "@/components/home/UpcomingEventBanner";
-import YearCalendar from "@/components/home/YearCalendar";
+import EventCalendar from "@/components/home/EventCalendar";
 import {
   getActivePopups,
   getActivities,
@@ -13,6 +13,7 @@ import {
   getEventsByYear,
   getHeroSlides,
   getNextEvent,
+  getTodayEvents,
   getNotices,
   getOrgMembers,
   getPublicBusinesses,
@@ -29,11 +30,12 @@ export default async function HomePage() {
   const now = new Date();
   const todayKey = toDateKey(now);
 
-  const [slides, stats, popups, notices, activities, nextEvent, businesses, org, years] =
+  const [slides, stats, popups, todayEvents, notices, activities, nextEvent, businesses, org, years] =
     await Promise.all([
       getHeroSlides(),
       getStats(),
       getActivePopups(now),
+      getTodayEvents(now),
       getNotices(5),
       getActivities(3),
       getNextEvent(now),
@@ -50,17 +52,13 @@ export default async function HomePage() {
 
   const thisYear = now.getFullYear();
   const calendarYears = years.length > 0 ? years : [thisYear];
-  const initialYear = calendarYears.includes(thisYear)
-    ? thisYear
-    : calendarYears[calendarYears.length - 1];
-
   const eventsByYear: Record<number, Post[]> = Object.fromEntries(
     await Promise.all(calendarYears.map(async (y) => [y, await getEventsByYear(y)] as const)),
   );
 
   return (
     <>
-      <SitePopup popups={popups} />
+      <SitePopup popups={popups} todayEvents={todayEvents} />
 
       <HeroSlider slides={slides} />
       <StatsBand items={stats} />
@@ -88,12 +86,7 @@ export default async function HomePage() {
       {/* 예정된 행사가 없으면 이 영역 자체가 나오지 않는다 (기획안 9조). */}
       {nextEvent && <UpcomingEventBanner event={nextEvent} />}
 
-      <YearCalendar
-        eventsByYear={eventsByYear}
-        years={calendarYears}
-        initialYear={initialYear}
-        todayKey={todayKey}
-      />
+      <EventCalendar eventsByYear={eventsByYear} years={calendarYears} todayKey={todayKey} />
     </>
   );
 }

@@ -53,6 +53,7 @@ export const getPostBySlug = (slug: string) => impl().getPostBySlug(slug);
 export const getEventsByYear = (year: number) => impl().getEventsByYear(year);
 export const getEventYears = () => impl().getEventYears();
 export const getNextEvent = (now?: Date) => impl().getNextEvent(now);
+export const getTodayEvents = (now?: Date) => impl().getTodayEvents(now);
 
 /* 회원 (2단계 회원 로그인 대비) */
 export const getMembers = () => impl().getMembers();

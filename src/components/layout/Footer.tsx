@@ -61,8 +61,13 @@ export default function Footer({
         </div>
 
         <div className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-[12.5px] text-white/50">
-            © {new Date().getFullYear()} {site.name}. All rights reserved.
+          <p className="flex items-center gap-3 text-[12.5px] text-white/50">
+            <span>
+              © {new Date().getFullYear()} {site.name}. All rights reserved.
+            </span>
+            <Link href="/admin/login" className="text-white/35 transition-colors hover:text-white/70">
+              관리자
+            </Link>
           </p>
 
           <div className="flex items-center gap-4">

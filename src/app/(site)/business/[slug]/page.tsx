@@ -46,11 +46,14 @@ export default async function BusinessDetailPage({
     { icon: ClockIcon, label: "영업시간", value: business.hours },
   ].filter((r) => r.value);
 
+  // 값이 있는 채널만 버튼으로 만든다. 등록하지 않은 채널은 아예 나오지 않는다.
   const links = [
-    { label: "네이버 플레이스", href: business.placeUrl },
-    { label: "홈페이지", href: business.homepageUrl },
-    { label: "SNS", href: business.snsUrl },
-  ].filter((l) => l.href);
+    { label: "네이버 플레이스", href: business.placeUrl, tone: "brand" },
+    { label: "홈페이지", href: business.homepageUrl, tone: "line" },
+    { label: "인스타그램", href: business.instagramUrl, tone: "line" },
+    { label: "블로그", href: business.blogUrl, tone: "line" },
+    { label: "SNS", href: business.snsUrl, tone: "line" },
+  ].filter((l): l is { label: string; href: string; tone: string } => Boolean(l.href));
 
   return (
     <article className="px-5 py-10 md:py-14">
@@ -127,9 +130,19 @@ export default async function BusinessDetailPage({
               <Badge label={business.category} />
             </p>
 
-            <h1 className="mt-3.5 text-[26px] font-bold tracking-[-0.02em] md:text-[32px]">
-              {business.name}
-            </h1>
+            <span className="mt-3.5 flex items-center gap-3">
+              {business.logoImage && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={business.logoImage}
+                  alt=""
+                  className="h-11 w-11 shrink-0 rounded-lg object-contain"
+                />
+              )}
+              <h1 className="text-[26px] font-bold tracking-[-0.02em] md:text-[32px]">
+                {business.name}
+              </h1>
+            </span>
             <p className="mt-2 text-[14.5px] text-ink-soft">{business.tagline}</p>
 
             <dl className="mt-6 space-y-3 border-t border-line pt-6">
@@ -154,25 +167,38 @@ export default async function BusinessDetailPage({
                 </div>
               ))}
 
-              {links.map((link) => (
-                <div key={link.label} className="flex gap-3">
-                  <dt className="flex w-[92px] shrink-0 items-center gap-1.5 text-[13px] text-muted">
-                    <LinkIcon className="h-[15px] w-[15px] shrink-0 text-brand" />
-                    {link.label}
-                  </dt>
-                  <dd className="min-w-0 flex-1">
-                    <a
-                      href={link.href as string}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="break-all text-[13.5px] font-semibold text-brand hover:underline"
-                    >
-                      {link.href}
-                    </a>
-                  </dd>
-                </div>
-              ))}
             </dl>
+
+            {links.length > 0 && (
+              <div className="mt-5 flex flex-wrap gap-2">
+                {links.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-[13.5px] font-bold transition-colors ${
+                      link.tone === "brand"
+                        ? "bg-brand text-white hover:bg-brand-deep"
+                        : "border border-line hover:border-brand hover:text-brand"
+                    }`}
+                  >
+                    <LinkIcon className="h-[14px] w-[14px]" />
+                    {link.label}
+                    <span aria-hidden>↗</span>
+                  </a>
+                ))}
+              </div>
+            )}
+
+            {business.benefit && (
+              <div className="mt-5 rounded-xl border border-amber/30 bg-amber-tint p-4">
+                <p className="text-[12.5px] font-bold text-amber">원청협 회원 혜택</p>
+                <p className="mt-1.5 text-[14px] font-semibold leading-relaxed">
+                  {business.benefit}
+                </p>
+              </div>
+            )}
 
             <div className="mt-6 border-t border-line pt-6">
               <h2 className="text-[15px] font-bold">업장 소개</h2>
@@ -190,24 +216,30 @@ export default async function BusinessDetailPage({
               <span aria-hidden className="block h-[18px] w-[3px] rounded bg-brand" />
               메뉴
             </h2>
-            <ul className="mt-4 overflow-hidden rounded-xl border border-line">
-              {menus.map((m, i) => (
+            <ul className="mt-4 grid gap-x-6 sm:grid-cols-2">
+              {menus.map((m) => (
                 <li
                   key={m.id}
-                  className={`flex items-baseline justify-between gap-6 px-5 py-3.5 ${
-                    i > 0 ? "border-t border-line" : ""
-                  }`}
+                  className="flex items-center gap-3 border-b border-line py-3"
                 >
-                  <span className="min-w-0">
-                    <span className="text-[14.5px] font-semibold">{m.name}</span>
+                  {m.imageUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={m.imageUrl}
+                      alt=""
+                      className="h-12 w-12 shrink-0 rounded-lg object-cover"
+                    />
+                  )}
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[14px] font-semibold">{m.name}</span>
                     {m.description && (
-                      <span className="mt-1 block text-[12.5px] text-muted">
+                      <span className="mt-0.5 block truncate text-[12px] text-muted">
                         {m.description}
                       </span>
                     )}
                   </span>
                   {m.price && (
-                    <span className="tnum shrink-0 text-[14.5px] font-bold text-brand">
+                    <span className="tnum shrink-0 text-[14px] font-bold text-brand">
                       {m.price}
                     </span>
                   )}

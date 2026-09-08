@@ -150,12 +150,25 @@ export async function getEventYears(): Promise<number[]> {
   return [...years].sort((a, b) => a - b);
 }
 
+/** 오늘 열리는 행사. 있으면 홈페이지 접속 시 팝업으로 안내한다. */
+export async function getTodayEvents(now = new Date()): Promise<Post[]> {
+  const today = toDateKey(now);
+  return posts.filter(
+    (p) =>
+      p.type === "event" &&
+      isPublic(p) &&
+      !p.dateTbd &&
+      (p.startDate ?? p.date) <= today &&
+      (p.endDate ?? p.startDate ?? p.date) >= today,
+  );
+}
+
 /** 다음 예정 행사 1건. 없으면 null → 화면에서 섹션 자체를 숨긴다. */
 export async function getNextEvent(now = new Date()): Promise<Post | null> {
   const today = toDateKey(now);
   return (
     posts
-      .filter((p) => p.type === "event" && isPublic(p))
+      .filter((p) => p.type === "event" && isPublic(p) && !p.dateTbd)
       .filter((p) => (p.endDate ?? p.startDate ?? p.date) >= today)
       .sort((a, b) => (a.startDate ?? a.date).localeCompare(b.startDate ?? b.date))[0] ?? null
   );
