@@ -8,6 +8,7 @@ import { publicFileExists } from "@/lib/assets";
 import {
   getHistory,
   getMembers,
+  getOrgGroupOrder,
   getOrgMembers,
   getPartners,
   getPresidentMessage,
@@ -21,8 +22,18 @@ export const metadata: Metadata = { title: "협회소개" };
 export const revalidate = 86400;
 
 export default async function AboutPage() {
-  const [site, story, president, programs, history, partners, org, businesses, members] =
-    await Promise.all([
+  const [
+    site,
+    story,
+    president,
+    programs,
+    history,
+    partners,
+    org,
+    businesses,
+    members,
+    groupOrder,
+  ] = await Promise.all([
       getSiteInfo(),
       getStory(),
       getPresidentMessage(),
@@ -31,8 +42,9 @@ export default async function AboutPage() {
       getPartners(),
       getOrgMembers(),
       getPublicBusinesses(),
-      getMembers(),
-    ]);
+    getMembers(),
+    getOrgGroupOrder(),
+  ]);
 
   const chair = org.find((o) => o.title === "회장") ?? null;
 
@@ -134,7 +146,12 @@ export default async function AboutPage() {
 
       <OrgChart org={org} />
 
-      <PeopleGroups org={org} members={members} businessById={businessById} />
+      <PeopleGroups
+        org={org}
+        members={members}
+        businessById={businessById}
+        groupOrder={groupOrder}
+      />
 
       {/* 주요사업 */}
       <section className="px-5 py-12 md:py-16">

@@ -13,6 +13,7 @@ import { createClient } from "@supabase/supabase-js";
 import { toDateKey } from "@/lib/date";
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/supabase/config";
 import * as seed from "@/lib/repo/seed";
+import { ORG_GROUPS } from "@/lib/types";
 import type {
   AssociationStory,
   Business,
@@ -21,6 +22,7 @@ import type {
   HistoryItem,
   Member,
   MenuItem,
+  OrgGroup,
   OrgMember,
   PartnerOrg,
   PopupNotice,
@@ -306,6 +308,20 @@ export async function getOrgMembers(): Promise<OrgMember[]> {
     (rows: Row[]) => rows.map((r) => toOrgMember(r)),
     seed.getOrgMembers,
   );
+}
+
+/**
+ * 분류(회장단·이사회·운영진·역대 회장)가 나오는 순서.
+ * 관리자에서 정한 값이 있으면 그걸 쓰고, 없거나 값이 깨졌으면 기본 순서로 돌아간다.
+ */
+export async function getOrgGroupOrder(): Promise<OrgGroup[]> {
+  const saved = await setting<unknown>("orgGroupOrder", async () => null);
+  const list = Array.isArray(saved)
+    ? saved.filter((g): g is OrgGroup => ORG_GROUPS.includes(g as OrgGroup))
+    : [];
+
+  // 저장된 목록에 빠진 분류가 있으면 뒤에 붙여서 하나도 사라지지 않게 한다.
+  return [...list, ...ORG_GROUPS.filter((g) => !list.includes(g))];
 }
 
 /* ------------------------------------------------------------------ */

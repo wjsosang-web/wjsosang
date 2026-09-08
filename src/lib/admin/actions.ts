@@ -6,7 +6,8 @@ import { requireAdmin } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { STORAGE_BUCKET } from "@/lib/supabase/config";
 import { importFromPlaceUrl } from "@/lib/place/import";
-import type { PlaceImportResult } from "@/lib/types";
+import { ORG_GROUPS } from "@/lib/types";
+import type { OrgGroup, PlaceImportResult } from "@/lib/types";
 
 /**
  * 관리자 저장 작업.
@@ -358,6 +359,37 @@ export async function deleteInquiry(form: FormData) {
 /* ------------------------------------------------------------------ */
 /* 조직도 · 임원                                                        */
 /* ------------------------------------------------------------------ */
+
+/** 협회소개에서 분류 탭이 나오는 순서를 저장한다 (site_settings.orgGroupOrder) */
+export async function saveOrgGroupOrder(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    const db = getAdminSupabase();
+
+    const order = str(form, "order")
+      .split(",")
+      .map((g) => g.trim())
+      .filter((g): g is OrgGroup => ORG_GROUPS.includes(g as OrgGroup));
+
+    // 아는 분류만 남긴 뒤, 빠진 분류는 뒤에 붙여 하나도 잃지 않게 한다.
+    const full = [...order, ...ORG_GROUPS.filter((g) => !order.includes(g))];
+
+    const { error } = await db
+      .from("site_settings")
+      .upsert({ key: "orgGroupOrder", value: full, updated_at: new Date().toISOString() });
+    if (error) throw new Error(error.message);
+
+    refreshPublicPages();
+    revalidatePath("/admin/org");
+
+    return { ok: true, message: "순서를 저장했습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
 
 export async function saveOrgMember(
   _prev: ActionResult | null,

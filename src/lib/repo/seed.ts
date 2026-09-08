@@ -6,6 +6,7 @@
  */
 
 import { toDateKey } from "@/lib/date";
+import { ORG_GROUPS } from "@/lib/types";
 import type {
   AssociationStory,
   Faq,
@@ -17,6 +18,7 @@ import type {
   Business,
   Member,
   MemberBusiness,
+  OrgGroup,
   OrgMember,
   PopupNotice,
   Post,
@@ -103,6 +105,10 @@ export async function getDistricts(): Promise<string[]> {
 
 export async function getOrgMembers(): Promise<OrgMember[]> {
   return orgMembers.slice().sort((a, b) => a.order - b.order);
+}
+
+export async function getOrgGroupOrder(): Promise<OrgGroup[]> {
+  return ORG_GROUPS.slice();
 }
 
 /* ------------------------------------------------------------------ */

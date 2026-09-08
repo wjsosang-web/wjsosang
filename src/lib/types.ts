@@ -237,6 +237,9 @@ export interface Business {
 
 export type OrgGroup = "회장단" | "이사회·감사" | "운영진" | "역대 회장";
 
+/** 분류가 나오는 기본 순서. 관리자에서 바꾸면 그 순서를 따른다. */
+export const ORG_GROUPS: OrgGroup[] = ["회장단", "이사회·감사", "운영진", "역대 회장"];
+
 export interface OrgMember {
   id: string;
   /** 회원 테이블과 연결. 조직도는 회원 데이터를 참조할 뿐 복제하지 않는다. */

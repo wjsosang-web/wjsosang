@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Badge from "@/components/common/Badge";
 import { resolveOrgPhoto } from "@/lib/images";
+import { ORG_GROUPS } from "@/lib/types";
 import type { Member, OrgGroup, OrgMember } from "@/lib/types";
 
 /**
@@ -11,20 +12,21 @@ import type { Member, OrgGroup, OrgMember } from "@/lib/types";
  * 그룹 탭으로 회장단 / 이사회·감사 / 운영진 / 역대 회장을 나눠 본다.
  */
 
-const GROUP_ORDER: OrgGroup[] = ["회장단", "이사회·감사", "운영진", "역대 회장"];
-
 export default function PeopleGroups({
   org,
   members = [],
   businessById = {},
+  groupOrder = ORG_GROUPS,
 }: {
   org: OrgMember[];
   /** 조직도에 사진이 없을 때 회원 프로필 사진으로 대체하기 위해 넘긴다. */
   members?: Member[];
   /** businessId → { slug, name, category } */
   businessById?: Record<string, { slug: string; name: string; category: string }>;
+  /** 관리자에서 정한 분류 표시 순서 */
+  groupOrder?: OrgGroup[];
 }) {
-  const groups = GROUP_ORDER.map((g) => ({
+  const groups = groupOrder.map((g) => ({
     name: g,
     people: org.filter((o) => o.group === g),
   })).filter((g) => g.people.length > 0);

@@ -44,6 +44,7 @@ export const getDistricts = () => impl().getDistricts();
 
 /* 조직 */
 export const getOrgMembers = () => impl().getOrgMembers();
+export const getOrgGroupOrder = () => impl().getOrgGroupOrder();
 
 /* 게시물 */
 export const getNotices = (limit?: number) => impl().getNotices(limit);

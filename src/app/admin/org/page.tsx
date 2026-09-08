@@ -1,21 +1,24 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import Badge from "@/components/common/Badge";
+import OrgGroupOrder from "@/components/admin/OrgGroupOrder";
+import { getOrgGroupOrder } from "@/lib/repo";
 import { getCurrentAdmin } from "@/lib/supabase/auth";
 import { listBusinesses, listOrgMembers } from "@/lib/admin/queries";
-import type { OrgGroup } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
-
-const GROUP_ORDER: OrgGroup[] = ["회장단", "이사회·감사", "운영진", "역대 회장"];
 
 export default async function AdminOrgPage() {
   if (!(await getCurrentAdmin())) redirect("/admin/login");
 
-  const [org, businesses] = await Promise.all([listOrgMembers(), listBusinesses()]);
+  const [org, businesses, groupOrder] = await Promise.all([
+    listOrgMembers(),
+    listBusinesses(),
+    getOrgGroupOrder(),
+  ]);
   const nameById = Object.fromEntries(businesses.map((b) => [b.id, b.name]));
 
-  const groups = GROUP_ORDER.map((g) => ({
+  const groups = groupOrder.map((g) => ({
     name: g,
     people: org.filter((o) => o.group === g).sort((a, b) => a.order - b.order),
   })).filter((g) => g.people.length > 0);
@@ -37,6 +40,8 @@ export default async function AdminOrgPage() {
           + 임원 추가
         </Link>
       </div>
+
+      <OrgGroupOrder current={groupOrder} />
 
       {groups.length === 0 ? (
         <p className="rounded-xl border border-dashed border-line bg-white py-16 text-center text-[14px] text-muted">
