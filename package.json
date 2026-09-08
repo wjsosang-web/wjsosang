@@ -10,7 +10,9 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "seed:push": "node scripts/push-seed.mjs",
-    "admin:create": "node scripts/create-admin.mjs"
+    "admin:create": "node scripts/create-admin.mjs",
+    "setup:check": "node scripts/check-setup.mjs",
+    "db:migrate": "node scripts/db-migrate.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",
@@ -25,6 +27,7 @@
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.9",
     "dotenv": "^17.4.2",
+    "pg": "^8.23.0",
     "postcss": "8.5.6",
     "tailwindcss": "4.1.13",
     "typescript": "5.9.2"
