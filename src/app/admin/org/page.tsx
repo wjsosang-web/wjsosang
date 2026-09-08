@@ -81,7 +81,7 @@ export default async function AdminOrgPage() {
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-2">
                           <span className="text-[14.5px] font-bold">{p.name}</span>
-                          <Badge label={p.title} className="bg-brand-tint text-brand-deep" />
+                          <Badge label={p.title} />
                           {p.department && <Badge label={p.department} />}
                         </span>
                         <span className="mt-0.5 block truncate text-[12.5px] text-muted">

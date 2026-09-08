@@ -20,7 +20,7 @@ create type auth_provider      as enum ('kakao', 'naver', 'email');
 create type ownership_type     as enum ('owner', 'co-owner', 'manager');
 create type publish_status     as enum ('public', 'private', 'draft');
 create type post_type          as enum ('notice', 'activity', 'event');
-create type org_group          as enum ('회장단', '이사회·감사', '운영진', '고문단', '자문위원');
+create type org_group          as enum ('회장단', '이사회·감사', '임원진', '고문단', '자문위원');
 create type edit_request_state as enum ('pending', 'approved', 'rejected');
 
 -- ---------------------------------------------------------------------------

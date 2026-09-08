@@ -1,21 +1,20 @@
 /**
  * 브라우저에서 사진 용량을 줄인다.
  *
- * 요즘 휴대폰 사진은 한 장에 5~10MB 씩 된다.
- * 그대로 올리면 전송 한도에 걸리고, 홈페이지도 느려진다.
- * 그래서 올리기 전에 긴 변을 줄이고 다시 저장한다.
+ * 요즘 휴대폰 사진은 한 장에 5~10MB 씩 되고, 화면 캡처(PNG)는 더 큰 경우도 있다.
+ * 그래서 크기를 일일이 확인하지 않아도 되도록, 고르는 즉시 목표 용량 아래로
+ * 들어갈 때까지 화질과 크기를 단계적으로 낮춘다.
  *
- * 화질은 눈으로 구분하기 어려운 수준만 낮춘다.
- * 투명 배경이 필요한 PNG(로고)와 SVG 는 건드리지 않는다.
+ * 애니메이션 GIF 와 SVG 는 다시 그리면 망가지므로 건드리지 않는다.
  */
 
 export interface CompressOptions {
   /** 긴 변 최대 길이(px) */
   maxSize?: number;
-  /** 0~1. 낮을수록 용량이 작아진다. */
-  quality?: number;
-  /** 이 크기 이하면 그대로 둔다 */
-  skipUnderBytes?: number;
+  /** 이 용량 아래로 만든다 (bytes) */
+  targetBytes?: number;
+  /** 투명 배경을 지켜야 하는 로고 등. PNG 로 저장한다. */
+  keepTransparency?: boolean;
 }
 
 export interface CompressResult {
@@ -27,56 +26,101 @@ export interface CompressResult {
 
 const DEFAULTS: Required<CompressOptions> = {
   maxSize: 1600,
-  quality: 0.82,
-  skipUnderBytes: 400 * 1024,
+  targetBytes: 700 * 1024,
+  keepTransparency: false,
 };
+
+/** 다시 그려도 되는 형식인지 */
+function reencodable(type: string): boolean {
+  return /^image\/(jpeg|jpg|png|webp|bmp|heic|heif|avif)$/.test(type);
+}
+
+function toBlob(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob | null> {
+  return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+}
+
+function draw(bitmap: ImageBitmap, maxSize: number): HTMLCanvasElement | null {
+  const scale = Math.min(1, maxSize / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+
+  // JPEG 는 투명을 표현하지 못해서 검게 나온다. 흰 배경을 먼저 깐다.
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  return canvas;
+}
 
 export async function compressImage(
   file: File,
   options: CompressOptions = {},
 ): Promise<CompressResult> {
-  const { maxSize, quality, skipUnderBytes } = { ...DEFAULTS, ...options };
+  const { maxSize, targetBytes, keepTransparency } = { ...DEFAULTS, ...options };
   const original = file.size;
+  const keep = (): CompressResult => ({
+    file,
+    originalBytes: original,
+    bytes: original,
+    changed: false,
+  });
 
-  // PNG 는 로고처럼 투명 배경일 수 있어 그대로 둔다.
-  // SVG 와 GIF 도 다시 그리면 망가진다.
-  const untouchable = /image\/(png|svg\+xml|gif)/.test(file.type);
-  if (untouchable || file.size <= skipUnderBytes || !file.type.startsWith("image/")) {
-    return { file, originalBytes: original, bytes: original, changed: false };
-  }
+  if (!reencodable(file.type)) return keep();
 
   try {
     const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, maxSize / Math.max(bitmap.width, bitmap.height));
-    const width = Math.round(bitmap.width * scale);
-    const height = Math.round(bitmap.height * scale);
 
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
+    // 투명 배경을 지켜야 하면 PNG 로 두고 크기만 줄인다.
+    if (keepTransparency) {
+      const canvas = draw(bitmap, Math.min(maxSize, 1024));
+      bitmap.close();
+      if (!canvas) return keep();
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return { file, originalBytes: original, bytes: original, changed: false };
-
-    ctx.drawImage(bitmap, 0, 0, width, height);
-    bitmap.close();
-
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, "image/jpeg", quality),
-    );
-    if (!blob || blob.size >= original) {
-      // 줄여도 이득이 없으면 원본을 쓴다
-      return { file, originalBytes: original, bytes: original, changed: false };
+      const blob = await toBlob(canvas, "image/png", 1);
+      if (!blob || blob.size >= original) return keep();
+      return done(file, blob, "png", original);
     }
 
-    const name = file.name.replace(/\.[^.]+$/, "") + ".jpg";
-    const compressed = new File([blob], name, { type: "image/jpeg", lastModified: Date.now() });
+    // 목표 용량에 들어갈 때까지 화질 → 크기 순으로 낮춘다.
+    for (const width of [maxSize, 1280, 1024, 800]) {
+      const canvas = draw(bitmap, width);
+      if (!canvas) break;
 
-    return { file: compressed, originalBytes: original, bytes: compressed.size, changed: true };
+      for (const quality of [0.82, 0.7, 0.6, 0.5, 0.4]) {
+        const blob = await toBlob(canvas, "image/jpeg", quality);
+        if (!blob) continue;
+        if (blob.size <= targetBytes) {
+          bitmap.close();
+          // 원본이 이미 더 작으면 원본을 쓴다
+          return blob.size >= original ? keep() : done(file, blob, "jpg", original);
+        }
+      }
+    }
+
+    // 여기까지 왔으면 가장 작게 만든 것이라도 쓴다. 원본보다는 훨씬 작다.
+    const canvas = draw(bitmap, 800);
+    bitmap.close();
+    if (!canvas) return keep();
+
+    const blob = await toBlob(canvas, "image/jpeg", 0.4);
+    if (!blob || blob.size >= original) return keep();
+    return done(file, blob, "jpg", original);
   } catch {
-    // 브라우저가 지원하지 않으면 원본을 그대로 올린다
-    return { file, originalBytes: original, bytes: original, changed: false };
+    // 브라우저가 지원하지 않으면 원본을 그대로 쓴다
+    return keep();
   }
+}
+
+function done(source: File, blob: Blob, ext: string, original: number): CompressResult {
+  const name = source.name.replace(/\.[^.]+$/, "") + "." + ext;
+  const file = new File([blob], name, {
+    type: ext === "png" ? "image/png" : "image/jpeg",
+    lastModified: Date.now(),
+  });
+  return { file, originalBytes: original, bytes: file.size, changed: true };
 }
 
 /** 사람이 읽기 좋은 크기 표기 */

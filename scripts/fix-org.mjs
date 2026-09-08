@@ -82,7 +82,7 @@ const { data: org } = await db.from("org_members").select("*");
   if (exists) {
     await db
       .from("org_members")
-      .update({ title: "인사부국장", department: "인사국", org_group: "운영진" })
+      .update({ title: "인사부국장", department: "인사국", org_group: "임원진" })
       .eq("id", exists.id);
     console.log("임동연 → 인사부국장 (수정)");
   } else {
@@ -102,7 +102,7 @@ const { data: org } = await db.from("org_members").select("*");
 
     await db.from("org_members").insert({
       name: "임동연",
-      org_group: "운영진",
+      org_group: "임원진",
       title: "인사부국장",
       department: "인사국",
       member_id: member?.id ?? null,
@@ -120,7 +120,7 @@ const { data: org } = await db.from("org_members").select("*");
 
   const 회장단 = all.filter((o) => o.org_group === "회장단");
   const 이사회 = all.filter((o) => o.org_group === "이사회·감사");
-  const 운영진 = all.filter((o) => o.org_group === "운영진");
+  const 임원진 = all.filter((o) => o.org_group === "임원진");
   const 역대 = all.filter((o) => o.org_group === "역대 회장");
 
   const updates = [];
@@ -136,7 +136,7 @@ const { data: org } = await db.from("org_members").select("*");
     .forEach((o, i) => updates.push({ id: o.id, sort_order: i + 1 }));
 
   // 국장 → 부국장 → 부장 → 부원, 같은 직급 안에서는 국 순서
-  운영진
+  임원진
     .sort((a, b) => {
       const r = rankOf(a.title) - rankOf(b.title);
       if (r !== 0) return r;

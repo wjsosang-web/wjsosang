@@ -6,7 +6,7 @@ import { saveOrgGroupOrder, type ActionResult } from "@/lib/admin/actions";
 import type { OrgGroup } from "@/lib/types";
 
 /**
- * 협회소개에서 분류(회장단·이사회·운영진·역대 회장)가 나오는 순서를 정한다.
+ * 협회소개에서 분류(회장단·이사회·임원진·역대 회장)가 나오는 순서를 정한다.
  * 위/아래로 옮긴 뒤 저장하면 조직도 탭 순서가 바뀐다.
  */
 export default function OrgGroupOrder({ current }: { current: OrgGroup[] }) {

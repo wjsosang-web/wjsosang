@@ -463,7 +463,13 @@ export default function BusinessForm({ business }: { business?: Business }) {
         )}
 
         <div className="mt-4">
-          <ImageInput name="coverFile" label="대표사진" currentUrl={business?.coverImage} />
+          <ImageInput
+            name="coverFile"
+            label="대표사진"
+            hint="카드에 4:3 으로 나옵니다. 고르면 자르기 창이 뜹니다."
+            currentUrl={business?.coverImage}
+            folder="businesses"
+          />
         </div>
 
         <div className="mt-4">
@@ -474,13 +480,14 @@ export default function BusinessForm({ business }: { business?: Business }) {
             currentUrl={business?.logoImage}
             keepTransparency
             compact
+            folder="businesses"
           />
         </div>
 
         <ul className="mt-4 space-y-3">
           {photoSlots.map((key, i) => (
             <li key={key} className="grid gap-2 sm:grid-cols-[1fr_1.4fr_auto] sm:items-center">
-              <ImageInput name="photoFiles" />
+              <ImageInput name="photoFiles" folder="businesses" />
               <input name="photoCaptions" placeholder={`사진 ${i + 1} 설명`} className={field} />
               <button
                 type="button"

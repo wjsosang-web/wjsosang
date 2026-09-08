@@ -86,7 +86,7 @@ export default function OrgChart({ org }: { org: OrgMember[] }) {
                     >
                       <span className="font-semibold">{d.name}</span>
                       {d.subTitle && (
-                        <span className="rounded bg-violet-tint px-1.5 py-0.5 text-[10.5px] font-bold text-violet">
+                        <span className="rounded bg-violet px-1.5 py-0.5 text-[10.5px] font-bold text-white">
                           {d.subTitle}
                         </span>
                       )}

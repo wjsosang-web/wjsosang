@@ -67,7 +67,7 @@ const orgGroupOf = (group, title) => {
   if (/초대|직전|명예/.test(`${group} ${title}`)) return "역대 회장";
   if (group === "이사회") return "이사회·감사";
   if (group === "집행부") return /감사/.test(title) ? "이사회·감사" : "회장단";
-  return "운영진";
+  return "임원진";
 };
 
 /* ------------------------------------------------------------------ */

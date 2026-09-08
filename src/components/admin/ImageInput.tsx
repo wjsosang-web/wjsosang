@@ -1,23 +1,34 @@
 "use client";
 
 import { useRef, useState } from "react";
+import ImageCropper from "@/components/admin/ImageCropper";
 import { compressImage, formatBytes } from "@/lib/compressImage";
+import { uploadAsset } from "@/lib/uploadAsset";
 
 /**
  * 사진 고르기 칸.
  *
- * 파일을 고르면 브라우저에서 바로 용량을 줄인 뒤 실제 전송 파일로 바꿔 넣는다.
- * 그래서 휴대폰으로 찍은 큰 사진을 그대로 골라도 저장이 된다.
- * 미리보기와 줄어든 용량을 보여주므로 무슨 일이 일어났는지 알 수 있다.
+ * 고르면 이 순서로 처리한다.
+ *   1. 자르기 — 정해진 비율에 맞춰 어디를 남길지 직접 정한다
+ *   2. 용량 줄이기 — 크기를 확인할 필요 없이 알아서 목표 용량 아래로 내린다
+ *   3. 저장소로 바로 올리기 — 폼에는 주소만 담는다
+ *
+ * 3번이 중요하다. 파일을 폼에 담아 보내면 배포 환경의 요청 크기 제한(4.5MB)에
+ * 걸려서 사진 몇 장만으로도 저장이 통째로 실패한다. 주소만 보내면 그 제한과
+ * 무관해지고, 사진을 몇 장 넣든 저장이 된다.
  */
 export default function ImageInput({
   name,
   label,
   hint,
   currentUrl,
-  /** 로고처럼 투명 배경을 지켜야 하면 켠다 (PNG 를 건드리지 않는다) */
+  /** 로고처럼 투명 배경을 지켜야 하면 켠다 */
   keepTransparency = false,
   compact = false,
+  /** 자르기 비율. 0 이면 자르기 단계를 건너뛴다. */
+  aspect = 4 / 3,
+  /** 저장소 폴더 */
+  folder = "uploads",
 }: {
   name: string;
   label?: string;
@@ -25,48 +36,75 @@ export default function ImageInput({
   currentUrl?: string | null;
   keepTransparency?: boolean;
   compact?: boolean;
+  aspect?: number;
+  folder?: string;
 }) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [url, setUrl] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [cropping, setCropping] = useState<File | null>(null);
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const canCrop = aspect > 0 && !keepTransparency;
+
+  function pick(e: React.ChangeEvent<HTMLInputElement>) {
     const picked = e.target.files?.[0];
-    if (!picked) {
-      setPreview(null);
-      setNote(null);
-      return;
-    }
+    if (!picked) return;
 
+    setError(null);
+    if (canCrop) setCropping(picked);
+    else void process(picked);
+  }
+
+  async function process(file: File) {
     setBusy(true);
+    setError(null);
+    setNote("사진을 줄이는 중…");
+
     try {
-      const result = await compressImage(picked, {
+      const result = await compressImage(file, {
         maxSize: keepTransparency ? 1024 : 1600,
+        keepTransparency,
       });
 
-      // 줄인 파일로 갈아 끼운다. 폼이 전송할 때 이 파일이 나간다.
-      if (result.changed && inputRef.current) {
-        const holder = new DataTransfer();
-        holder.items.add(result.file);
-        inputRef.current.files = holder.files;
-      }
-
       setPreview(URL.createObjectURL(result.file));
+      setNote("올리는 중…");
+
+      const uploaded = await uploadAsset(result.file, folder);
+      setUrl(uploaded);
+
       setNote(
         result.changed
-          ? `${formatBytes(result.originalBytes)} → ${formatBytes(result.bytes)} 로 줄여서 올립니다.`
-          : `${formatBytes(result.bytes)} — 그대로 올립니다.`,
+          ? `${formatBytes(result.originalBytes)} → ${formatBytes(result.bytes)} 로 줄여서 올렸습니다.`
+          : `${formatBytes(result.bytes)} — 올렸습니다.`,
       );
+    } catch (e) {
+      setNote(null);
+      setError(e instanceof Error ? e.message : String(e));
     } finally {
       setBusy(false);
+      // 같은 파일을 다시 고를 수 있게 비운다
+      if (fileRef.current) fileRef.current.value = "";
     }
-  };
+  }
+
+  function clear() {
+    setUrl(null);
+    setPreview(null);
+    setNote(null);
+    setError(null);
+    if (fileRef.current) fileRef.current.value = "";
+  }
 
   return (
     <div>
       {label && <p className="mb-1.5 block text-[13px] font-bold">{label}</p>}
       {hint && <p className="-mt-1 mb-2 text-[11.5px] text-muted">{hint}</p>}
+
+      {/* 폼에는 파일이 아니라 올라간 주소만 보낸다 */}
+      <input type="hidden" name={name} value={url ?? ""} />
 
       {(preview || currentUrl) && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -79,17 +117,51 @@ export default function ImageInput({
         />
       )}
 
-      <input
-        ref={inputRef}
-        type="file"
-        name={name}
-        accept="image/*"
-        onChange={handleChange}
-        className="block w-full text-[13px] file:mr-3 file:rounded-md file:border-0 file:bg-mist file:px-3 file:py-2 file:text-[12.5px] file:font-bold"
-      />
+      <div className="flex flex-wrap items-center gap-2">
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          onChange={pick}
+          disabled={busy}
+          className="block min-w-0 flex-1 text-[13px] file:mr-3 file:rounded-md file:border-0 file:bg-mist file:px-3 file:py-2 file:text-[12.5px] file:font-bold disabled:opacity-50"
+        />
 
-      {busy && <p className="mt-1.5 text-[12px] text-muted">사진을 줄이는 중…</p>}
-      {!busy && note && <p className="mt-1.5 text-[12px] text-brand">{note}</p>}
+        {url && (
+          <button
+            type="button"
+            onClick={clear}
+            className="shrink-0 rounded-md border border-line px-3 py-2 text-[12.5px] font-semibold text-muted hover:border-coral hover:text-coral"
+          >
+            빼기
+          </button>
+        )}
+      </div>
+
+      {error ? (
+        <p className="mt-1.5 text-[12px] font-semibold text-coral">{error}</p>
+      ) : (
+        note && (
+          <p className={`mt-1.5 text-[12px] ${busy ? "text-muted" : "text-brand"}`}>{note}</p>
+        )
+      )}
+
+      {cropping && (
+        <ImageCropper
+          file={cropping}
+          aspect={aspect}
+          outputWidth={1600}
+          onDone={(cropped) => {
+            setCropping(null);
+            void process(cropped);
+          }}
+          onCancel={() => {
+            const original = cropping;
+            setCropping(null);
+            void process(original);
+          }}
+        />
+      )}
     </div>
   );
 }

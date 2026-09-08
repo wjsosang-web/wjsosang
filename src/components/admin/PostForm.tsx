@@ -222,7 +222,13 @@ export default function PostForm({ type, post }: { type: PostType; post?: Post }
         <p className="mt-1 text-[12.5px] text-muted">목록 카드와 상세 상단에 크게 보입니다.</p>
 
         <div className="mt-3">
-          <ImageInput name="coverFile" currentUrl={post?.coverImage} />
+          <ImageInput
+            name="coverFile"
+            hint="목록 카드는 16:10 으로 잘립니다. 고르면 자르기 창이 뜹니다."
+            currentUrl={post?.coverImage}
+            aspect={16 / 10}
+            folder="posts"
+          />
         </div>
       </section>
 
@@ -265,7 +271,7 @@ export default function PostForm({ type, post }: { type: PostType; post?: Post }
           <ul className="mt-4 space-y-3">
             {slots.map((slot, i) => (
               <li key={slot.key} className="grid gap-2 sm:grid-cols-[1fr_1.4fr_auto] sm:items-center">
-                <ImageInput name="photoFiles" />
+                <ImageInput name="photoFiles" folder="posts" />
                 <input
                   name="photoCaptions"
                   placeholder={`사진 ${i + 1} 설명 (예: 개회식 모습)`}

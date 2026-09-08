@@ -153,6 +153,32 @@ export default async function AboutPage() {
         groupOrder={groupOrder}
       />
 
+      {/* 임원진께 드리는 말 — 협회 임원은 모두 자기 가게를 하면서 봉사하는 분들이다 */}
+      <section className="bg-forest px-5 py-14 text-white md:py-20">
+        <div className="mx-auto max-w-[760px] text-center">
+          <p className="text-[12.5px] font-bold tracking-[0.14em] text-brand-light">
+            부탁드립니다
+          </p>
+
+          <p className="mt-5 text-[17px] font-bold leading-[1.75] tracking-[-0.01em] md:text-[21px]">
+            우리 협회의 모든 임원진들은
+            <br className="hidden sm:block" /> 각자 자영업을 하고 있는 소상공인들입니다.
+          </p>
+
+          <p className="mt-5 text-[14.5px] leading-[2] text-white/80 md:text-[15.5px]">
+            협회원분들을 위해 먼저 나서서, 개인 시간 내셔서 봉사해 주시는 대표님들이다 보니,
+            <br className="hidden md:block" /> 잘하는지 못하는지 평가가 아닌 응원을 해주시는 게
+            마땅합니다.
+            <br />
+            협회와 협회원분들을 위해 애쓰시는 분들입니다.
+          </p>
+
+          <p className="hand mt-8 text-[26px] leading-snug text-brand-light md:text-[32px]">
+            만날 때마다 항상 수고한다는 말 한마디씩 해주세요~
+          </p>
+        </div>
+      </section>
+
       {/* 주요사업 */}
       <section className="px-5 py-12 md:py-16">
         <div className="mx-auto grid max-w-[1180px] gap-8 lg:grid-cols-[200px_1fr] lg:gap-10">

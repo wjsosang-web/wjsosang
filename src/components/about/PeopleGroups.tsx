@@ -9,7 +9,7 @@ import type { Member, OrgGroup, OrgMember } from "@/lib/types";
 
 /**
  * 각자의 자리에서, 하나의 이름으로 (기획안 15~18조 / 시안 기준).
- * 그룹 탭으로 회장단 / 이사회·감사 / 운영진 / 역대 회장을 나눠 본다.
+ * 그룹 탭으로 회장단 / 이사회·감사 / 임원진 / 역대 회장을 나눠 본다.
  */
 
 export default function PeopleGroups({
@@ -93,9 +93,9 @@ export default function PeopleGroups({
 
                 <div className="flex flex-1 flex-col p-4">
                   <p className="flex flex-wrap items-center gap-1.5">
-                    <Badge label={p.title} className="bg-brand-tint text-brand-deep" />
+                    <Badge label={p.title} />
                     {p.subTitle && (
-                      <Badge label={p.subTitle} className="bg-violet-tint text-violet" />
+                      <Badge label={p.subTitle} />
                     )}
                     <span className="ml-0.5 text-[15.5px] font-bold">{p.name}</span>
                   </p>

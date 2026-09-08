@@ -311,7 +311,7 @@ export async function getOrgMembers(): Promise<OrgMember[]> {
 }
 
 /**
- * 분류(회장단·이사회·운영진·역대 회장)가 나오는 순서.
+ * 분류(회장단·이사회·임원진·역대 회장)가 나오는 순서.
  * 관리자에서 정한 값이 있으면 그걸 쓰고, 없거나 값이 깨졌으면 기본 순서로 돌아간다.
  */
 export async function getOrgGroupOrder(): Promise<OrgGroup[]> {

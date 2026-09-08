@@ -6,7 +6,7 @@ import ImageInput from "@/components/admin/ImageInput";
 import { saveOrgMember, type ActionResult } from "@/lib/admin/actions";
 import type { OrgGroup, OrgMember } from "@/lib/types";
 
-const GROUPS: OrgGroup[] = ["회장단", "이사회·감사", "운영진", "역대 회장"];
+const GROUPS: OrgGroup[] = ["회장단", "이사회·감사", "임원진", "역대 회장"];
 const DEPARTMENTS = ["사무국", "재무국", "관리국", "인사국", "홍보국", "기획국"];
 
 export default function OrgMemberForm({
@@ -86,7 +86,7 @@ export default function OrgMemberForm({
             <select
               id="group"
               name="group"
-              defaultValue={person?.group ?? "운영진"}
+              defaultValue={person?.group ?? "임원진"}
               className={field}
             >
               {GROUPS.map((g) => (
@@ -99,7 +99,7 @@ export default function OrgMemberForm({
 
           <div>
             <label htmlFor="department" className={label}>
-              소속국 <span className="ml-1 font-normal text-muted">(운영진만)</span>
+              소속국 <span className="ml-1 font-normal text-muted">(임원진만)</span>
             </label>
             <select
               id="department"
@@ -192,7 +192,7 @@ export default function OrgMemberForm({
         </p>
 
         <div className="mt-3">
-          <ImageInput name="photoFile" currentUrl={person?.photo} />
+          <ImageInput name="photoFile" currentUrl={person?.photo} folder="org" />
         </div>
       </section>
 

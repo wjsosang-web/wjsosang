@@ -55,6 +55,44 @@ function makeSlug(title: string, fallbackDate: string): string {
 /* ------------------------------------------------------------------ */
 
 /** 파일 하나를 스토리지에 올리고 공개 주소를 돌려준다. */
+/**
+ * 새로 올라온 사진의 주소를 고른다.
+ *
+ * 사진은 브라우저에서 저장소로 바로 올라오므로 폼에는 보통 주소만 담겨 온다.
+ * 옛 화면이나 자바스크립트가 막힌 환경에서 파일이 그대로 오는 경우도 있어
+ * 둘 다 받아준다. 새로 올린 것이 없으면 원래 쓰던 주소를 유지한다.
+ */
+async function pickedImage(
+  form: FormData,
+  field: string,
+  keepField: string,
+  folder: string,
+): Promise<string | null> {
+  const picked = form.get(field);
+
+  if (picked instanceof File && picked.size > 0) return uploadOne(picked, folder);
+  if (typeof picked === "string" && picked.trim() !== "") return picked.trim();
+
+  return nullable(form, keepField);
+}
+
+/** 여러 장을 받을 때 — 주소와 파일이 섞여 와도 순서를 지켜 돌려준다 */
+async function pickedImages(form: FormData, field: string, folder: string): Promise<string[]> {
+  const out: string[] = [];
+
+  for (const entry of form.getAll(field)) {
+    if (entry instanceof File) {
+      if (entry.size === 0) continue;
+      const url = await uploadOne(entry, folder);
+      if (url) out.push(url);
+    } else if (typeof entry === "string" && entry.trim() !== "") {
+      out.push(entry.trim());
+    }
+  }
+
+  return out;
+}
+
 async function uploadOne(file: File, folder: string): Promise<string | null> {
   if (!file || file.size === 0) return null;
 
@@ -88,11 +126,7 @@ export async function savePost(_prev: ActionResult | null, form: FormData): Prom
     if (!title) return { ok: false, message: "제목을 입력해 주세요." };
     if (!date) return { ok: false, message: "날짜를 선택해 주세요." };
 
-    const cover = form.get("coverFile");
-    const coverUrl =
-      cover instanceof File && cover.size > 0
-        ? await uploadOne(cover, "posts")
-        : nullable(form, "coverImage");
+    const coverUrl = await pickedImage(form, "coverFile", "coverImage", "posts");
 
     const payload = {
       type,
@@ -126,19 +160,18 @@ export async function savePost(_prev: ActionResult | null, form: FormData): Prom
     }
 
     // 활동사진 — 파일과 설명을 짝지어 저장한다 (기획안 29조)
-    const files = form.getAll("photoFiles").filter((f): f is File => f instanceof File && f.size > 0);
+    const urls = await pickedImages(form, "photoFiles", "posts");
     const captions = form.getAll("photoCaptions").map((c) => String(c ?? ""));
 
-    if (files.length > 0 && postId) {
+    if (urls.length > 0 && postId) {
       const { count } = await db
         .from("post_photos")
         .select("id", { count: "exact", head: true })
         .eq("post_id", postId);
 
       const rows = [];
-      for (let i = 0; i < files.length; i += 1) {
-        const url = await uploadOne(files[i], "posts");
-        if (!url) continue;
+      for (let i = 0; i < urls.length; i += 1) {
+        const url = urls[i];
         rows.push({
           post_id: postId,
           url,
@@ -201,17 +234,8 @@ export async function saveBusiness(
     const name = str(form, "name");
     if (!name) return { ok: false, message: "업장명을 입력해 주세요." };
 
-    const cover = form.get("coverFile");
-    const coverUrl =
-      cover instanceof File && cover.size > 0
-        ? await uploadOne(cover, "businesses")
-        : nullable(form, "coverImage");
-
-    const logo = form.get("logoFile");
-    const logoUrl =
-      logo instanceof File && logo.size > 0
-        ? await uploadOne(logo, "businesses")
-        : nullable(form, "logoImage");
+    const coverUrl = await pickedImage(form, "coverFile", "coverImage", "businesses");
+    const logoUrl = await pickedImage(form, "logoFile", "logoImage", "businesses");
 
     const keywords = str(form, "keywords")
       .split(/[,\n]/)
@@ -293,19 +317,18 @@ export async function saveBusiness(
     }
 
     // 업장 사진
-    const files = form.getAll("photoFiles").filter((f): f is File => f instanceof File && f.size > 0);
+    const urls = await pickedImages(form, "photoFiles", "businesses");
     const captions = form.getAll("photoCaptions").map((c) => String(c ?? ""));
 
-    if (files.length > 0 && businessId) {
+    if (urls.length > 0 && businessId) {
       const { count } = await db
         .from("business_photos")
         .select("id", { count: "exact", head: true })
         .eq("business_id", businessId);
 
       const rows = [];
-      for (let i = 0; i < files.length; i += 1) {
-        const url = await uploadOne(files[i], "businesses");
-        if (!url) continue;
+      for (let i = 0; i < urls.length; i += 1) {
+        const url = urls[i];
         rows.push({
           business_id: businessId,
           url,
@@ -406,11 +429,7 @@ export async function saveOrgMember(
     if (!name) return { ok: false, message: "이름을 입력해 주세요." };
     if (!title) return { ok: false, message: "직책을 입력해 주세요." };
 
-    const photo = form.get("photoFile");
-    const photoUrl =
-      photo instanceof File && photo.size > 0
-        ? await uploadOne(photo, "org")
-        : nullable(form, "photo");
+    const photoUrl = await pickedImage(form, "photoFile", "photo", "org");
 
     const payload = {
       name,

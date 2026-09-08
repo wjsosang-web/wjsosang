@@ -30,12 +30,12 @@ const TONES: Record<string, string> = {
   생활서비스: "bg-leaf-tint text-leaf",
   전문서비스: "bg-brand-tint text-brand-deep",
 
-  // 임원 직책
-  회장: "bg-brand text-white",
+  // 임원 직책 — 직급이 한눈에 보이도록 위로 갈수록 진하게
+  회장: "bg-forest text-white",
   부회장: "bg-brand text-white",
-  감사: "bg-violet-tint text-violet",
-  이사: "bg-sky-tint text-sky",
-  사무총장: "bg-brand-tint text-brand-deep",
+  이사: "bg-brand-deep text-white",
+  감사: "bg-violet text-white",
+  회원: "bg-mist text-ink-soft",
   신입회원: "bg-amber text-white",
 
   // 강조
@@ -44,6 +44,17 @@ const TONES: Record<string, string> = {
 };
 
 const DEFAULT_TONE = "bg-mist text-muted";
+
+/**
+ * 직책은 종류가 많아서 하나씩 적지 않고 끝말로 판단한다.
+ * 사무국장·재무부장처럼 새 직책이 생겨도 색이 알아서 붙는다.
+ */
+const TITLE_TONES: [RegExp, string][] = [
+  [/부국장$/, "bg-sky-tint text-sky"],
+  [/(사무총장|국장)$/, "bg-sky text-white"],
+  [/부장$/, "bg-amber-tint text-amber"],
+  [/부원$/, "bg-leaf-tint text-leaf"],
+];
 
 export default function Badge({
   label,
@@ -54,7 +65,8 @@ export default function Badge({
   className?: string;
   size?: "sm" | "md";
 }) {
-  const tone = TONES[label] ?? DEFAULT_TONE;
+  const tone =
+    TONES[label] ?? TITLE_TONES.find(([re]) => re.test(label))?.[1] ?? DEFAULT_TONE;
   const sizing =
     size === "md" ? "px-3 py-1.5 text-[12px]" : "px-2.5 py-1 text-[11.5px]";
 
