@@ -70,6 +70,12 @@ export default async function AdminBusinessesPage() {
 
                   <Badge label={b.category} />
 
+                  {!b.phonePublic && b.phone && (
+                    <span className="shrink-0 rounded bg-mist px-2 py-1 text-[11px] font-semibold text-muted">
+                      연락처 숨김
+                    </span>
+                  )}
+
                   {b.priority !== null && (
                     <span className="tnum shrink-0 rounded bg-mist px-2 py-1 text-[11.5px] font-bold text-muted">
                       {b.priority}순위

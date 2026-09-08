@@ -236,6 +236,8 @@ export async function saveBusiness(
       blog_url: nullable(form, "blogUrl"),
       sns_url: nullable(form, "snsUrl"),
       benefit: nullable(form, "benefit"),
+      phone_public: bool(form, "phonePublic"),
+      member_since: nullable(form, "memberSince"),
       cover_image: coverUrl,
       logo_image: logoUrl,
       place_id: nullable(form, "placeId"),

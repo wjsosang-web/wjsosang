@@ -42,7 +42,10 @@ export default async function BusinessDetailPage({
   const rows = [
     { icon: UsersIcon, label: "대표자", value: business.ownerName },
     { icon: PinIcon, label: "주소", value: business.address },
-    { icon: PhoneIcon, label: "전화번호", value: business.phone, tel: true },
+    // 연락처는 개인 휴대폰인 경우가 많아, 회원이 공개에 동의한 곳만 보여준다
+    business.phonePublic
+      ? { icon: PhoneIcon, label: "전화번호", value: business.phone, tel: true }
+      : { icon: PhoneIcon, label: "전화번호", value: null, tel: false },
     { icon: ClockIcon, label: "영업시간", value: business.hours },
   ].filter((r) => r.value);
 

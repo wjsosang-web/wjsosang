@@ -280,6 +280,21 @@ export default function BusinessForm({ business }: { business?: Business }) {
               defaultValue={v("phone", business?.phone)}
               className={`${field} ${marked("phone")}`}
             />
+            <label className="mt-2 flex items-start gap-2 rounded-lg bg-mist p-3 text-[12.5px]">
+              <input
+                type="checkbox"
+                name="phonePublic"
+                defaultChecked={business?.phonePublic ?? false}
+                className="mt-0.5 h-4 w-4 accent-[color:var(--color-brand)]"
+              />
+              <span>
+                <b>홈페이지에 전화번호 공개</b>
+                <span className="mt-0.5 block text-[11.5px] text-muted">
+                  개인 휴대폰이면 꺼두세요. 꺼도 협회는 이 번호로 연락할 수 있습니다.
+                  회원이 공개에 동의한 경우에만 켜주세요.
+                </span>
+              </span>
+            </label>
           </div>
           <div>
             <label htmlFor="hours" className={label}>
@@ -512,6 +527,22 @@ export default function BusinessForm({ business }: { business?: Business }) {
           </div>
 
           <div>
+            <label htmlFor="memberSince" className={label}>
+              협회 가입일
+            </label>
+            <input
+              id="memberSince"
+              name="memberSince"
+              type="date"
+              defaultValue={business?.memberSince ?? ""}
+              className={field}
+            />
+            <p className="mt-1 text-[11.5px] text-muted">
+              6개월 이내면 &quot;신입회원&quot; 배지가 붙습니다.
+            </p>
+          </div>
+
+          <div>
             <label htmlFor="priority" className={label}>
               노출 우선순위
             </label>
@@ -527,15 +558,7 @@ export default function BusinessForm({ business }: { business?: Business }) {
             <p className="mt-1 text-[11.5px] text-muted">숫자가 작을수록 먼저 나옵니다.</p>
           </div>
 
-          <label className="flex items-center gap-2 self-end pb-3 text-[13.5px]">
-            <input
-              type="checkbox"
-              name="featured"
-              defaultChecked={business?.featured}
-              className="h-4 w-4 accent-[color:var(--color-brand)]"
-            />
-            이달의 추천 업장
-          </label>
+
         </div>
       </section>
 

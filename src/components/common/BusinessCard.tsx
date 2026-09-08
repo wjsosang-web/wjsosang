@@ -50,6 +50,12 @@ export default function BusinessCard({
         {variant === "large" && (
           <Badge label={business.category} className="absolute left-3 top-3 bg-white/95" />
         )}
+
+        {business.isNew && (
+          <span className="absolute right-2 top-2 rounded-md bg-amber px-2 py-1 text-[10.5px] font-bold text-white">
+            신입회원
+          </span>
+        )}
       </div>
 
       <div className={`flex flex-1 flex-col ${variant === "compact" ? "p-3.5" : "p-4"}`}>

@@ -46,7 +46,7 @@ export default async function HomePage() {
 
   // 검색 텍스트와 노출 순서를 서버에서 확정한다.
   const cards = orderBusinessCards(
-    buildBusinessCards(businesses, org),
+    buildBusinessCards(businesses, org, todayKey),
     seedFromDateKey(todayKey),
   );
 

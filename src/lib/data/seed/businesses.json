@@ -77,7 +77,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": "원청협 회원 카드 제시 시 음료 10% 할인"
+    "benefit": "원청협 회원 카드 제시 시 음료 10% 할인",
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b02",
@@ -122,7 +124,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b03",
@@ -174,7 +178,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b04",
@@ -221,7 +227,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": "원청협 회원 기기 변경 시 액세서리 1종 증정"
+    "benefit": "원청협 회원 기기 변경 시 액세서리 1종 증정",
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b05",
@@ -267,7 +275,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b06",
@@ -318,7 +328,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b07",
@@ -363,7 +375,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b08",
@@ -410,7 +424,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b09",
@@ -457,7 +473,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b10",
@@ -503,7 +521,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b11",
@@ -549,7 +569,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b12",
@@ -596,7 +618,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b13",
@@ -674,7 +698,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": "원청협 회원 점심 정식 1,000원 할인"
+    "benefit": "원청협 회원 점심 정식 1,000원 할인",
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b14",
@@ -721,7 +747,9 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   },
   {
     "id": "b15",
@@ -767,6 +795,8 @@
     "instagramUrl": null,
     "blogUrl": null,
     "logoImage": null,
-    "benefit": null
+    "benefit": null,
+    "phonePublic": false,
+    "memberSince": null
   }
 ]

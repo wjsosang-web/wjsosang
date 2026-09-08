@@ -25,15 +25,30 @@ export interface BusinessCard {
   district: string;
   coverImage: string | null;
   priority: number | null;
+  /** 협회 가입 6개월 이내 */
+  isNew: boolean;
+  /** 임원이 운영하는 업장 — 목록에서 위로 올린다 */
+  isOfficer: boolean;
   /** 검색 전용. 화면에는 절대 출력하지 않는다. */
   searchText: string;
 }
 
 const normalize = (s: string) => s.toLowerCase().replace(/\s+/g, "");
 
+/** 협회 가입 6개월 이내면 신입회원 */
+export function isNewMember(memberSince: string | null, today: string): boolean {
+  if (!memberSince) return false;
+  const joined = new Date(`${memberSince}T00:00:00`);
+  const now = new Date(`${today}T00:00:00`);
+  const sixMonthsAgo = new Date(now);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  return joined >= sixMonthsAgo && joined <= now;
+}
+
 export function buildBusinessCards(
   businesses: Business[],
   orgMembers: OrgMember[],
+  today = "",
 ): BusinessCard[] {
   return businesses.map((b) => {
     // 이 업장과 연결된 협회 직책들. businessId 연결이 우선이고,
@@ -64,6 +79,9 @@ export function buildBusinessCards(
       // 회원 사진이 없으면 플레이스 대표사진으로 대체된다
       coverImage: resolveBusinessCover(b).url,
       priority: b.priority,
+      isNew: isNewMember(b.memberSince, today),
+      // 임원 직책이 붙어 있으면 임원 업장으로 본다
+      isOfficer: roles.some((o) => o.title && o.title !== "회원"),
       searchText: normalize([...visible, ...hidden].filter(Boolean).join(" ")),
     };
   });
@@ -120,12 +138,22 @@ export function seedFromDateKey(dateKey: string): number {
 }
 
 /**
- * 관리자가 지정한 우선순위를 앞에 두고, 나머지는 시드 기반 랜덤으로 섞는다.
+ * 노출 순서.
+ *
+ *   1. 관리자가 우선순위를 매긴 업장 (숫자가 작을수록 먼저)
+ *   2. 임원이 운영하는 업장
+ *   3. 나머지는 랜덤
+ *
+ * 랜덤은 날짜를 시드로 쓰는 결정적 셔플이라 서버와 브라우저 순서가 같고,
+ * 하루가 지나면 순서가 새로 섞인다. 그래서 특정 업장만 계속 위에 있지 않다.
  */
 export function orderBusinessCards(cards: BusinessCard[], seed: number): BusinessCard[] {
   const pinned = cards
     .filter((c) => c.priority !== null)
     .sort((a, b) => (a.priority as number) - (b.priority as number));
-  const rest = cards.filter((c) => c.priority === null);
-  return [...pinned, ...shuffle(rest, seed)];
+
+  const officers = cards.filter((c) => c.priority === null && c.isOfficer);
+  const rest = cards.filter((c) => c.priority === null && !c.isOfficer);
+
+  return [...pinned, ...shuffle(officers, seed), ...shuffle(rest, seed)];
 }

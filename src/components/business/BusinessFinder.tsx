@@ -47,18 +47,22 @@ export default function BusinessFinder({
   const [category, setCategory] = useState<string | null>(null);
   const [district, setDistrict] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>("recent");
+  const [onlyNew, setOnlyNew] = useState(false);
   const [visible, setVisible] = useState(PAGE_SIZE);
 
+  const newCount = useMemo(() => cards.filter((c) => c.isNew).length, [cards]);
+
   const results = useMemo(() => {
-    const filtered = filterBusinessCards(cards, { query, category, district });
+    let filtered = filterBusinessCards(cards, { query, category, district });
+    if (onlyNew) filtered = filtered.filter((c) => c.isNew);
     // 기본(recent)은 서버가 정한 순서를 그대로 쓴다.
     return sort === "name"
       ? filtered.slice().sort((a, b) => a.name.localeCompare(b.name, "ko"))
       : filtered;
-  }, [cards, query, category, district, sort]);
+  }, [cards, query, category, district, sort, onlyNew]);
 
   const shown = results.slice(0, visible);
-  const isFiltered = query.trim() !== "" || category !== null || district !== null;
+  const isFiltered = query.trim() !== "" || category !== null || district !== null || onlyNew;
 
   const update = (fn: () => void) => {
     fn();
@@ -70,6 +74,7 @@ export default function BusinessFinder({
       setQuery("");
       setCategory(null);
       setDistrict(null);
+      setOnlyNew(false);
     });
 
   return (
@@ -133,6 +138,23 @@ export default function BusinessFinder({
               </Chip>
             ))}
           </FilterRow>
+
+          {newCount > 0 && (
+            <div className="flex items-center gap-2 border-t border-line pt-3">
+              <button
+                type="button"
+                onClick={() => update(() => setOnlyNew(!onlyNew))}
+                aria-pressed={onlyNew}
+                className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[13px] font-bold transition-colors ${
+                  onlyNew ? "bg-amber text-white" : "bg-white text-amber ring-1 ring-amber/40 hover:ring-amber"
+                }`}
+              >
+                신입회원만 보기
+                <span className="tnum opacity-80">{newCount}</span>
+              </button>
+              <span className="text-[12px] text-muted">최근 6개월 안에 가입한 회원사입니다.</span>
+            </div>
+          )}
         </div>
       </div>
 

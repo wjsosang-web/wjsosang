@@ -1,17 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import BusinessCard from "@/components/common/BusinessCard";
 import PageHero from "@/components/common/PageHero";
-import SectionHead from "@/components/common/SectionHead";
 import { Icon } from "@/components/common/Icons";
 import BusinessFinder from "@/components/business/BusinessFinder";
-import {
-  getDistricts,
-  getFeaturedBusinesses,
-  getOrgMembers,
-  getPublicBusinesses,
-  toDateKey,
-} from "@/lib/repo";
+import { getDistricts, getOrgMembers, getPublicBusinesses, toDateKey } from "@/lib/repo";
 import { accentAt } from "@/lib/accents";
 import { buildBusinessCards, orderBusinessCards, seedFromDateKey } from "@/lib/search";
 import { BUSINESS_CATEGORIES } from "@/lib/types";
@@ -48,18 +40,19 @@ export default async function BusinessListPage({
 }) {
   const { q } = await searchParams;
 
-  const [businesses, org, districts, featured] = await Promise.all([
+  const today = toDateKey(new Date());
+
+  const [businesses, org, districts] = await Promise.all([
     getPublicBusinesses(),
     getOrgMembers(),
     getDistricts(),
-    getFeaturedBusinesses(3),
   ]);
 
-  const allCards = buildBusinessCards(businesses, org);
-  const cards = orderBusinessCards(allCards, seedFromDateKey(toDateKey(new Date())));
-  const featuredCards = featured
-    .map((b) => allCards.find((c) => c.id === b.id))
-    .filter((c): c is NonNullable<typeof c> => Boolean(c));
+  // 우선순위 지정 → 임원 업장 → 나머지 랜덤 (하루마다 다시 섞임)
+  const cards = orderBusinessCards(
+    buildBusinessCards(businesses, org, today),
+    seedFromDateKey(today),
+  );
 
   return (
     <>
@@ -77,25 +70,6 @@ export default async function BusinessListPage({
         categories={[...BUSINESS_CATEGORIES]}
         districts={districts}
         initialQuery={q ?? ""}
-        featuredSlot={
-          featuredCards.length > 0 ? (
-            <section className="px-5 pt-10">
-              <div className="mx-auto max-w-[1180px]">
-                <SectionHead
-                  title="이달의 추천 회원업장"
-                  description="원주에서 더 특별한 가치를 만들어가는 회원업장을 소개합니다."
-                />
-                <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {featuredCards.map((b) => (
-                    <li key={b.id}>
-                      <BusinessCard business={b} variant="large" />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-          ) : null
-        }
       />
 
       {/* 플레이스 URL로 간편 등록 */}
