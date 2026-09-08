@@ -28,6 +28,9 @@ export default function ImageCropper({
   const [url, setUrl] = useState<string | null>(null);
   const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
   const [zoom, setZoom] = useState(1);
+  // 채우기 = 틀을 꽉 채우고 넘치는 부분은 자른다
+  // 전체보기 = 사진 전체가 들어오게 줄이고 남는 곳은 흰 여백으로 둔다
+  const [mode, setMode] = useState<"cover" | "contain">("cover");
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [working, setWorking] = useState(false);
 
@@ -49,16 +52,21 @@ export default function ImageCropper({
   const boxWidth = 420;
   const boxHeight = Math.round(boxWidth / aspect);
 
-  // 사진이 빈틈 없이 틀을 덮는 최소 배율
-  const cover = natural
-    ? Math.max(boxWidth / natural.w, boxHeight / natural.h)
+  // 채우기는 짧은 변을 기준으로, 전체보기는 긴 변을 기준으로 배율을 잡는다
+  const base = natural
+    ? mode === "cover"
+      ? Math.max(boxWidth / natural.w, boxHeight / natural.h)
+      : Math.min(boxWidth / natural.w, boxHeight / natural.h)
     : 1;
-  const scale = cover * zoom;
+  const scale = base * zoom;
   const drawnW = natural ? natural.w * scale : 0;
   const drawnH = natural ? natural.h * scale : 0;
 
   /** 사진이 틀 밖으로 밀려 빈 곳이 생기지 않게 잡아둔다 */
   function clamp(x: number, y: number) {
+    // 전체보기에서는 사진이 틀보다 작으므로 가운데에 고정한다
+    if (mode === "contain" && zoom <= 1) return { x: 0, y: 0 };
+
     const maxX = Math.max(0, (drawnW - boxWidth) / 2);
     const maxY = Math.max(0, (drawnH - boxHeight) / 2);
     return {
@@ -70,7 +78,7 @@ export default function ImageCropper({
   useEffect(() => {
     setOffset((o) => clamp(o.x, o.y));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zoom, natural]);
+  }, [zoom, natural, mode]);
 
   function onPointerDown(e: React.PointerEvent) {
     (e.target as Element).setPointerCapture(e.pointerId);
@@ -131,10 +139,37 @@ export default function ImageCropper({
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-forest/70 px-4 py-6">
       <div className="max-h-full w-full max-w-[480px] overflow-y-auto rounded-xl bg-white p-5">
-        <h2 className="text-[16px] font-bold">사진 자르기</h2>
+        <h2 className="text-[16px] font-bold">사진 맞추기</h2>
         <p className="mt-1 text-[12.5px] text-muted">
-          사진을 끌어서 위치를 잡고, 아래 막대로 크기를 맞춰 주세요. 초록 틀 안이 저장됩니다.
+          저장될 크기는 <b className="text-ink">{outputWidth} × {Math.round(outputWidth / aspect)}px</b>{" "}
+          입니다. 사진을 끌어서 위치를 잡고, 아래 막대로 크기를 맞춰 주세요. 초록 틀 안이
+          저장됩니다.
         </p>
+
+        <div className="mt-3 flex gap-1 rounded-lg bg-mist p-1">
+          {(
+            [
+              { key: "cover", label: "채우기", hint: "틀에 꽉 차게 (넘치면 잘림)" },
+              { key: "contain", label: "전체 보기", hint: "사진 전체가 들어오게 (여백 생김)" },
+            ] as const
+          ).map((m) => (
+            <button
+              key={m.key}
+              type="button"
+              title={m.hint}
+              onClick={() => {
+                setMode(m.key);
+                setZoom(1);
+                setOffset({ x: 0, y: 0 });
+              }}
+              className={`flex-1 rounded-md px-3 py-2 text-[12.5px] font-bold transition-colors ${
+                mode === m.key ? "bg-white text-brand-deep" : "text-muted hover:text-ink"
+              }`}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
 
         <div
           ref={boxRef}
@@ -169,7 +204,7 @@ export default function ImageCropper({
           <span className="text-[12.5px] font-bold">크기</span>
           <input
             type="range"
-            min={1}
+            min={mode === "contain" ? 0.5 : 1}
             max={3}
             step={0.01}
             value={zoom}

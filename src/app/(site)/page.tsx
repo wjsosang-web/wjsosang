@@ -5,7 +5,6 @@ import HeroSlider from "@/components/home/HeroSlider";
 import JoinBand from "@/components/home/JoinBand";
 import SloganBand from "@/components/home/SloganBand";
 import NoticesAndActivities from "@/components/home/NoticesAndActivities";
-import StatsBand from "@/components/home/StatsBand";
 import UpcomingEventBanner from "@/components/home/UpcomingEventBanner";
 import EventCalendar from "@/components/home/EventCalendar";
 import {
@@ -20,7 +19,6 @@ import {
   getOrgMembers,
   getPublicBusinesses,
   getSiteInfo,
-  getStats,
   toDateKey,
 } from "@/lib/repo";
 import { buildBusinessCards, orderBusinessCards, seedFromDateKey } from "@/lib/search";
@@ -36,7 +34,6 @@ export default async function HomePage() {
   const [
     site,
     slides,
-    stats,
     popups,
     todayEvents,
     notices,
@@ -48,7 +45,6 @@ export default async function HomePage() {
   ] = await Promise.all([
       getSiteInfo(),
       getHeroSlides(),
-      getStats(),
       getActivePopups(now),
       getTodayEvents(now),
       getNotices(5),
@@ -76,10 +72,13 @@ export default async function HomePage() {
       <SitePopup popups={popups} todayEvents={todayEvents} />
 
       <HeroSlider slides={slides} />
-      <StatsBand items={stats} />
-      <SloganBand site={site} />
+
+      {/* 히어로 바로 아래 — 예정된 행사가 없으면 이 자리는 비운다 (기획안 9조) */}
+      {nextEvent && <UpcomingEventBanner event={nextEvent} />}
 
       <NoticesAndActivities notices={notices} activities={activities} />
+
+      <SloganBand site={site} />
 
       {/* 회원업장 미리보기 */}
       <section className="bg-mist px-5 py-10 md:py-14">
@@ -99,9 +98,6 @@ export default async function HomePage() {
           </ul>
         </div>
       </section>
-
-      {/* 예정된 행사가 없으면 이 영역 자체가 나오지 않는다 (기획안 9조). */}
-      {nextEvent && <UpcomingEventBanner event={nextEvent} />}
 
       <JoinBand site={site} />
 

@@ -52,7 +52,9 @@ export default function Header({ logo, phone }: Props) {
     <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-[68px] max-w-[1180px] items-center gap-4 px-5 md:h-[76px]">
         <Link href="/" aria-label="원주청년소상공인협회 메인홈" className="shrink-0">
-          <Logo src={logo} height={44} className="max-h-[44px]" />
+          {/* 가로로 긴 로고를 기준으로 잡았다. 세로가 긴 파일이 들어와도
+              높이는 그대로 두고 가로만 늘어난다. */}
+          <Logo src={logo} height={40} className="max-h-[40px] w-auto max-w-[230px]" />
         </Link>
 
         {/* PC 메뉴 — 가운데 */}

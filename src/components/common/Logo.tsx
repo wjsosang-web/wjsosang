@@ -32,7 +32,7 @@ export default function Logo({
         src={src}
         alt="원주청년소상공인협회"
         style={{ height }}
-        className={`w-auto ${className}`}
+        className={`w-auto object-contain ${className}`}
       />
     );
   }

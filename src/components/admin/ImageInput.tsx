@@ -17,6 +17,20 @@ import { uploadAsset } from "@/lib/uploadAsset";
  * 걸려서 사진 몇 장만으로도 저장이 통째로 실패한다. 주소만 보내면 그 제한과
  * 무관해지고, 사진을 몇 장 넣든 저장이 된다.
  */
+/** 4/3 → "4:3" 처럼 보여준다. 흔한 비율은 그대로, 나머지는 소수로 적는다. */
+function ratioText(aspect: number): string {
+  const known: [number, string][] = [
+    [1, "1:1"],
+    [4 / 3, "4:3"],
+    [3 / 2, "3:2"],
+    [16 / 10, "16:10"],
+    [16 / 9, "16:9"],
+  ];
+
+  const hit = known.find(([v]) => Math.abs(v - aspect) < 0.02);
+  return hit ? hit[1] : `${aspect.toFixed(2)} : 1`;
+}
+
 export default function ImageInput({
   name,
   label,
@@ -48,6 +62,13 @@ export default function ImageInput({
   const [cropping, setCropping] = useState<File | null>(null);
 
   const canCrop = aspect > 0 && !keepTransparency;
+
+  // 어느 칸이든 "얼마짜리 사진이 들어가는지"가 보이게 한다.
+  // 크기를 몰라도 되도록 자동으로 줄이지만, 원본이 이보다 크면 더 선명하다.
+  const outputWidth = keepTransparency ? 512 : 1600;
+  const sizeText = canCrop
+    ? `권장 ${outputWidth} × ${Math.round(outputWidth / aspect)}px (${ratioText(aspect)})`
+    : `권장 가로 ${outputWidth}px 이상`;
 
   function pick(e: React.ChangeEvent<HTMLInputElement>) {
     const picked = e.target.files?.[0];
@@ -101,7 +122,17 @@ export default function ImageInput({
   return (
     <div>
       {label && <p className="mb-1.5 block text-[13px] font-bold">{label}</p>}
-      {hint && <p className="-mt-1 mb-2 text-[11.5px] text-muted">{hint}</p>}
+
+      <p className="mb-2 text-[11.5px] text-muted">
+        {sizeText}
+        {canCrop && " · 고르면 맞추기 창이 열립니다"}
+        {hint && (
+          <>
+            <br />
+            {hint}
+          </>
+        )}
+      </p>
 
       {/* 폼에는 파일이 아니라 올라간 주소만 보낸다 */}
       <input type="hidden" name={name} value={url ?? ""} />
@@ -150,7 +181,7 @@ export default function ImageInput({
         <ImageCropper
           file={cropping}
           aspect={aspect}
-          outputWidth={1600}
+          outputWidth={outputWidth}
           onDone={(cropped) => {
             setCropping(null);
             void process(cropped);

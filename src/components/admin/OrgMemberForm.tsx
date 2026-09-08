@@ -188,11 +188,16 @@ export default function OrgMemberForm({
       <section className="rounded-xl border border-line bg-white p-5">
         <h2 className="text-[15px] font-bold">사진</h2>
         <p className="mt-1 text-[12.5px] text-muted">
-          권장 크기 <b>800 × 600px</b> (가로형 4:3), 2MB 이하. 없으면 자리표시 무늬가 나옵니다.
+          회장·임원 카드에 나오는 얼굴 사진입니다. 없으면 자리표시 무늬가 나옵니다.
         </p>
 
         <div className="mt-3">
-          <ImageInput name="photoFile" currentUrl={person?.photo} folder="org" />
+          <ImageInput
+            name="photoFile"
+            currentUrl={person?.photo}
+            folder="org"
+            aspect={4 / 3}
+          />
         </div>
       </section>
 

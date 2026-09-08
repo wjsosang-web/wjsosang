@@ -472,7 +472,7 @@ export default function BusinessForm({ business }: { business?: Business }) {
           <ImageInput
             name="coverFile"
             label="대표사진"
-            hint="카드에 4:3 으로 나옵니다. 고르면 자르기 창이 뜹니다."
+            hint="목록 카드와 업장 페이지 위쪽에 크게 나옵니다."
             currentUrl={business?.coverImage}
             folder="businesses"
           />
@@ -482,7 +482,7 @@ export default function BusinessForm({ business }: { business?: Business }) {
           <ImageInput
             name="logoFile"
             label="업장 로고 (선택)"
-            hint="투명 배경 PNG 는 그대로 올립니다."
+            hint="투명 배경 PNG 는 배경을 살려 그대로 올립니다."
             currentUrl={business?.logoImage}
             keepTransparency
             compact
@@ -493,7 +493,7 @@ export default function BusinessForm({ business }: { business?: Business }) {
         <ul className="mt-4 space-y-3">
           {photoSlots.map((key, i) => (
             <li key={key} className="grid gap-2 sm:grid-cols-[1fr_1.4fr_auto] sm:items-center">
-              <ImageInput name="photoFiles" folder="businesses" />
+              <ImageInput name="photoFiles" folder="businesses" aspect={4 / 3} />
               <input name="photoCaptions" placeholder={`사진 ${i + 1} 설명`} className={field} />
               <button
                 type="button"
