@@ -11,13 +11,10 @@ import type { BusinessCard as CardData } from "@/lib/search";
 export default function BusinessCard({
   business,
   variant = "default",
-  showMemberBadge = false,
 }: {
   business: CardData;
-  /** large = 이달의 추천 (사진 크게), compact = 목록 그리드 */
+  /** large = 사진 크게, compact = 목록 그리드 */
   variant?: "default" | "large" | "compact";
-  /** 카드 상단에 "원주청년소상공인협회 회원사" 띠를 붙일지 */
-  showMemberBadge?: boolean;
 }) {
   const aspect = variant === "large" ? "aspect-[16/10]" : "aspect-[4/3]";
 
@@ -26,15 +23,6 @@ export default function BusinessCard({
       href={`/business/${business.slug}`}
       className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white transition-shadow hover:shadow-[0_8px_24px_rgba(22,36,31,0.08)]"
     >
-      {showMemberBadge && (
-        <p className="flex items-center gap-1.5 border-b border-line bg-brand-tint-2 px-3 py-2 text-[10.5px] font-bold text-brand-deep">
-          <span aria-hidden className="grid h-4 w-4 place-items-center rounded-sm bg-brand text-[8px] text-white">
-            wj
-          </span>
-          원주청년소상공인협회 회원사
-        </p>
-      )}
-
       <div className={`relative overflow-hidden ${aspect}`}>
         {business.coverImage ? (
           // eslint-disable-next-line @next/next/no-img-element
