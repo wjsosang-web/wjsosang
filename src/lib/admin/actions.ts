@@ -237,7 +237,10 @@ export async function saveBusiness(
       sns_url: nullable(form, "snsUrl"),
       benefit: nullable(form, "benefit"),
       phone_public: bool(form, "phonePublic"),
-      member_since: nullable(form, "memberSince"),
+      // 새로 등록하면서 가입일을 비워두면 오늘로 잡는다.
+      // 그래야 신입회원 배지가 자동으로 붙는다.
+      member_since: nullable(form, "memberSince") ?? (id ? null : new Date().toISOString().slice(0, 10)),
+      hide_new_badge: bool(form, "hideNewBadge"),
       cover_image: coverUrl,
       logo_image: logoUrl,
       place_id: nullable(form, "placeId"),

@@ -214,6 +214,7 @@ export function toBusiness(r: Row): Business {
     benefit: (r.benefit as string | null) ?? null,
     phonePublic: Boolean(r.phone_public),
     memberSince: (r.member_since as string | null) ?? null,
+    hideNewBadge: Boolean(r.hide_new_badge),
     coverImage: (r.cover_image as string | null) ?? null,
     photos,
     promo,

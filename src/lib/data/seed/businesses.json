@@ -79,7 +79,8 @@
     "logoImage": null,
     "benefit": "원청협 회원 카드 제시 시 음료 10% 할인",
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b02",
@@ -126,7 +127,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b03",
@@ -180,7 +182,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b04",
@@ -229,7 +232,8 @@
     "logoImage": null,
     "benefit": "원청협 회원 기기 변경 시 액세서리 1종 증정",
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b05",
@@ -277,7 +281,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b06",
@@ -330,7 +335,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b07",
@@ -377,7 +383,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b08",
@@ -426,7 +433,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b09",
@@ -475,7 +483,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b10",
@@ -523,7 +532,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b11",
@@ -571,7 +581,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b12",
@@ -620,7 +631,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b13",
@@ -700,7 +712,8 @@
     "logoImage": null,
     "benefit": "원청협 회원 점심 정식 1,000원 할인",
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b14",
@@ -749,7 +762,8 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   },
   {
     "id": "b15",
@@ -797,6 +811,7 @@
     "logoImage": null,
     "benefit": null,
     "phonePublic": false,
-    "memberSince": null
+    "memberSince": null,
+    "hideNewBadge": false
   }
 ]

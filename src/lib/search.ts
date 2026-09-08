@@ -29,6 +29,8 @@ export interface BusinessCard {
   isNew: boolean;
   /** 임원이 운영하는 업장 — 목록에서 위로 올린다 */
   isOfficer: boolean;
+  /** 임원 직책 (회장 / 사무국장 / 이사 …). 없으면 null */
+  officerTitle: string | null;
   /** 검색 전용. 화면에는 절대 출력하지 않는다. */
   searchText: string;
 }
@@ -67,6 +69,12 @@ export function buildBusinessCards(
       ...roles.flatMap((o) => [o.title, o.department ?? "", o.group, o.expertise ?? ""]),
     ];
 
+    // 대표 직책 하나만 배지로 보여준다. 여러 개면 순서가 앞선 것을 쓴다.
+    const officerTitle =
+      roles
+        .filter((o) => o.title && o.title !== "회원")
+        .sort((a, b2) => a.order - b2.order)[0]?.title ?? null;
+
     const visible = [b.name, b.category, b.tagline, b.description, b.address, b.district];
 
     return {
@@ -79,9 +87,10 @@ export function buildBusinessCards(
       // 회원 사진이 없으면 플레이스 대표사진으로 대체된다
       coverImage: resolveBusinessCover(b).url,
       priority: b.priority,
-      isNew: isNewMember(b.memberSince, today),
+      isNew: !b.hideNewBadge && isNewMember(b.memberSince, today),
       // 임원 직책이 붙어 있으면 임원 업장으로 본다
-      isOfficer: roles.some((o) => o.title && o.title !== "회원"),
+      isOfficer: officerTitle !== null,
+      officerTitle,
       searchText: normalize([...visible, ...hidden].filter(Boolean).join(" ")),
     };
   });

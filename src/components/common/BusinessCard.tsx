@@ -51,11 +51,19 @@ export default function BusinessCard({
           <Badge label={business.category} className="absolute left-3 top-3 bg-white/95" />
         )}
 
-        {business.isNew && (
-          <span className="absolute right-2 top-2 rounded-md bg-amber px-2 py-1 text-[10.5px] font-bold text-white">
-            신입회원
-          </span>
-        )}
+        {/* 임원·신입 배지. 둘 다 있으면 나란히 붙는다. */}
+        <span className="absolute right-2 top-2 flex flex-col items-end gap-1">
+          {business.officerTitle && (
+            <span className="rounded-md bg-brand px-2 py-1 text-[10.5px] font-bold text-white">
+              {business.officerTitle}
+            </span>
+          )}
+          {business.isNew && (
+            <span className="rounded-md bg-amber px-2 py-1 text-[10.5px] font-bold text-white">
+              신입회원
+            </span>
+          )}
+        </span>
       </div>
 
       <div className={`flex flex-1 flex-col ${variant === "compact" ? "p-3.5" : "p-4"}`}>

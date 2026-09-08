@@ -538,8 +538,23 @@ export default function BusinessForm({ business }: { business?: Business }) {
               className={field}
             />
             <p className="mt-1 text-[11.5px] text-muted">
-              6개월 이내면 &quot;신입회원&quot; 배지가 붙습니다.
+              비워두고 새로 등록하면 오늘 날짜로 잡히고, 6개월간 &quot;신입회원&quot; 배지가 붙습니다.
             </p>
+
+            <label className="mt-2 flex items-start gap-2 rounded-lg bg-mist p-3 text-[12.5px]">
+              <input
+                type="checkbox"
+                name="hideNewBadge"
+                defaultChecked={business?.hideNewBadge ?? false}
+                className="mt-0.5 h-4 w-4 accent-[color:var(--color-brand)]"
+              />
+              <span>
+                <b>신입회원 배지 숨기기</b>
+                <span className="mt-0.5 block text-[11.5px] text-muted">
+                  배지를 원하지 않는 회원이면 켜세요. 가입일은 그대로 남습니다.
+                </span>
+              </span>
+            </label>
           </div>
 
           <div>

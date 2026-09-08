@@ -185,6 +185,8 @@ export interface Business {
   phonePublic: boolean;
   /** 협회 가입일. 6개월 이내면 신입회원으로 표시한다. */
   memberSince: string | null;
+  /** 신입회원 배지를 숨길지. 켜면 가입 6개월 이내라도 배지가 안 나온다. */
+  hideNewBadge: boolean;
 
   /**
    * 회원 또는 관리자가 직접 올린 대표사진.

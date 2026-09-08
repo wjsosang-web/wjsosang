@@ -30,6 +30,14 @@ const TONES: Record<string, string> = {
   생활서비스: "bg-leaf-tint text-leaf",
   전문서비스: "bg-brand-tint text-brand-deep",
 
+  // 임원 직책
+  회장: "bg-brand text-white",
+  부회장: "bg-brand text-white",
+  감사: "bg-violet-tint text-violet",
+  이사: "bg-sky-tint text-sky",
+  사무총장: "bg-brand-tint text-brand-deep",
+  신입회원: "bg-amber text-white",
+
   // 강조
   주요활동: "bg-brand text-white",
   회원사: "bg-white/90 text-brand-deep",
