@@ -13,14 +13,44 @@ export default async function AdminHomePage() {
   if (!admin) redirect("/admin/login");
 
   if (!canWriteToSupabase()) {
+    // 배포본과 내 컴퓨터는 고쳐야 할 곳이 다르다. 지금 보고 있는 쪽 안내만 띄운다.
+    const onVercel = process.env.VERCEL === "1";
+
     return (
       <Panel title="설정이 하나 남았습니다">
         <p>
           <code>SUPABASE_SERVICE_ROLE_KEY</code> 가 없어서 저장 기능을 쓸 수 없습니다.
-          <br />
-          Supabase 대시보드 → Project Settings → API Keys 에서 secret key 를 복사해
-          <code> .env.local</code> 에 넣고 개발 서버를 다시 켜주세요.
+          지금 보고 있는 곳은 <b>{onVercel ? "Vercel 에 배포된 사이트" : "내 컴퓨터(localhost)"}</b>
+          {" "}입니다.
         </p>
+
+        {onVercel ? (
+          <ol className="mt-3 list-decimal space-y-1.5 pl-5">
+            <li>Vercel → 이 프로젝트 → Settings → Environment Variables</li>
+            <li>
+              <code>SUPABASE_SERVICE_ROLE_KEY</code> 를 추가합니다. 값은 Supabase → Project
+              Settings → API Keys 의 secret key 입니다.
+            </li>
+            <li>
+              Environments 는 <b>Production · Preview · Development 세 개 모두</b> 체크합니다.
+            </li>
+            <li>
+              저장한 뒤 Deployments 에서 맨 위 배포를 <b>Redeploy</b> 합니다. 환경변수는 다시
+              배포해야 반영됩니다.
+            </li>
+          </ol>
+        ) : (
+          <ol className="mt-3 list-decimal space-y-1.5 pl-5">
+            <li>
+              <code>.env.local</code> 에 <code>SUPABASE_SERVICE_ROLE_KEY=</code> 한 줄이 있는지
+              확인합니다.
+            </li>
+            <li>
+              개발 서버를 껐다가 다시 켭니다. <code>.env.local</code> 은 서버를 켤 때 한 번만
+              읽어서, 값을 넣어도 다시 켜지 않으면 이 화면이 계속 나옵니다.
+            </li>
+          </ol>
+        )}
       </Panel>
     );
   }

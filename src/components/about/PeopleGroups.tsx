@@ -90,9 +90,12 @@ export default function PeopleGroups({
                 </div>
 
                 <div className="flex flex-1 flex-col p-4">
-                  <p className="flex items-center gap-2">
+                  <p className="flex flex-wrap items-center gap-1.5">
                     <Badge label={p.title} className="bg-brand-tint text-brand-deep" />
-                    <span className="text-[15.5px] font-bold">{p.name}</span>
+                    {p.subTitle && (
+                      <Badge label={p.subTitle} className="bg-violet-tint text-violet" />
+                    )}
+                    <span className="ml-0.5 text-[15.5px] font-bold">{p.name}</span>
                   </p>
 
                   <dl className="mt-3 space-y-1 text-[12.5px]">
