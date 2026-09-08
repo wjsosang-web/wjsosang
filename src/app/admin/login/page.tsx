@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import LoginForm from "@/components/admin/LoginForm";
 import Logo from "@/components/common/Logo";
 import { getLogoAssets } from "@/lib/assets";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
+import {
+  isSupabaseConfigured,
+  SUPABASE_ANON_KEY,
+  SUPABASE_SERVICE_ROLE_KEY,
+  SUPABASE_URL,
+} from "@/lib/supabase/config";
 
 export const metadata: Metadata = { title: "관리자 로그인" };
 export const dynamic = "force-dynamic";
@@ -10,6 +15,14 @@ export const dynamic = "force-dynamic";
 export default function AdminLoginPage() {
   const configured = isSupabaseConfigured();
   const logo = getLogoAssets();
+
+  // 어느 값이 안 들어왔는지 화면에서 바로 보이게 한다.
+  // 값 자체는 보여주지 않고 있는지 없는지만 표시한다.
+  const checks = [
+    { name: "NEXT_PUBLIC_SUPABASE_URL", ok: SUPABASE_URL !== "", type: "Config 로 등록" },
+    { name: "NEXT_PUBLIC_SUPABASE_ANON_KEY", ok: SUPABASE_ANON_KEY !== "", type: "Config 로 등록" },
+    { name: "SUPABASE_SERVICE_ROLE_KEY", ok: SUPABASE_SERVICE_ROLE_KEY !== "", type: "Secret 로 등록" },
+  ];
 
   return (
     <div className="grid min-h-screen place-items-center bg-mist px-5 py-12">
@@ -44,6 +57,28 @@ export default function AdminLoginPage() {
             <p className="mt-3 font-semibold">내 컴퓨터에서 실행 중인 경우</p>
             <p className="mt-1">
               <code>.env.local</code> 에 두 값을 넣고 개발 서버를 다시 켜주세요.
+            </p>
+
+            <ul className="mt-4 space-y-1.5 border-t border-amber/25 pt-4">
+              {checks.map((c) => (
+                <li key={c.name} className="flex items-start gap-2">
+                  <span
+                    aria-hidden
+                    className={`mt-0.5 shrink-0 font-bold ${c.ok ? "text-brand" : "text-coral"}`}
+                  >
+                    {c.ok ? "✓" : "✗"}
+                  </span>
+                  <span className="min-w-0">
+                    <code className="break-all text-[12px]">{c.name}</code>
+                    <span className="ml-1.5 text-[11.5px] text-muted">
+                      {c.ok ? "읽음" : `없음 — ${c.type}`}
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2 text-[11.5px] text-muted">
+              이름이 한 글자라도 다르면 &quot;없음&quot;으로 나옵니다. 철자를 그대로 맞춰주세요.
             </p>
           </div>
         )}
