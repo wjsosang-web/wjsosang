@@ -39,6 +39,10 @@ export async function fetchPlacePage(canonicalUrl: string): Promise<PagePickResu
 
   const html = await res.text();
 
+  // 대표사진은 페이지가 열린 뒤에 따로 불러오는 경우가 많아 본문 JSON 에 없다.
+  // 반면 미리보기용 og:image 는 항상 박혀 있고, 그 값이 곧 대표사진이다.
+  const ogPhoto = readOgImage(html);
+
   const fromLd = readJsonLd(html);
   const state = readApolloState(html);
   if (!state) warnings.push("플레이스 상세 데이터를 찾지 못했습니다. 사진·메뉴는 직접 등록해 주세요.");
@@ -51,12 +55,15 @@ export async function fetchPlacePage(canonicalUrl: string): Promise<PagePickResu
     address: fromState.address ?? fromLd.address ?? null,
     jibunAddress: fromState.jibunAddress ?? null,
     phone: fromState.phone ?? fromLd.phone ?? null,
-    photo: fromState.photo ?? fromLd.photo ?? null,
+    photo: ogPhoto ?? fromState.photo ?? fromLd.photo ?? null,
     hours: fromState.hours ?? null,
     keywords: fromState.keywords ?? [],
     menus: fromState.menus ?? [],
     description: fromState.description ?? null,
     homepageUrl: fromState.homepageUrl ?? null,
+    instagramUrl: fromState.instagramUrl ?? null,
+    blogUrl: fromState.blogUrl ?? null,
+    snsUrl: fromState.snsUrl ?? null,
     lat: fromState.lat ?? null,
     lng: fromState.lng ?? null,
   };
@@ -65,6 +72,38 @@ export async function fetchPlacePage(canonicalUrl: string): Promise<PagePickResu
   if (!data.menus?.length) warnings.push("메뉴 정보를 가져오지 못했습니다.");
 
   return { data, warnings };
+}
+
+/**
+ * <meta property="og:image"> 에서 대표사진 주소를 읽는다.
+ *
+ * 속성 순서가 뒤바뀌어 나오는 경우가 있어 두 가지 배치를 모두 본다.
+ * 값에는 &amp; 같은 실체참조가 섞여 오므로 되돌린다.
+ */
+function readOgImage(html: string): string | null {
+  const patterns = [
+    /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+    /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+  ];
+
+  for (const re of patterns) {
+    const raw = html.match(re)?.[1];
+    if (!raw) continue;
+
+    const url = decodeEntities(raw);
+    if (looksLikeImage(url)) return url;
+  }
+
+  return null;
+}
+
+function decodeEntities(text: string): string {
+  return text
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
 }
 
 /* ------------------------------------------------------------------ */
@@ -178,6 +217,9 @@ interface Picked {
   hours: string | null;
   description: string | null;
   homepageUrl: string | null;
+  instagramUrl: string | null;
+  blogUrl: string | null;
+  snsUrl: string | null;
   lat: number | null;
   lng: number | null;
   keywords: string[];
@@ -204,6 +246,11 @@ function pickFromState(state: Json): Partial<Picked> {
       out.description = asString(node.description) ?? out.description ?? null;
       out.homepageUrl = asString(node.homepage) ?? out.homepageUrl ?? null;
     }
+
+    // --- 홈페이지 · 블로그 · 인스타그램 ---
+    // { homepages: { etc: [{ url, type: "홈페이지" | "블로그" | ... }] } } 모양으로 온다.
+    const etc = (node.homepages as Record<string, Json> | undefined)?.etc ?? node.etc;
+    if (Array.isArray(etc)) assignLinks(etc, out);
 
     // --- 좌표 ---
     // 좌표는 { __typename: "Coordinate", x, y } 처럼 따로 떨어진 객체로 온다.
@@ -278,6 +325,36 @@ function pickFromState(state: Json): Partial<Picked> {
   out.menus = (out.menus ?? []).slice(0, 60);
 
   return out;
+}
+
+/**
+ * 플레이스에 등록된 바깥 링크를 종류별로 나눠 담는다.
+ *
+ * type 값("홈페이지"/"블로그"/"인스타그램"…)을 먼저 믿고,
+ * 값이 없거나 낯설면 주소에 들어 있는 도메인으로 판단한다.
+ * 어디에도 안 맞는 것은 첫 하나만 '그 밖의 SNS'로 남긴다.
+ */
+function assignLinks(entries: Json[], out: Partial<Picked>) {
+  for (const entry of entries) {
+    const item = entry as Record<string, Json>;
+    const url = asString(item.url) ?? asString(item.landingUrl);
+    if (!url || !/^https?:\/\//i.test(url)) continue;
+
+    // 죽은 링크라고 표시된 것은 가져오지 않는다
+    if (item.isDeadUrl === true) continue;
+
+    const type = asString(item.type) ?? "";
+
+    if (/인스타/.test(type) || /instagram\.com/i.test(url)) {
+      out.instagramUrl ??= url;
+    } else if (/블로그/.test(type) || /blog\.naver\.com/i.test(url)) {
+      out.blogUrl ??= url;
+    } else if (/홈페이지/.test(type)) {
+      out.homepageUrl ??= url;
+    } else {
+      out.snsUrl ??= url;
+    }
+  }
 }
 
 /** 객체 트리를 모두 돌면서 각 객체를 콜백에 넘긴다. 순환 참조를 막는다. */

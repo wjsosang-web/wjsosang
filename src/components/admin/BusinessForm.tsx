@@ -341,29 +341,35 @@ export default function BusinessForm({ business }: { business?: Business }) {
           <p className={label}>바로가기 링크</p>
           <p className="-mt-1 mb-2 text-[11.5px] text-muted">
             입력한 것만 업장 페이지에 버튼으로 나옵니다. 비워두면 나오지 않습니다.
+            플레이스에 등록된 링크가 있으면 불러올 때 자동으로 채워지며, 지우거나 고쳐도
+            됩니다.
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <input
               name="homepageUrl"
+              key={`home-${draft?.homepageUrl ?? ""}`}
               defaultValue={v("homepageUrl", business?.homepageUrl)}
               placeholder="홈페이지 주소"
               className={field}
             />
             <input
               name="instagramUrl"
-              defaultValue={business?.instagramUrl ?? ""}
+              key={`ig-${draft?.instagramUrl ?? ""}`}
+              defaultValue={v("instagramUrl", business?.instagramUrl)}
               placeholder="인스타그램 주소"
               className={field}
             />
             <input
               name="blogUrl"
-              defaultValue={business?.blogUrl ?? ""}
+              key={`blog-${draft?.blogUrl ?? ""}`}
+              defaultValue={v("blogUrl", business?.blogUrl)}
               placeholder="블로그 주소"
               className={field}
             />
             <input
               name="snsUrl"
-              defaultValue={business?.snsUrl ?? ""}
+              key={`sns-${draft?.snsUrl ?? ""}`}
+              defaultValue={v("snsUrl", business?.snsUrl)}
               placeholder="그 밖의 SNS 주소"
               className={field}
             />

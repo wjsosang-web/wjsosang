@@ -32,6 +32,9 @@ const FIELD_LABELS: Record<string, string> = {
   keywords: "대표키워드",
   menus: "메뉴",
   lat: "위치좌표",
+  homepageUrl: "홈페이지",
+  instagramUrl: "인스타그램",
+  blogUrl: "블로그",
 };
 
 /** 플레이스에서 절대 가져올 수 없는 항목 — 관리자가 반드시 직접 입력한다. */
@@ -55,6 +58,9 @@ const emptyDraft = (): PlaceDraft => ({
   menus: [],
   description: null,
   homepageUrl: null,
+  instagramUrl: null,
+  blogUrl: null,
+  snsUrl: null,
 });
 
 export async function importFromPlaceUrl(inputUrl: string): Promise<PlaceImportResult> {

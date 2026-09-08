@@ -460,6 +460,10 @@ export interface PlaceDraft {
   menus: Array<{ name: string; price: string | null; description: string | null; imageUrl: string | null }>;
   description: string | null;
   homepageUrl: string | null;
+  instagramUrl: string | null;
+  blogUrl: string | null;
+  /** 그 밖의 SNS (유튜브·페이스북·카페 등) 중 첫 번째 */
+  snsUrl: string | null;
 }
 
 export interface PlaceImportResult {
