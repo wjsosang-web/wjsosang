@@ -2,6 +2,8 @@ import BusinessCard from "@/components/common/BusinessCard";
 import SectionHead from "@/components/common/SectionHead";
 import SitePopup from "@/components/common/SitePopup";
 import HeroSlider from "@/components/home/HeroSlider";
+import JoinBand from "@/components/home/JoinBand";
+import SloganBand from "@/components/home/SloganBand";
 import NoticesAndActivities from "@/components/home/NoticesAndActivities";
 import StatsBand from "@/components/home/StatsBand";
 import UpcomingEventBanner from "@/components/home/UpcomingEventBanner";
@@ -17,6 +19,7 @@ import {
   getNotices,
   getOrgMembers,
   getPublicBusinesses,
+  getSiteInfo,
   getStats,
   toDateKey,
 } from "@/lib/repo";
@@ -30,8 +33,20 @@ export default async function HomePage() {
   const now = new Date();
   const todayKey = toDateKey(now);
 
-  const [slides, stats, popups, todayEvents, notices, activities, nextEvent, businesses, org, years] =
-    await Promise.all([
+  const [
+    site,
+    slides,
+    stats,
+    popups,
+    todayEvents,
+    notices,
+    activities,
+    nextEvent,
+    businesses,
+    org,
+    years,
+  ] = await Promise.all([
+      getSiteInfo(),
       getHeroSlides(),
       getStats(),
       getActivePopups(now),
@@ -62,10 +77,12 @@ export default async function HomePage() {
 
       <HeroSlider slides={slides} />
       <StatsBand items={stats} />
+      <SloganBand site={site} />
+
       <NoticesAndActivities notices={notices} activities={activities} />
 
       {/* 회원업장 미리보기 */}
-      <section className="px-5 py-8 md:py-10">
+      <section className="bg-mist px-5 py-10 md:py-14">
         <div className="mx-auto max-w-[1180px]">
           <SectionHead
             title="회원업장"
@@ -73,8 +90,8 @@ export default async function HomePage() {
             moreHref="/business"
           />
 
-          <ul className="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {cards.slice(0, 4).map((b) => (
+          <ul className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {cards.slice(0, 8).map((b) => (
               <li key={b.id}>
                 <BusinessCard business={b} />
               </li>
@@ -85,6 +102,8 @@ export default async function HomePage() {
 
       {/* 예정된 행사가 없으면 이 영역 자체가 나오지 않는다 (기획안 9조). */}
       {nextEvent && <UpcomingEventBanner event={nextEvent} />}
+
+      <JoinBand site={site} />
 
       <EventCalendar eventsByYear={eventsByYear} years={calendarYears} todayKey={todayKey} />
     </>

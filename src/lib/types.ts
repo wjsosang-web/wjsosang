@@ -375,6 +375,8 @@ export interface SiteInfo {
   shortName: string;
   foundedYear: number;
   phone: string;
+  /** 전화를 받는 사람. 예: "이종현 사무국장". 비어 있으면 표시하지 않는다. */
+  phoneOwner: string;
   email: string;
   address: string;
   /** 주소 아래 한 줄 (예: "원주청년소상공인협회 사무국") */
