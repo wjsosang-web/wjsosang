@@ -12,7 +12,8 @@
     "seed:push": "node scripts/push-seed.mjs",
     "admin:create": "node scripts/create-admin.mjs",
     "setup:check": "node scripts/check-setup.mjs",
-    "db:migrate": "node scripts/db-migrate.mjs"
+    "db:migrate": "node scripts/db-migrate.mjs",
+    "roster:import": "node scripts/import-roster.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",
@@ -30,6 +31,7 @@
     "pg": "^8.23.0",
     "postcss": "8.5.6",
     "tailwindcss": "4.1.13",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "xlsx": "^0.18.5"
   }
 }

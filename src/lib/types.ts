@@ -181,6 +181,10 @@ export interface Business {
   logoImage: string | null;
   /** 원청협 회원에게 주는 혜택. 비어 있으면 표시하지 않는다. */
   benefit: string | null;
+  /** 연락처를 홈페이지에 보여줄지. 개인 휴대폰이라 기본은 숨김. */
+  phonePublic: boolean;
+  /** 협회 가입일. 6개월 이내면 신입회원으로 표시한다. */
+  memberSince: string | null;
 
   /**
    * 회원 또는 관리자가 직접 올린 대표사진.

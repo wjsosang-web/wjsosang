@@ -212,6 +212,8 @@ export function toBusiness(r: Row): Business {
     snsUrl: (r.sns_url as string | null) ?? null,
     logoImage: (r.logo_image as string | null) ?? null,
     benefit: (r.benefit as string | null) ?? null,
+    phonePublic: Boolean(r.phone_public),
+    memberSince: (r.member_since as string | null) ?? null,
     coverImage: (r.cover_image as string | null) ?? null,
     photos,
     promo,
