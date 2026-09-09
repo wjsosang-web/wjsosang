@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import OrgChart from "@/components/about/OrgChart";
 import PeopleGroups from "@/components/about/PeopleGroups";
+import MemberDocDownload from "@/components/about/MemberDocDownload";
 import PageHero from "@/components/common/PageHero";
 import { Icon } from "@/components/common/Icons";
 import { accentAt } from "@/lib/accents";
@@ -8,6 +9,7 @@ import { publicFileExists } from "@/lib/assets";
 import {
   getHistory,
   getMembers,
+  getMemberDocInfo,
   getOrgGroupOrder,
   getOrgMembers,
   getPartners,
@@ -33,6 +35,7 @@ export default async function AboutPage() {
     businesses,
     members,
     groupOrder,
+    memberDoc,
   ] = await Promise.all([
       getSiteInfo(),
       getStory(),
@@ -44,6 +47,7 @@ export default async function AboutPage() {
       getPublicBusinesses(),
     getMembers(),
     getOrgGroupOrder(),
+    getMemberDocInfo(),
   ]);
 
   const chair = org.find((o) => o.title === "회장") ?? null;
@@ -152,6 +156,26 @@ export default async function AboutPage() {
         businessById={businessById}
         groupOrder={groupOrder}
       />
+
+      {/* 회원 전용 자료 — 협회 정관 */}
+      {memberDoc && (
+        <section className="px-5 pb-2 pt-12 md:pt-16">
+          <div className="mx-auto grid max-w-[1180px] gap-8 lg:grid-cols-[200px_1fr] lg:gap-10">
+            <div>
+              <h2 className="text-[22px] font-bold tracking-[-0.02em] md:text-[25px]">협회 자료</h2>
+              <p className="mt-3 text-[13.5px] leading-[1.7] text-ink-soft">
+                협회원에게만
+                <br />
+                열려 있습니다.
+              </p>
+            </div>
+
+            <div className="max-w-[560px]">
+              <MemberDocDownload title={memberDoc.title} description={memberDoc.description} />
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 임원진께 드리는 말 — 협회 임원은 모두 자기 가게를 하면서 봉사하는 분들이다 */}
       <section className="bg-forest px-5 py-14 text-white md:py-20">

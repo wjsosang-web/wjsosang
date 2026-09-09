@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import ListEditor from "@/components/admin/ListEditor";
+import MemberDocForm from "@/components/admin/MemberDocForm";
 import SiteTextForm from "@/components/admin/SiteTextForm";
 import { getCurrentAdmin } from "@/lib/supabase/auth";
+import { getAdminSupabase } from "@/lib/supabase/server";
 import {
   savePresidentMessage,
   saveSiteInfo,
@@ -36,6 +38,17 @@ export default async function AdminSitePage() {
     getStats(),
     getPartners(),
   ]);
+
+  // 코드와 파일명은 관리자 화면에서만 보여준다
+  const { data: docRow } = await getAdminSupabase()
+    .from("site_settings")
+    .select("value")
+    .eq("key", "member_doc")
+    .maybeSingle();
+
+  const doc = (docRow?.value ?? null) as
+    | { title: string; description: string; code: string; fileName: string | null }
+    | null;
 
   return (
     <div className="space-y-5">
@@ -158,6 +171,8 @@ export default async function AdminSitePage() {
           { name: "plaque", label: "액자 문구", defaultValue: president.plaque, type: "half" },
         ]}
       />
+
+      <MemberDocForm doc={doc} />
 
       <ListEditor
         settingKey="stats"

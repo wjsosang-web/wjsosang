@@ -107,6 +107,11 @@ export async function getOrgMembers(): Promise<OrgMember[]> {
   return orgMembers.slice().sort((a, b) => a.order - b.order);
 }
 
+/** 예비 데이터에는 회원 전용 자료를 두지 않는다 (파일이 저장소에만 있다) */
+export async function getMemberDocInfo(): Promise<{ title: string; description: string } | null> {
+  return null;
+}
+
 export async function getOrgGroupOrder(): Promise<OrgGroup[]> {
   return ORG_GROUPS.slice();
 }

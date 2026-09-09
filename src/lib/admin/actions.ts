@@ -400,6 +400,119 @@ export async function deleteInquiry(form: FormData) {
 
 /** 협회소개에서 분류 탭이 나오는 순서를 저장한다 (site_settings.orgGroupOrder) */
 /* ------------------------------------------------------------------ */
+/* 회원 전용 자료 — 협회 정관                                            */
+/* ------------------------------------------------------------------ */
+
+const MEMBER_BUCKET = "member-files";
+
+/** 관리자가 회원 전용 자료를 올린다 */
+export async function saveMemberDoc(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    const db = getAdminSupabase();
+
+    const title = str(form, "title");
+    const code = str(form, "code");
+    const file = form.get("file");
+
+    if (!title) return { ok: false, message: "자료 이름을 입력해 주세요." };
+    if (!code) return { ok: false, message: "협회원 코드를 정해 주세요." };
+
+    const current = (await getMemberDoc()) ?? { path: null, fileName: null };
+    let path = current.path;
+    let fileName = current.fileName;
+
+    if (file instanceof File && file.size > 0) {
+      if (file.size > 20 * 1024 * 1024) {
+        return { ok: false, message: "파일이 너무 큽니다. 20MB 아래로 줄여 주세요." };
+      }
+
+      const ext = (file.name.split(".").pop() ?? "pdf").toLowerCase().replace(/[^a-z0-9]/g, "");
+      const next = `docs/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext || "pdf"}`;
+
+      const { error } = await db.storage
+        .from(MEMBER_BUCKET)
+        .upload(next, file, { contentType: file.type || undefined, upsert: false });
+
+      if (error) throw new Error(`파일을 올리지 못했습니다: ${error.message}`);
+
+      // 새 파일이 올라갔으면 옛 파일은 지운다
+      if (path) await db.storage.from(MEMBER_BUCKET).remove([path]);
+
+      path = next;
+      fileName = file.name;
+    }
+
+    if (!path) return { ok: false, message: "파일을 골라 주세요." };
+
+    await putSetting("member_doc", {
+      title,
+      description: str(form, "description"),
+      code,
+      path,
+      fileName,
+      updatedAt: new Date().toISOString(),
+    });
+
+    return { ok: true, message: "저장했습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+export interface MemberDoc {
+  title: string;
+  description: string;
+  code: string;
+  path: string | null;
+  fileName: string | null;
+  updatedAt: string;
+}
+
+async function getMemberDoc(): Promise<MemberDoc | null> {
+  const db = getAdminSupabase();
+  const { data } = await db
+    .from("site_settings")
+    .select("value")
+    .eq("key", "member_doc")
+    .maybeSingle();
+
+  return (data?.value as MemberDoc | undefined) ?? null;
+}
+
+/**
+ * 코드를 맞히면 잠깐 열리는 내려받기 주소를 만들어 준다.
+ *
+ * 코드가 틀려도 맞아도 응답 모양이 같아야 파일이 있는지 없는지 새어 나가지 않는다.
+ * 주소는 5분 뒤에 만료되므로 다른 곳에 퍼뜨려도 오래 쓰이지 않는다.
+ */
+export async function requestMemberDoc(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult & { url?: string }> {
+  const doc = await getMemberDoc();
+  const entered = str(form, "code");
+
+  if (!doc?.path || !doc.code || entered !== doc.code) {
+    return { ok: false, message: "코드가 맞지 않습니다. 협회 사무국에 문의해 주세요." };
+  }
+
+  const db = getAdminSupabase();
+  const { data, error } = await db.storage
+    .from(MEMBER_BUCKET)
+    .createSignedUrl(doc.path, 300, { download: doc.fileName ?? true });
+
+  if (error || !data) {
+    return { ok: false, message: "파일을 여는 데 실패했습니다. 잠시 뒤 다시 시도해 주세요." };
+  }
+
+  return { ok: true, message: "내려받기를 시작합니다.", url: data.signedUrl };
+}
+
+/* ------------------------------------------------------------------ */
 /* 협회 정보 · 소개 글                                                   */
 /* ------------------------------------------------------------------ */
 

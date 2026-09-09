@@ -314,6 +314,20 @@ export async function getOrgMembers(): Promise<OrgMember[]> {
  * 분류(회장단·이사회·임원진·역대 회장)가 나오는 순서.
  * 관리자에서 정한 값이 있으면 그걸 쓰고, 없거나 값이 깨졌으면 기본 순서로 돌아간다.
  */
+/**
+ * 회원 전용 자료의 안내 문구.
+ * 코드와 파일 경로는 절대 화면으로 내보내지 않는다.
+ */
+export async function getMemberDocInfo(): Promise<{ title: string; description: string } | null> {
+  const saved = await setting<Record<string, unknown> | null>("member_doc", async () => null);
+  if (!saved || typeof saved !== "object" || !saved.path) return null;
+
+  return {
+    title: String(saved.title ?? "협회 정관"),
+    description: String(saved.description ?? ""),
+  };
+}
+
 export async function getOrgGroupOrder(): Promise<OrgGroup[]> {
   const saved = await setting<unknown>("orgGroupOrder", async () => null);
   const list = Array.isArray(saved)
