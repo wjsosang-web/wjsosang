@@ -49,14 +49,14 @@ export default function NoticesAndActivities({
         <div>
           <SectionHead title="최근 활동" moreHref="/activities" />
 
-          <ul className="mt-5 grid gap-4 sm:grid-cols-3">
+          <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
             {activities.map((a) => (
               <li key={a.id}>
                 <Link
                   href={`/activities/${a.slug}`}
                   className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white transition-shadow hover:shadow-[0_8px_24px_rgba(22,36,31,0.08)]"
                 >
-                  <div className="relative aspect-[16/10] overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/10]">
                     {a.coverImage ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -69,15 +69,17 @@ export default function NoticesAndActivities({
                     )}
                   </div>
 
-                  <div className="flex flex-1 flex-col p-4">
-                    {a.category && <Badge label={a.category} className="self-start" />}
-                    <h3 className="mt-2.5 text-[15.5px] font-bold leading-snug transition-colors group-hover:text-brand">
+                  <div className="flex flex-1 flex-col p-3 sm:p-4">
+                    {a.category && (
+                      <Badge label={a.category} className="hidden self-start sm:inline-flex" />
+                    )}
+                    <h3 className="line-clamp-2 text-[13.5px] font-bold leading-snug transition-colors group-hover:text-brand sm:mt-2.5 sm:text-[15.5px]">
                       {a.title}
                     </h3>
-                    <p className="mt-2 line-clamp-2 text-[13px] leading-[1.6] text-muted">
+                    <p className="mt-2 line-clamp-2 hidden text-[13px] leading-[1.6] text-muted sm:block">
                       {a.summary}
                     </p>
-                    <p className="tnum mt-auto pt-3 text-[12.5px] text-muted">
+                    <p className="tnum mt-auto pt-2 text-[11.5px] text-muted sm:pt-3 sm:text-[12.5px]">
                       {formatDate(a.date)}
                     </p>
                   </div>

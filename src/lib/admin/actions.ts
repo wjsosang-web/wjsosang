@@ -6,7 +6,7 @@ import { requireAdmin } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { STORAGE_BUCKET } from "@/lib/supabase/config";
 import { importFromPlaceUrl } from "@/lib/place/import";
-import { ORG_GROUPS } from "@/lib/types";
+import { ORG_GROUPS, REMOVE_IMAGE } from "@/lib/types";
 import type { OrgGroup, PlaceImportResult } from "@/lib/types";
 
 /**
@@ -71,7 +71,13 @@ async function pickedImage(
   const picked = form.get(field);
 
   if (picked instanceof File && picked.size > 0) return uploadOne(picked, folder);
-  if (typeof picked === "string" && picked.trim() !== "") return picked.trim();
+
+  if (typeof picked === "string") {
+    const value = picked.trim();
+    // 지우기를 누른 경우. 빈 값(= 그대로 두기)과 구분해야 한다.
+    if (value === REMOVE_IMAGE) return null;
+    if (value !== "") return value;
+  }
 
   return nullable(form, keepField);
 }
@@ -209,6 +215,14 @@ export async function deletePostPhoto(form: FormData) {
   const db = getAdminSupabase();
   const id = String(form.get("photoId") ?? "");
   if (id) await db.from("post_photos").delete().eq("id", id);
+  refreshPublicPages();
+}
+
+export async function deleteBusinessPhoto(form: FormData) {
+  await requireAdmin();
+  const db = getAdminSupabase();
+  const id = String(form.get("photoId") ?? "");
+  if (id) await db.from("business_photos").delete().eq("id", id);
   refreshPublicPages();
 }
 

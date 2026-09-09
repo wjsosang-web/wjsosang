@@ -65,7 +65,7 @@ export default function Header({ logo, phone }: Props) {
                 <Link
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
-                  className={`relative block px-4 py-6 text-[15px] font-semibold transition-colors lg:px-5 ${
+                  className={`relative block px-3 py-6 text-[14.5px] font-semibold transition-colors lg:px-5 lg:text-[15px] ${
                     isActive(item.href) ? "text-brand" : "text-ink hover:text-brand"
                   }`}
                 >
@@ -95,7 +95,9 @@ export default function Header({ logo, phone }: Props) {
 
           <Link
             href="/contact"
-            className="hidden shrink-0 items-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-[14px] font-bold text-white transition-colors hover:bg-brand-deep sm:inline-flex"
+            /* 태블릿 폭(768~1023)에서는 가로 메뉴가 자리를 다 써서 이 버튼을 뺀다.
+               그 폭에서도 가로 메뉴에 협회문의가 있어서 길이 막히지는 않는다. */
+            className="hidden shrink-0 items-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-[14px] font-bold text-white transition-colors hover:bg-brand-deep sm:inline-flex md:hidden lg:inline-flex"
           >
             <MailIcon />
             문의하기

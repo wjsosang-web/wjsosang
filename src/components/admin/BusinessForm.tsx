@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import ImageInput from "@/components/admin/ImageInput";
-import { fetchPlaceDraft, saveBusiness, type ActionResult } from "@/lib/admin/actions";
+import {
+  deleteBusinessPhoto,
+  fetchPlaceDraft,
+  saveBusiness,
+  type ActionResult,
+} from "@/lib/admin/actions";
 import { BUSINESS_CATEGORIES, type Business, type PlaceDraft } from "@/lib/types";
 
 /**
@@ -489,6 +494,45 @@ export default function BusinessForm({ business }: { business?: Business }) {
             folder="businesses"
           />
         </div>
+
+        {business?.photos && business.photos.length > 0 && (
+          <>
+            <p className="mt-5 text-[13px] font-bold">
+              올린 사진 {business.photos.length}장
+            </p>
+            <ul className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {business.photos.map((photo) => (
+                <li key={photo.id} className="rounded-lg border border-line p-2">
+                  {photo.url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={photo.url}
+                      alt=""
+                      className="aspect-[4/3] w-full rounded object-cover"
+                    />
+                  ) : (
+                    <div aria-hidden className="ph aspect-[4/3] w-full rounded" />
+                  )}
+                  {photo.caption && (
+                    <p className="mt-1.5 line-clamp-2 text-[12px] text-muted">{photo.caption}</p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const fd = new FormData();
+                      fd.set("photoId", photo.id);
+                      await deleteBusinessPhoto(fd);
+                      location.reload();
+                    }}
+                    className="mt-2 w-full rounded border border-line py-1.5 text-[12px] font-semibold text-coral hover:border-coral"
+                  >
+                    삭제
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
         <ul className="mt-4 space-y-3">
           {photoSlots.map((key, i) => (

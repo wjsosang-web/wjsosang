@@ -7,6 +7,10 @@ import type { BusinessCard as CardData } from "@/lib/search";
  * 회원업장 카드 (시안 기준).
  * 사진 → 업종 배지 → 상호 → 한 줄 소개 → 지역.
  * 사진은 회원이 올린 것이 없으면 플레이스 대표사진이 들어온다.
+ *
+ * 좁은 화면에서는 한 줄에 세 칸이 들어가서 칸 하나가 100px 남짓이 된다.
+ * 그 폭에 소개글과 버튼까지 넣으면 카드가 사진보다 네 배 길어져서,
+ * 작은 화면에서는 사진·상호·지역만 남기고 나머지는 접는다.
  */
 export default function BusinessCard({
   business,
@@ -17,6 +21,7 @@ export default function BusinessCard({
   variant?: "default" | "large" | "compact";
 }) {
   const aspect = variant === "large" ? "aspect-[16/10]" : "aspect-[4/3]";
+  const compact = variant === "compact";
 
   return (
     <Link
@@ -29,6 +34,7 @@ export default function BusinessCard({
           <img
             src={business.coverImage}
             alt=""
+            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         ) : (
@@ -40,47 +46,55 @@ export default function BusinessCard({
         )}
 
         {/* 임원·신입 배지. 둘 다 있으면 나란히 붙는다. */}
-        <span className="absolute right-2 top-2 flex flex-col items-end gap-1">
+        <span className="absolute right-1.5 top-1.5 flex flex-col items-end gap-1 sm:right-2 sm:top-2">
           {business.officerTitle && (
-            <span className="rounded-md bg-brand px-2 py-1 text-[10.5px] font-bold text-white">
+            <span className="rounded bg-brand px-1.5 py-0.5 text-[9.5px] font-bold text-white sm:rounded-md sm:px-2 sm:py-1 sm:text-[10.5px]">
               {business.officerTitle}
             </span>
           )}
           {business.isNew && (
-            <span className="rounded-md bg-amber px-2 py-1 text-[10.5px] font-bold text-white">
+            <span className="rounded bg-amber px-1.5 py-0.5 text-[9.5px] font-bold text-white sm:rounded-md sm:px-2 sm:py-1 sm:text-[10.5px]">
               신입회원
             </span>
           )}
         </span>
       </div>
 
-      <div className={`flex flex-1 flex-col ${variant === "compact" ? "p-3.5" : "p-4"}`}>
+      <div className={`flex flex-1 flex-col ${compact ? "p-2 sm:p-3.5" : "p-3 sm:p-4"}`}>
         <h3
           className={`font-bold leading-snug transition-colors group-hover:text-brand ${
-            variant === "large" ? "text-[17px]" : "text-[15px]"
+            variant === "large"
+              ? "text-[17px]"
+              : compact
+                ? "line-clamp-2 text-[12.5px] sm:text-[15px]"
+                : "text-[13.5px] sm:text-[15px]"
           }`}
         >
           {business.name}
         </h3>
 
         {variant !== "large" && (
-          <Badge label={business.category} className="mt-2 self-start" />
+          <Badge label={business.category} className="mt-1.5 self-start sm:mt-2" />
         )}
 
-        <p className="mt-2 line-clamp-2 text-[13px] leading-[1.6] text-muted">
-          {business.tagline}
-        </p>
-
-        <p className="mt-auto flex items-center gap-1 pt-3 text-[12.5px] text-muted">
-          <PinIcon className="h-[13px] w-[13px] shrink-0" />
-          원주시 {business.district}
-        </p>
-
-        {variant === "compact" && (
-          <span className="mt-3 block rounded-md border border-line py-2 text-center text-[12.5px] font-bold text-ink transition-colors group-hover:border-brand group-hover:text-brand">
-            업장 보기 →
-          </span>
+        {/* 소개글은 칸이 넉넉할 때만 보여준다.
+            목록 그리드는 넓은 화면에서도 한 칸이 180px 안팎이라 넣지 않는다. */}
+        {!compact && (
+          <p className="mt-2 hidden line-clamp-2 text-[13px] leading-[1.6] text-muted sm:block">
+            {business.tagline}
+          </p>
         )}
+
+        <p
+          className={`mt-auto flex items-center gap-1 text-muted ${
+            compact ? "pt-1.5 text-[11px] sm:pt-3 sm:text-[12.5px]" : "pt-2 text-[12px] sm:pt-3 sm:text-[12.5px]"
+          }`}
+        >
+          <PinIcon className="h-[11px] w-[11px] shrink-0 sm:h-[13px] sm:w-[13px]" />
+          <span className="truncate">원주시 {business.district}</span>
+        </p>
+
+
       </div>
     </Link>
   );

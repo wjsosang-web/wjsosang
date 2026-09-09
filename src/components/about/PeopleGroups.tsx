@@ -72,7 +72,7 @@ export default function PeopleGroups({
           </div>
         </div>
 
-        <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
           {current.people.map((p) => {
             const photo = resolveOrgPhoto(p, members);
             const business = p.businessId ? businessById[p.businessId] : undefined;
@@ -91,16 +91,16 @@ export default function PeopleGroups({
                   )}
                 </div>
 
-                <div className="flex flex-1 flex-col p-4">
-                  <p className="flex flex-wrap items-center gap-1.5">
+                <div className="flex flex-1 flex-col p-3 sm:p-4">
+                  <p className="flex flex-wrap items-center gap-1 sm:gap-1.5">
                     <Badge label={p.title} />
-                    {p.subTitle && (
-                      <Badge label={p.subTitle} />
-                    )}
-                    <span className="ml-0.5 text-[15.5px] font-bold">{p.name}</span>
+                    {p.subTitle && <Badge label={p.subTitle} />}
+                    <span className="text-[14px] font-bold sm:ml-0.5 sm:text-[15.5px]">
+                      {p.name}
+                    </span>
                   </p>
 
-                  <dl className="mt-3 space-y-1 text-[12.5px]">
+                  <dl className="mt-2 hidden space-y-1 text-[12.5px] sm:mt-3 sm:block">
                     {expertiseFirst
                       ? p.expertise && (
                           <div className="flex gap-2">
@@ -122,17 +122,22 @@ export default function PeopleGroups({
                         )}
                   </dl>
 
-                  <p className="mt-3 border-t border-line pt-3 text-[12.5px] leading-[1.65] text-ink-soft">
+                  <p className="mt-3 hidden border-t border-line pt-3 text-[12.5px] leading-[1.65] text-ink-soft sm:block">
                     {p.intro}
                   </p>
 
                   {business && (
-                    <Link
-                      href={`/business/${business.slug}`}
-                      className="mt-3 text-[12.5px] font-bold text-brand hover:underline"
-                    >
-                      업장 보기 →
-                    </Link>
+                    <>
+                      <span className="mt-1.5 block truncate text-[12px] text-muted sm:hidden">
+                        {business.name}
+                      </span>
+                      <Link
+                        href={`/business/${business.slug}`}
+                        className="mt-3 hidden text-[12.5px] font-bold text-brand hover:underline sm:block"
+                      >
+                        업장 보기 →
+                      </Link>
+                    </>
                   )}
                 </div>
               </li>

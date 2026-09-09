@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import ImageCropper from "@/components/admin/ImageCropper";
 import { compressImage, formatBytes } from "@/lib/compressImage";
 import { uploadAsset } from "@/lib/uploadAsset";
+import { REMOVE_IMAGE } from "@/lib/types";
 
 /**
  * 사진 고르기 칸.
@@ -60,6 +61,8 @@ export default function ImageInput({
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [cropping, setCropping] = useState<File | null>(null);
+  // 이미 저장된 사진을 지우기로 표시했는지
+  const [removed, setRemoved] = useState(false);
 
   const canCrop = aspect > 0 && !keepTransparency;
 
@@ -75,6 +78,7 @@ export default function ImageInput({
     if (!picked) return;
 
     setError(null);
+    setRemoved(false);
     if (canCrop) setCropping(picked);
     else void process(picked);
   }
@@ -111,12 +115,19 @@ export default function ImageInput({
     }
   }
 
-  function clear() {
+  /** 방금 고른 사진만 취소한다. 저장된 사진은 그대로 둔다. */
+  function clearPicked() {
     setUrl(null);
     setPreview(null);
     setNote(null);
     setError(null);
     if (fileRef.current) fileRef.current.value = "";
+  }
+
+  /** 저장된 사진까지 지운다. 저장을 눌러야 실제로 반영된다. */
+  function removeSaved() {
+    clearPicked();
+    setRemoved(true);
   }
 
   return (
@@ -134,10 +145,11 @@ export default function ImageInput({
         )}
       </p>
 
-      {/* 폼에는 파일이 아니라 올라간 주소만 보낸다 */}
-      <input type="hidden" name={name} value={url ?? ""} />
+      {/* 폼에는 파일이 아니라 올라간 주소만 보낸다.
+          빈 값은 "그대로 두기", REMOVE_IMAGE 는 "지우기" 를 뜻한다. */}
+      <input type="hidden" name={name} value={removed ? REMOVE_IMAGE : (url ?? "")} />
 
-      {(preview || currentUrl) && (
+      {!removed && (preview || currentUrl) && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={preview ?? currentUrl ?? ""}
@@ -161,13 +173,39 @@ export default function ImageInput({
         {url && (
           <button
             type="button"
-            onClick={clear}
+            onClick={clearPicked}
+            className="shrink-0 rounded-md border border-line px-3 py-2 text-[12.5px] font-semibold text-muted hover:border-ink hover:text-ink"
+          >
+            방금 고른 것 취소
+          </button>
+        )}
+
+        {currentUrl && !url && !removed && (
+          <button
+            type="button"
+            onClick={removeSaved}
             className="shrink-0 rounded-md border border-line px-3 py-2 text-[12.5px] font-semibold text-muted hover:border-coral hover:text-coral"
           >
-            빼기
+            사진 지우기
+          </button>
+        )}
+
+        {removed && (
+          <button
+            type="button"
+            onClick={() => setRemoved(false)}
+            className="shrink-0 rounded-md border border-line px-3 py-2 text-[12.5px] font-semibold text-brand hover:border-brand"
+          >
+            지우기 취소
           </button>
         )}
       </div>
+
+      {removed && (
+        <p className="mt-1.5 text-[12px] font-semibold text-coral">
+          저장을 누르면 사진이 지워집니다.
+        </p>
+      )}
 
       {error ? (
         <p className="mt-1.5 text-[12px] font-semibold text-coral">{error}</p>
