@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Badge from "@/components/common/Badge";
+import PhotoGallery from "@/components/common/PhotoGallery";
+import ShareButton from "@/components/common/ShareButton";
 import { ClockIcon, LinkIcon, PhoneIcon, PinIcon, UsersIcon } from "@/components/common/Icons";
 import { resolveBusinessCover } from "@/lib/images";
 import { getBusinessBySlug, getPublicBusinesses } from "@/lib/repo";
+import { absoluteUrl, siteUrl } from "@/lib/siteUrl";
 
 export const revalidate = 86400;
 
@@ -21,7 +24,32 @@ export async function generateMetadata({
   const { slug } = await params;
   const business = await getBusinessBySlug(slug);
   if (!business) return { title: "회원업장" };
-  return { title: business.name, description: business.tagline };
+
+  // 카톡·페이스북으로 보낼 때 뜨는 미리보기 카드.
+  // 사진 주소는 절대주소여야 미리보기에 나온다.
+  const image = absoluteUrl(resolveBusinessCover(business).url);
+  const description = business.tagline || business.description || `원주시 ${business.district}`;
+  const url = `${siteUrl()}/business/${business.slug}`;
+
+  return {
+    title: business.name,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      siteName: "원주청년소상공인협회",
+      title: business.name,
+      description,
+      url,
+      images: image ? [{ url: image, width: 1200, height: 900, alt: business.name }] : [],
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title: business.name,
+      description,
+      images: image ? [image] : [],
+    },
+  };
 }
 
 /** 업장별 독립 URL — /business/cafe-oneuldo (기획안 21조) */
@@ -84,30 +112,11 @@ export default async function BusinessDetailPage({
               )}
             </div>
 
+            {/* 눌러서 크게 보고 좌우로 넘긴다. 넉 장만 보여주던 것을 전부 보여준다. */}
             {photos.length > 0 && (
-              <ul className="mt-3 grid grid-cols-4 gap-2.5">
-                {photos.slice(0, 4).map((photo) => (
-                  <li key={photo.id}>
-                    <figure>
-                      {photo.url ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={photo.url}
-                          alt=""
-                          className="aspect-square w-full rounded-lg object-cover"
-                        />
-                      ) : (
-                        <div aria-hidden className="ph aspect-square w-full rounded-lg" />
-                      )}
-                      {photo.caption && (
-                        <figcaption className="mt-1.5 truncate text-[11.5px] text-muted">
-                          {photo.caption}
-                        </figcaption>
-                      )}
-                    </figure>
-                  </li>
-                ))}
-              </ul>
+              <PhotoGallery
+                photos={photos.map((p) => ({ id: p.id, url: p.url, caption: p.caption }))}
+              />
             )}
 
             {cover.source === "place" && (
@@ -118,8 +127,8 @@ export default async function BusinessDetailPage({
             )}
           </div>
 
-          {/* 정보 */}
-          <div>
+          {/* 정보 — 사진이 길어도 정보가 눈에서 벗어나지 않게 붙여 둔다 */}
+          <div className="lg:sticky lg:top-24 lg:self-start">
             <p className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-md bg-brand-tint px-2.5 py-1 text-[11.5px] font-bold text-brand-deep">
                 <span
@@ -147,6 +156,35 @@ export default async function BusinessDetailPage({
               </h1>
             </span>
             <p className="mt-2 text-[14.5px] text-ink-soft">{business.tagline}</p>
+
+            {/* 찾아온 사람이 가장 많이 누를 것들을 위로 올린다 */}
+            <div className="mt-5 flex flex-wrap gap-2">
+              {business.phonePublic && business.phone && (
+                <a
+                  href={`tel:${business.phone.replace(/-/g, "")}`}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-5 py-2.5 text-[13.5px] font-bold text-white transition-colors hover:bg-brand-deep"
+                >
+                  <PhoneIcon className="h-[14px] w-[14px]" />
+                  전화 걸기
+                </a>
+              )}
+
+              {business.address && (
+                <a
+                  href={`https://map.naver.com/p/search/${encodeURIComponent(
+                    `${business.name} ${business.address}`,
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-line px-5 py-2.5 text-[13.5px] font-bold transition-colors hover:border-brand hover:text-brand"
+                >
+                  <PinIcon className="h-[14px] w-[14px]" />
+                  길찾기 <span aria-hidden>↗</span>
+                </a>
+              )}
+
+              <ShareButton title={business.name} text={business.tagline} />
+            </div>
 
             <dl className="mt-6 space-y-3 border-t border-line pt-6">
               {rows.map((row) => (
@@ -218,20 +256,24 @@ export default async function BusinessDetailPage({
             <h2 className="flex items-center gap-2.5 text-[19px] font-bold tracking-[-0.02em]">
               <span aria-hidden className="block h-[18px] w-[3px] rounded bg-brand" />
               메뉴
+              <span className="tnum text-[13px] font-semibold text-muted">{menus.length}개</span>
             </h2>
-            <ul className="mt-4 grid gap-x-6 sm:grid-cols-2">
+            <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
               {menus.map((m) => (
                 <li
                   key={m.id}
-                  className="flex items-center gap-3 border-b border-line py-3"
+                  className="flex items-center gap-3 rounded-xl border border-line bg-white p-3 transition-colors hover:border-brand/40"
                 >
-                  {m.imageUrl && (
+                  {m.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={m.imageUrl}
                       alt=""
-                      className="h-12 w-12 shrink-0 rounded-lg object-cover"
+                      loading="lazy"
+                      className="h-14 w-14 shrink-0 rounded-lg object-cover"
                     />
+                  ) : (
+                    <span aria-hidden className="ph h-14 w-14 shrink-0 rounded-lg" />
                   )}
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-[14px] font-semibold">{m.name}</span>

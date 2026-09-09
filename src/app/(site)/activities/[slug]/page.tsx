@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Badge from "@/components/common/Badge";
+import PhotoGallery from "@/components/common/PhotoGallery";
+import ShareButton from "@/components/common/ShareButton";
 import { ClockIcon, PinIcon, UsersIcon } from "@/components/common/Icons";
 import { getPostBySlug, getPublicPosts } from "@/lib/repo";
+import { absoluteUrl, siteUrl } from "@/lib/siteUrl";
 
 export const revalidate = 86400;
 
@@ -29,7 +32,31 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) return { title: "협회활동" };
-  return { title: post.title, description: post.summary };
+
+  // 대표사진이 없으면 첫 번째 활동사진을 쓴다
+  const image = absoluteUrl(post.coverImage ?? post.photos?.[0]?.url ?? null);
+  const url = `${siteUrl()}/activities/${post.slug}`;
+
+  return {
+    title: post.title,
+    description: post.summary,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      siteName: "원주청년소상공인협회",
+      title: post.title,
+      description: post.summary,
+      url,
+      publishedTime: post.date,
+      images: image ? [{ url: image, width: 1200, height: 750, alt: post.title }] : [],
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title: post.title,
+      description: post.summary,
+      images: image ? [image] : [],
+    },
+  };
 }
 
 /**
@@ -94,6 +121,9 @@ export default async function PostDetailPage({
               </span>
             )}
           </p>
+          <div className="mt-6">
+            <ShareButton title={post.title} text={post.summary} />
+          </div>
         </header>
 
         <div className="mt-8">
@@ -128,32 +158,14 @@ export default async function PostDetailPage({
             <h2 className="flex items-center gap-2.5 text-[19px] font-bold tracking-[-0.02em]">
               <span aria-hidden className="block h-[18px] w-[3px] rounded bg-brand" />
               활동사진
+              <span className="tnum text-[13px] font-semibold text-muted">{photos.length}장</span>
             </h2>
 
-            <ul className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {photos.map((photo) => (
-                <li key={photo.id}>
-                  <figure>
-                    {photo.url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={photo.url}
-                        alt=""
-                        className="aspect-[4/3] w-full rounded-xl object-cover"
-                      />
-                    ) : (
-                      <div aria-hidden className="ph aspect-[4/3] w-full rounded-xl" />
-                    )}
-                    {/* 사진 한 장마다 설명을 붙인다. 몇 년 뒤 활동기록의 가치가 달라진다. */}
-                    {photo.caption && (
-                      <figcaption className="mt-2.5 text-[12.5px] leading-[1.6] text-muted">
-                        {photo.caption}
-                      </figcaption>
-                    )}
-                  </figure>
-                </li>
-              ))}
-            </ul>
+            {/* 눌러서 크게 보고 좌우로 넘긴다.
+                사진 한 장마다 붙인 설명은 크게 볼 때도 함께 나온다. */}
+            <PhotoGallery
+              photos={photos.map((p) => ({ id: p.id, url: p.url, caption: p.caption }))}
+            />
           </section>
         )}
       </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { siteUrl } from "@/lib/siteUrl";
 import { getLogoAssets } from "@/lib/assets";
 import "./globals.css";
 
@@ -12,6 +13,19 @@ export const metadata: Metadata = {
   // 홈화면에 추가했을 때 앱처럼 열리게 한다
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, title: "원청협", statusBarStyle: "default" },
+
+  // 상대주소로 적은 이미지도 공유 카드에서 절대주소로 바뀌게 한다
+  metadataBase: new URL(siteUrl()),
+  openGraph: {
+    type: "website",
+    siteName: "원주청년소상공인협회",
+    locale: "ko_KR",
+    title: "원주청년소상공인협회",
+    description:
+      "원주에서 청년으로, 소상공인으로 살아가는 사람들. 원주청년소상공인협회 공식 홈페이지입니다.",
+    url: siteUrl(),
+    images: [{ url: "/logo/wj-horizontal.png", width: 668, height: 160 }],
+  },
 };
 
 /**
