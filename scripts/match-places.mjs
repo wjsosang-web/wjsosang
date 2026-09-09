@@ -25,6 +25,15 @@ const UA =
   "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1";
 
 const apply = process.argv.includes("--apply");
+/** --pair "우리업장명=플레이스이름" 으로 직접 짝지어 준다 (여러 번 쓸 수 있다) */
+const manualPairs = process.argv
+  .map((a, i) => (a === "--pair" ? process.argv[i + 1] : null))
+  .filter(Boolean)
+  .map((s) => {
+    const [left, right] = String(s).split("=");
+    return { business: (left ?? "").trim(), place: (right ?? "").trim() };
+  })
+  .filter((p) => p.business && p.place);
 const includeMaybe = process.argv.includes("--all");
 
 const db = createClient(
@@ -128,13 +137,17 @@ for (const business of businesses) {
 
     let score = similarity(bn, pn);
 
-    // 한쪽이 다른 쪽을 통째로 품고 있으면 같은 가게일 가능성이 높다.
-    // 다만 짧은 이름은 우연히 들어맞는다("소다모터스" 안에 "다모").
-    // 그래서 품긴 쪽이 세 글자 이상이고 길이 차이가 크지 않을 때만 인정한다.
-    if (bn.includes(pn) || pn.includes(bn)) {
-      const short = Math.min(bn.length, pn.length);
-      const long = Math.max(bn.length, pn.length);
-      if (short >= 3 && short / long >= 0.5) score = Math.max(score, 0.9);
+    // 품고 있는 방향에 따라 뜻이 다르다.
+    //
+    // 우리 이름이 플레이스 이름 안에 있으면 같은 가게일 가능성이 높다.
+    // 플레이스는 "원주에어컨청소 세탁기청소 뉴케어"처럼 홍보 문구를 덧붙이기 때문이다.
+    //
+    // 반대로 플레이스 이름이 우리 이름 안에 있는 경우는 우연일 수 있다.
+    // ("소다모터스" 안에 "다모") 그래서 길이가 비슷할 때만 인정한다.
+    if (bn.length >= 3 && pn.includes(bn)) {
+      score = Math.max(score, 0.9);
+    } else if (pn.length >= 3 && bn.includes(pn) && pn.length / bn.length >= 0.6) {
+      score = Math.max(score, 0.9);
     }
 
     // 동네까지 같으면 확신이 올라간다
@@ -143,6 +156,17 @@ for (const business of businesses) {
     if (sameDistrict) score += 0.06;
 
     if (!best || score > best.score) best = { place, score, sameDistrict };
+  }
+
+  // 직접 짝지어 준 것이 있으면 그것을 따른다
+  const manual = manualPairs.find((m) => m.business === business.name);
+  if (manual) {
+    const found = places.find((p) => p.name === manual.place);
+    if (found) {
+      results.push({ business, place: found, score: 1, sameDistrict: false, level: "확실" });
+      continue;
+    }
+    console.log(`직접 지정한 "${manual.place}" 를 목록에서 찾지 못했습니다`);
   }
 
   const level =

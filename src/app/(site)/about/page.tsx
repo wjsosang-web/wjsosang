@@ -260,7 +260,7 @@ export default async function AboutPage() {
             </p>
           </div>
 
-          <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
+          <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {partnerList.map((p) => (
               <li key={p.id}>
                 <PartnerTile partner={p} />
@@ -282,25 +282,37 @@ function PartnerTile({
 }: {
   partner: { name: string; logo: string | null; url: string | null };
 }) {
+  // 로고 파일이 아직 없는 기관은 이름 앞 두 글자로 자리를 지킨다.
+  // 빈 네모나 "CI" 글자보다 덜 어색하고, 로고를 넣으면 바로 대체된다.
+  const initials = partner.name.replace(/s/g, "").slice(0, 2);
+
   const inner = (
     <>
       {partner.logo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={partner.logo} alt={partner.name} className="h-9 w-auto shrink-0" />
+        <img
+          src={partner.logo}
+          alt={partner.name}
+          className="h-10 w-auto max-w-[120px] shrink-0 object-contain"
+        />
       ) : (
         <span
           aria-hidden
-          className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-tint text-[10px] font-bold text-city"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-tint text-[13px] font-bold text-brand-deep"
         >
-          CI
+          {initials}
         </span>
       )}
-      <span className="truncate text-[13px] font-bold">{partner.name}</span>
+
+      {/* 기관 이름은 잘리면 안 된다. 길면 두 줄로 내려 쓴다. */}
+      <span className="text-center text-[13px] font-bold leading-snug break-keep">
+        {partner.name}
+      </span>
     </>
   );
 
   const className =
-    "flex h-full items-center gap-2.5 rounded-xl border border-line bg-white px-4 py-4 transition-colors hover:border-line-strong";
+    "flex h-full flex-col items-center justify-start gap-2.5 rounded-xl border border-line bg-white px-3 py-4 text-center transition-colors hover:border-line-strong";
 
   return partner.url ? (
     <a href={partner.url} target="_blank" rel="noreferrer noopener" className={className}>
