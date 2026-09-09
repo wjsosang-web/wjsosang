@@ -58,10 +58,29 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
       ) : (
         <div aria-hidden className="ph-dark absolute inset-0 -z-10" />
       )}
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 bg-gradient-to-r from-forest/92 via-forest/68 to-forest/20"
-      />
+      {/* 사진 위에 흰 글씨를 얹으므로 어둡게 덮는다. 사진마다 손보지 않아도 되도록
+          왼쪽(글씨 자리)은 짙게, 오른쪽은 옅게 자동으로 깔린다.
+          아래 한 겹은 밝은 야외 사진에서 오른쪽 손글씨까지 읽히게 하는 보험이다. */}
+      {slide.image && (
+        <>
+          <div
+            aria-hidden
+            className="absolute inset-0 -z-10 bg-gradient-to-r from-forest/94 via-forest/72 to-forest/25"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 -z-10 bg-gradient-to-t from-forest/45 via-transparent to-forest/25"
+          />
+        </>
+      )}
+
+      {/* 사진이 없을 때는 무늬 위에 옅게만 덮는다 */}
+      {!slide.image && (
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-gradient-to-r from-forest/92 via-forest/68 to-forest/20"
+        />
+      )}
 
       <div className="mx-auto max-w-[1180px] px-5 py-12 md:py-16">
         <div className="flex items-center justify-between gap-8">

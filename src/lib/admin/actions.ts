@@ -6,8 +6,9 @@ import { requireAdmin } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { STORAGE_BUCKET } from "@/lib/supabase/config";
 import { importFromPlaceUrl } from "@/lib/place/import";
+import { getHeroSlides } from "@/lib/repo";
 import { ORG_GROUPS, REMOVE_IMAGE } from "@/lib/types";
-import type { OrgGroup, PlaceImportResult } from "@/lib/types";
+import type { HeroSlide, OrgGroup, PlaceImportResult } from "@/lib/types";
 
 /**
  * 관리자 저장 작업.
@@ -398,6 +399,131 @@ export async function deleteInquiry(form: FormData) {
 /* ------------------------------------------------------------------ */
 
 /** 협회소개에서 분류 탭이 나오는 순서를 저장한다 (site_settings.orgGroupOrder) */
+/* ------------------------------------------------------------------ */
+/* 히어로 슬라이드 — 메인홈 맨 위 배너                                   */
+/* ------------------------------------------------------------------ */
+
+/** 지금 저장된 슬라이드를 읽는다. 아직 없으면 예비 데이터로 시작한다. */
+async function readHeroSlides(): Promise<HeroSlide[]> {
+  const db = getAdminSupabase();
+  const { data } = await db
+    .from("site_settings")
+    .select("value")
+    .eq("key", "hero_slides")
+    .maybeSingle();
+
+  if (Array.isArray(data?.value)) return data.value as HeroSlide[];
+  return getHeroSlides();
+}
+
+async function writeHeroSlides(slides: HeroSlide[]): Promise<void> {
+  const db = getAdminSupabase();
+  const ordered = slides.map((s, i) => ({ ...s, order: i + 1 }));
+
+  const { error } = await db
+    .from("site_settings")
+    .upsert({ key: "hero_slides", value: ordered, updated_at: new Date().toISOString() });
+
+  if (error) throw new Error(error.message);
+
+  refreshPublicPages();
+  revalidatePath("/admin/hero");
+}
+
+export async function saveHeroSlide(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+
+    const slides = await readHeroSlides();
+    const index = num(form, "index") ?? -1;
+    if (index < 0 || index >= slides.length) {
+      return { ok: false, message: "슬라이드를 찾지 못했습니다." };
+    }
+
+    const title = str(form, "title");
+    if (!title) return { ok: false, message: "제목을 입력해 주세요." };
+
+    // 강조할 단어는 쉼표로 받는다. 제목에 없는 단어가 들어와도 그냥 무시된다.
+    const highlight = str(form, "highlight")
+      .split(",")
+      .map((w) => w.trim())
+      .filter(Boolean);
+
+    const links = [1, 2]
+      .map((n) => ({
+        label: str(form, `linkLabel${n}`),
+        href: str(form, `linkHref${n}`),
+      }))
+      .filter((l) => l.label && l.href);
+
+    slides[index] = {
+      ...slides[index],
+      eyebrow: str(form, "eyebrow"),
+      title,
+      highlight,
+      description: str(form, "description"),
+      note: str(form, "note"),
+      thumbTitle: title,
+      thumbDescription: str(form, "description"),
+      image: await pickedImage(form, "imageFile", "image", "hero"),
+      links,
+    };
+
+    await writeHeroSlides(slides);
+    return { ok: true, message: "저장했습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+export async function addHeroSlide() {
+  await requireAdmin();
+  const slides = await readHeroSlides();
+
+  slides.push({
+    id: `hs${Date.now()}`,
+    eyebrow: "원주청년소상공인협회",
+    title: "새 슬라이드",
+    highlight: [],
+    description: "",
+    note: "",
+    thumbTitle: "새 슬라이드",
+    thumbDescription: "",
+    image: null,
+    links: [],
+    order: slides.length + 1,
+  });
+
+  await writeHeroSlides(slides);
+}
+
+export async function deleteHeroSlide(form: FormData) {
+  await requireAdmin();
+  const slides = await readHeroSlides();
+  const index = Number(form.get("index"));
+
+  // 한 장은 남겨 둔다. 전부 지우면 메인홈 맨 위가 비어 버린다.
+  if (slides.length <= 1 || !(index >= 0 && index < slides.length)) return;
+
+  slides.splice(index, 1);
+  await writeHeroSlides(slides);
+}
+
+export async function moveHeroSlide(form: FormData) {
+  await requireAdmin();
+  const slides = await readHeroSlides();
+
+  const index = Number(form.get("index"));
+  const to = index + (String(form.get("direction")) === "up" ? -1 : 1);
+  if (!(index >= 0 && index < slides.length) || to < 0 || to >= slides.length) return;
+
+  [slides[index], slides[to]] = [slides[to], slides[index]];
+  await writeHeroSlides(slides);
+}
+
 /* ------------------------------------------------------------------ */
 /* 팝업 — 메인홈에 뜨는 알림창                                          */
 /* ------------------------------------------------------------------ */
