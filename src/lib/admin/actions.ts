@@ -511,7 +511,7 @@ export async function saveSiteList(
     await requireAdmin();
 
     const key = str(form, "key");
-    const allowed = ["programs", "history", "faqs", "stats"];
+    const allowed = ["programs", "history", "faqs", "stats", "partners"];
     if (!allowed.includes(key)) return { ok: false, message: "알 수 없는 항목입니다." };
 
     let rows: Record<string, unknown>[];
@@ -535,6 +535,17 @@ export async function saveSiteList(
       }
       if (key === "stats") {
         return { id, ...pick(row, ["value", "label", "description", "icon"]), order: i + 1 };
+      }
+      if (key === "partners") {
+        const cleanedRow = pick(row, ["name", "note", "logo", "url"]);
+        // 빈 칸은 null 로 둔다. 화면에서 "없음"과 "빈 글자"를 구분해 쓴다.
+        return {
+          id,
+          name: cleanedRow.name,
+          note: cleanedRow.note,
+          logo: cleanedRow.logo || null,
+          url: cleanedRow.url || null,
+        };
       }
       return { id, ...pick(row, ["question", "answer"]) };
     });

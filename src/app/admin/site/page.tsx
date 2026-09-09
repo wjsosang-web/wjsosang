@@ -11,6 +11,7 @@ import {
   getFaqs,
   getHistory,
   getPresidentMessage,
+  getPartners,
   getPrograms,
   getSiteInfo,
   getStats,
@@ -25,7 +26,7 @@ const ICONS = ["users", "chart", "chat", "heart", "megaphone", "store", "calenda
 export default async function AdminSitePage() {
   if (!(await getCurrentAdmin())) redirect("/admin/login");
 
-  const [info, story, president, programs, history, faqs, stats] = await Promise.all([
+  const [info, story, president, programs, history, faqs, stats, partners] = await Promise.all([
     getSiteInfo(),
     getStory(),
     getPresidentMessage(),
@@ -33,6 +34,7 @@ export default async function AdminSitePage() {
     getHistory(),
     getFaqs(),
     getStats(),
+    getPartners(),
   ]);
 
   return (
@@ -212,6 +214,31 @@ export default async function AdminSitePage() {
           upcoming: h.upcoming === true,
         }))}
         newRow={{ id: "", year: "", title: "", text: "", upcoming: false }}
+      />
+
+      <ListEditor
+        settingKey="partners"
+        title="함께하는 기관"
+        description="협회소개 맨 아래에 나옵니다. 로고 파일이 없으면 이름 앞 두 글자가 대신 나옵니다."
+        fields={[
+          { name: "name", label: "기관 이름", placeholder: "소상공인시장진흥공단" },
+          { name: "url", label: "홈페이지 주소", placeholder: "https://" },
+          {
+            name: "logo",
+            label: "로고 파일 경로",
+            placeholder: "/logo/partner-semas.png",
+            type: "long",
+          },
+          { name: "note", label: "메모", type: "long" },
+        ]}
+        rows={partners.map((p) => ({
+          id: p.id,
+          name: p.name,
+          note: p.note,
+          logo: p.logo ?? "",
+          url: p.url ?? "",
+        }))}
+        newRow={{ id: "", name: "", note: "", logo: "", url: "" }}
       />
 
       <ListEditor
