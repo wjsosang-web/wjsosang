@@ -398,6 +398,71 @@ export async function deleteInquiry(form: FormData) {
 /* ------------------------------------------------------------------ */
 
 /** 협회소개에서 분류 탭이 나오는 순서를 저장한다 (site_settings.orgGroupOrder) */
+/* ------------------------------------------------------------------ */
+/* 팝업 — 메인홈에 뜨는 알림창                                          */
+/* ------------------------------------------------------------------ */
+
+export async function savePopup(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+    const db = getAdminSupabase();
+
+    const id = nullable(form, "id");
+    const title = str(form, "title");
+    if (!title) return { ok: false, message: "제목을 입력해 주세요." };
+
+    // 날짜만 받고 시각은 하루의 처음과 끝으로 채운다.
+    // 관리자가 시각까지 정하게 하면 실수하기 쉽고, 실제로 필요한 적도 드물다.
+    const startDate = str(form, "startDate");
+    const endDate = str(form, "endDate");
+    if (!startDate || !endDate) {
+      return { ok: false, message: "노출 기간을 정해 주세요." };
+    }
+    if (endDate < startDate) {
+      return { ok: false, message: "종료일이 시작일보다 빠릅니다." };
+    }
+
+    const payload = {
+      title,
+      body: str(form, "body"),
+      image_url: await pickedImage(form, "imageFile", "imageUrl", "popups"),
+      link_url: nullable(form, "linkUrl"),
+      link_label: nullable(form, "linkLabel"),
+      start_at: new Date(`${startDate}T00:00:00+09:00`).toISOString(),
+      end_at: new Date(`${endDate}T23:59:59+09:00`).toISOString(),
+      status: str(form, "status") || "draft",
+    };
+
+    if (id) {
+      const { error } = await db.from("popups").update(payload).eq("id", id);
+      if (error) throw new Error(error.message);
+    } else {
+      const { error } = await db.from("popups").insert(payload);
+      if (error) throw new Error(error.message);
+    }
+
+    refreshPublicPages();
+    revalidatePath("/admin/popups");
+
+    return { ok: true, message: id ? "수정했습니다." : "만들었습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+export async function deletePopup(form: FormData) {
+  await requireAdmin();
+  const db = getAdminSupabase();
+  const id = String(form.get("id") ?? "");
+  if (id) await db.from("popups").delete().eq("id", id);
+  refreshPublicPages();
+  revalidatePath("/admin/popups");
+  redirect("/admin/popups");
+}
+
 export async function saveOrgGroupOrder(
   _prev: ActionResult | null,
   form: FormData,

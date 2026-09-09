@@ -1,7 +1,7 @@
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { toBusiness, toOrgMember, toPost } from "@/lib/repo/supabase";
 import { toDateKey } from "@/lib/date";
-import type { Business, Member, OrgMember, Post } from "@/lib/types";
+import type { Business, Member, OrgMember, PopupNotice, Post } from "@/lib/types";
 
 /**
  * 관리자 화면에서 쓰는 조회.
@@ -31,6 +31,8 @@ export interface DashboardCounts {
   upcomingEvents: number;
   unhandledInquiries: number;
   recentActivities: number;
+  /** 지금 화면에 뜨고 있는 팝업 수 */
+  activePopups: number;
 }
 
 export async function getDashboardCounts(): Promise<DashboardCounts> {
@@ -38,14 +40,29 @@ export async function getDashboardCounts(): Promise<DashboardCounts> {
   const today = toDateKey(new Date());
   const head = { count: "exact" as const, head: true };
 
-  const [members, businesses, publicBusinesses, upcomingEvents, unhandledInquiries, activities] =
-    await Promise.all([
+  const now = new Date().toISOString();
+
+  const [
+    members,
+    businesses,
+    publicBusinesses,
+    upcomingEvents,
+    unhandledInquiries,
+    activities,
+    activePopups,
+  ] = await Promise.all([
       db.from("members").select("id", head),
       db.from("businesses").select("id", head),
       db.from("businesses").select("id", head).eq("status", "public"),
       db.from("posts").select("id", head).eq("type", "event").gte("date", today),
       db.from("inquiries").select("id", head).eq("handled", false),
       db.from("posts").select("id", head).eq("type", "activity"),
+      db
+        .from("popups")
+        .select("id", head)
+        .eq("status", "public")
+        .lte("start_at", now)
+        .gte("end_at", now),
     ]);
 
   return {
@@ -55,6 +72,7 @@ export async function getDashboardCounts(): Promise<DashboardCounts> {
     upcomingEvents: upcomingEvents.count ?? 0,
     unhandledInquiries: unhandledInquiries.count ?? 0,
     recentActivities: activities.count ?? 0,
+    activePopups: activePopups.count ?? 0,
   };
 }
 
@@ -162,4 +180,32 @@ export async function listInquiries(): Promise<Inquiry[]> {
     handled: Boolean(r.handled),
     createdAt: r.created_at as string,
   }));
+}
+
+/* ------------------------------------------------------------------ */
+/* 팝업                                                                */
+/* ------------------------------------------------------------------ */
+
+const toPopup = (r: Row): PopupNotice => ({
+  id: r.id as string,
+  title: r.title as string,
+  body: (r.body as string | null) ?? "",
+  imageUrl: (r.image_url as string | null) ?? null,
+  linkUrl: (r.link_url as string | null) ?? null,
+  linkLabel: (r.link_label as string | null) ?? null,
+  startAt: r.start_at as string,
+  endAt: r.end_at as string,
+  status: r.status as PopupNotice["status"],
+});
+
+export async function listPopups(): Promise<PopupNotice[]> {
+  const db = getAdminSupabase();
+  const { data } = await db.from("popups").select("*").order("start_at", { ascending: false });
+  return (data ?? []).map((r) => toPopup(r as Row));
+}
+
+export async function getPopupById(id: string): Promise<PopupNotice | null> {
+  const db = getAdminSupabase();
+  const { data } = await db.from("popups").select("*").eq("id", id).maybeSingle();
+  return data ? toPopup(data as Row) : null;
 }

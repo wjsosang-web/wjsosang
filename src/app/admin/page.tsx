@@ -81,6 +81,7 @@ export default async function AdminHomePage() {
       unit: "건",
       href: "/admin/inquiries",
     },
+    { label: "팝업", value: counts.activePopups, unit: "건", href: "/admin/popups" },
     {
       label: "활동소식",
       value: counts.recentActivities,
