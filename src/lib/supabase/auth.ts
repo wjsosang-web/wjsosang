@@ -1,5 +1,6 @@
 import { getServerSupabase } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { can, type Permission } from "@/lib/permissions";
 import type { Role } from "@/lib/types";
 
 /**
@@ -17,7 +18,9 @@ export interface AdminUser {
   role: Role;
 }
 
-const ADMIN_ROLES: Role[] = ["superadmin", "admin"];
+// 임원진도 관리자 화면에 들어온다. 무엇까지 할 수 있는지는
+// lib/permissions 의 can() 으로 화면마다 따로 가린다.
+const ADMIN_ROLES: Role[] = ["superadmin", "admin", "officer"];
 
 export async function getCurrentAdmin(): Promise<AdminUser | null> {
   if (!isSupabaseConfigured()) return null;
@@ -49,5 +52,20 @@ export async function getCurrentAdmin(): Promise<AdminUser | null> {
 export async function requireAdmin(): Promise<AdminUser> {
   const admin = await getCurrentAdmin();
   if (!admin) throw new Error("관리자 권한이 필요합니다.");
+  return admin;
+}
+
+/**
+ * 특정 권한이 없으면 예외를 던진다.
+ *
+ * requireAdmin() 만으로는 임원진과 운영자를 가르지 못한다.
+ * 권한을 바꾸거나 협회 정보를 고치는 일은 운영자만 해야 하므로
+ * 그런 동작은 이 함수로 한 번 더 막는다.
+ */
+export async function requirePermission(permission: Permission): Promise<AdminUser> {
+  const admin = await requireAdmin();
+  if (!can(admin.role, permission)) {
+    throw new Error("이 작업을 할 권한이 없습니다. 운영자에게 문의해 주세요.");
+  }
   return admin;
 }

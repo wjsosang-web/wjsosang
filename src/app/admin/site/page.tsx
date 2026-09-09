@@ -64,6 +64,12 @@ export default async function AdminSitePage() {
         title="기본 정보"
         description="협회문의 화면, 푸터, 헤더 전화 버튼에 쓰입니다."
         action={saveSiteInfo}
+        image={{
+          name: "contactImageFile",
+          label: "협회문의 화면 사진",
+          hint: "연락처 옆에 나옵니다. 사무국 전경이나 협회 단체사진이 어울립니다.",
+          currentUrl: info.contactImage,
+        }}
         fields={[
           { name: "name", label: "협회 이름", defaultValue: info.name, type: "half", required: true },
           { name: "shortName", label: "줄임말", defaultValue: info.shortName, type: "half" },

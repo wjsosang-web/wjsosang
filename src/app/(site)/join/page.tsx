@@ -18,12 +18,7 @@ export default async function JoinPage() {
     getCurrentMember(),
   ]);
 
-  // 이미 신청한 사람은 신청서 대신 진행 상황으로 보낸다
-  const applyHref = current
-    ? current.member
-      ? "/my"
-      : "/join/apply"
-    : "/login?next=%2Fjoin%2Fapply";
+  const signedIn = Boolean(current);
 
   return (
     <article className="pb-16">
@@ -133,28 +128,60 @@ export default async function JoinPage() {
           </section>
         )}
 
-        {/* 신청 */}
+        {/* 가입 절차 */}
+        <section>
+          <h2 className="flex items-center gap-2.5 text-[20px] font-bold tracking-[-0.02em]">
+            <span aria-hidden className="block h-[19px] w-[3px] rounded bg-brand" />
+            가입 절차
+          </h2>
+
+          <ol className="mt-4 space-y-2.5">
+            {[
+              { step: "문의", text: "아래 버튼으로 가입 문의를 남기시면 인사국에서 연락드립니다." },
+              { step: "가입 승인", text: "인사국에서 가입 자격을 확인하고 회비 입금을 안내드립니다." },
+              {
+                step: "홈페이지 계정 만들기",
+                text: "승인이 끝나면 홈페이지에서 회원 로그인을 만들어 주세요. 인사국이 확인 후 열어드립니다.",
+              },
+            ].map((row, i) => (
+              <li key={row.step} className="flex gap-3.5 rounded-xl border border-line bg-white px-5 py-4">
+                <span
+                  aria-hidden
+                  className="tnum grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand text-[13px] font-bold text-white"
+                >
+                  {i + 1}
+                </span>
+                <span>
+                  <span className="block text-[15px] font-bold">{row.step}</span>
+                  <span className="mt-1 block text-[13.5px] leading-[1.7] text-ink-soft">
+                    {row.text}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* 문의 */}
         <section className="rounded-2xl bg-brand p-6 text-white md:p-8">
-          <p className="text-[18px] font-bold leading-[1.5] md:text-[21px]">
-            준비되셨나요?
-          </p>
+          <p className="text-[18px] font-bold leading-[1.5] md:text-[21px]">준비되셨나요?</p>
           <p className="mt-2 text-[14px] leading-[1.8] text-white/85 md:text-[15px]">
-            신청서를 쓰시면 인사국에서 확인한 뒤 승인해 드립니다.
-            {site.phoneOwner && ` 궁금한 점은 ${site.phoneOwner}에게 문의해 주세요.`}
+            가입 문의를 남겨주시면 인사국에서 연락드립니다.
+            {site.phoneOwner && ` 급하시면 ${site.phone} (${site.phoneOwner}) 로 전화 주셔도 됩니다.`}
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2.5">
             <Link
-              href={applyHref}
+              href="/contact?kind=join"
               className="rounded-lg bg-white px-7 py-3.5 text-[15px] font-bold text-brand-deep transition-colors hover:bg-mist"
             >
-              가입 신청하기 <span aria-hidden>→</span>
+              가입 문의하기 <span aria-hidden>→</span>
             </Link>
             <Link
-              href="/contact?kind=join"
+              href={signedIn ? "/my" : "/login"}
               className="rounded-lg border border-white/50 px-7 py-3.5 text-[15px] font-bold text-white transition-colors hover:bg-white/10"
             >
-              먼저 문의하기
+              {signedIn ? "내 정보 보기" : "가입 승인받으셨나요? 로그인"}
             </Link>
           </div>
         </section>

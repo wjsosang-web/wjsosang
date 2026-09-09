@@ -121,13 +121,22 @@ export default async function ContactPage({
             ))}
           </dl>
 
+          {/* 협회 사진 — 관리자 → 협회 정보에서 바꾼다.
+              없으면 자리표시 무늬가 그대로 나온다. */}
           <div className="relative isolate hidden overflow-hidden rounded-xl lg:block">
-            <div aria-hidden className="ph absolute inset-0 -z-10" />
+            {site.contactImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={site.contactImage}
+                alt=""
+                className="absolute inset-0 -z-10 h-full w-full object-cover"
+              />
+            ) : (
+              <div aria-hidden className="ph absolute inset-0 -z-10" />
+            )}
             <div aria-hidden className="absolute inset-0 -z-10 bg-forest/55" />
             <p className="absolute inset-x-0 bottom-0 p-5 text-[13.5px] font-bold leading-[1.6] text-white">
-              원주 청년 소상공인의
-              <br />
-              든든한 파트너, 원청협입니다.
+              {site.tagline || "원주 청년 소상공인의 든든한 파트너, 원청협입니다."}
             </p>
           </div>
         </div>

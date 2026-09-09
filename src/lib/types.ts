@@ -424,6 +424,8 @@ export interface SiteInfo {
   mapUrl: string;
   instagramUrl: string;
   youtubeUrl: string;
+  /** 협회문의 화면에 나오는 사진 (사무국 전경 등) */
+  contactImage: string | null;
   /** 푸터 우측 문구 */
   tagline: string;
   slogan: string;

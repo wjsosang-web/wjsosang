@@ -107,12 +107,30 @@ export default function SitePopup({
 
   return (
     <div
+      // 어두운 바깥을 눌러도 닫힌다.
+      // 좁은 화면에서는 팝업이 아래쪽에 붙고 위쪽은 어두운 막이 덮는데,
+      // 그 자리가 하필 헤더의 메뉴 버튼 자리다. 닫을 방법이 버튼뿐이면
+      // 메뉴가 눌리지 않는 것처럼 보인다.
+      onClick={() => close(item.id, false)}
       className="fixed inset-0 z-[80] flex items-end justify-center bg-forest/60 p-4 sm:items-center"
       role="dialog"
       aria-modal="true"
       aria-labelledby="popup-title"
     >
-      <div className="w-full max-w-[420px] overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-[420px] overflow-hidden rounded-2xl bg-white shadow-2xl"
+      >
+        {/* 닫는 방법이 눈에 보이게 ✕ 를 둔다 */}
+        <button
+          type="button"
+          onClick={() => close(item.id, false)}
+          aria-label="닫기"
+          className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full bg-forest/45 text-[15px] text-white backdrop-blur transition-colors hover:bg-forest/70"
+        >
+          ✕
+        </button>
+
         {isEvent ? (
           <p className="bg-brand px-6 py-3 text-[12.5px] font-bold text-white">
             오늘 열리는 협회 행사입니다

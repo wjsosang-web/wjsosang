@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "@/lib/supabase/auth";
+import { requireAdmin, requirePermission } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { STORAGE_BUCKET } from "@/lib/supabase/config";
 import { importFromPlaceUrl } from "@/lib/place/import";
@@ -411,7 +411,7 @@ export async function saveMemberDoc(
   form: FormData,
 ): Promise<ActionResult> {
   try {
-    await requireAdmin();
+    await requirePermission("site.manage");
     const db = getAdminSupabase();
 
     const title = str(form, "title");
@@ -534,7 +534,7 @@ export async function saveSiteInfo(
   form: FormData,
 ): Promise<ActionResult> {
   try {
-    await requireAdmin();
+    await requirePermission("site.manage");
 
     const name = str(form, "name");
     if (!name) return { ok: false, message: "협회 이름을 입력해 주세요." };
@@ -554,6 +554,7 @@ export async function saveSiteInfo(
       mapUrl: str(form, "mapUrl"),
       instagramUrl: str(form, "instagramUrl"),
       youtubeUrl: str(form, "youtubeUrl"),
+      contactImage: await pickedImage(form, "contactImageFile", "contactImage", "site"),
       tagline: str(form, "tagline"),
       slogan: str(form, "slogan"),
     });
@@ -570,7 +571,7 @@ export async function saveStory(
   form: FormData,
 ): Promise<ActionResult> {
   try {
-    await requireAdmin();
+    await requirePermission("site.manage");
 
     await putSetting("story", {
       heading: str(form, "heading"),
@@ -595,7 +596,7 @@ export async function savePresidentMessage(
   form: FormData,
 ): Promise<ActionResult> {
   try {
-    await requireAdmin();
+    await requirePermission("site.manage");
 
     await putSetting("president_message", {
       quote: str(form, "quote"),
@@ -621,7 +622,7 @@ export async function saveSiteList(
   form: FormData,
 ): Promise<ActionResult> {
   try {
-    await requireAdmin();
+    await requirePermission("site.manage");
 
     const key = str(form, "key");
     const allowed = ["programs", "history", "faqs", "stats", "partners"];

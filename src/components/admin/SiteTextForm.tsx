@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import ImageInput from "@/components/admin/ImageInput";
 import type { ActionResult } from "@/lib/admin/actions";
 
 export interface TextField {
@@ -25,11 +26,14 @@ export default function SiteTextForm({
   title,
   description,
   fields,
+  image,
   action: saveAction,
 }: {
   title: string;
   description?: string;
   fields: TextField[];
+  /** 이 묶음에 사진 한 장을 함께 둘 때 */
+  image?: { name: string; label: string; hint?: string; currentUrl: string | null; aspect?: number };
   action: (prev: ActionResult | null, form: FormData) => Promise<ActionResult>;
 }) {
   const [state, action, pending] = useActionState<ActionResult | null, FormData>(
@@ -78,6 +82,19 @@ export default function SiteTextForm({
           </div>
         ))}
       </div>
+
+      {image && (
+        <div className="mt-4 border-t border-line pt-4">
+          <ImageInput
+            name={image.name}
+            label={image.label}
+            hint={image.hint}
+            currentUrl={image.currentUrl}
+            folder="site"
+            aspect={image.aspect ?? 4 / 3}
+          />
+        </div>
+      )}
 
       <div className="mt-4 flex items-center gap-3">
         <button
