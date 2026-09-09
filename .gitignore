@@ -9,3 +9,7 @@ build/
 next-env.d.ts
 .DS_Store
 Thumbs.db
+
+# 임원 사진 원본은 올리지 않는다 (저장소에 업로드된 뒤에는 필요 없다)
+photos/*
+!photos/README.md
