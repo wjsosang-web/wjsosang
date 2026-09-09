@@ -20,6 +20,7 @@ import type {
   Faq,
   HeroSlide,
   HistoryItem,
+  JoinGuide,
   Member,
   MenuItem,
   OrgGroup,
@@ -96,6 +97,10 @@ export async function getHistory(): Promise<HistoryItem[]> {
 
 export async function getPartners(): Promise<PartnerOrg[]> {
   return setting("partners", seed.getPartners);
+}
+
+export async function getJoinGuide(): Promise<JoinGuide> {
+  return setting("join_guide", seed.getJoinGuide);
 }
 
 export async function getFaqs(): Promise<Faq[]> {

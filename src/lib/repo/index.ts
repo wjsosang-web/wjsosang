@@ -27,6 +27,7 @@ export { toDateKey } from "@/lib/date";
 export const getSiteInfo = () => impl().getSiteInfo();
 export const getStats = () => impl().getStats();
 export const getHeroSlides = () => impl().getHeroSlides();
+export const getJoinGuide = () => impl().getJoinGuide();
 export const getFaqs = () => impl().getFaqs();
 export const getPresidentMessage = () => impl().getPresidentMessage();
 export const getActivePopups = (now?: Date) => impl().getActivePopups(now);

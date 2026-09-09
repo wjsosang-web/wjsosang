@@ -385,6 +385,28 @@ export interface PopupNotice {
   status: PublishStatus;
 }
 
+/** 회원가입 안내 — 관리자에서 전부 고칠 수 있다 */
+export interface JoinGuide {
+  heading: string;
+  lead: string;
+  /** 가입 자격 (예: 만 45세 이하 청년 소상공인) */
+  eligibility: string;
+  /** 입회비 · 연회비 */
+  fees: { label: string; amount: string; note: string }[];
+  /** 계좌 */
+  bankName: string;
+  accountNumber: string;
+  accountHolder: string;
+  /** 입금자명 적는 법 */
+  depositNameRule: string;
+  depositExample: string;
+  /** 갱신 · 환불 등 꼭 알아야 할 것 */
+  notices: string[];
+  /** 입금 뒤 할 일 */
+  afterPayment: string;
+  image: string | null;
+}
+
 export interface SiteInfo {
   name: string;
   shortName: string;
