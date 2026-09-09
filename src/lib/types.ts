@@ -350,7 +350,14 @@ export interface HeroSlide {
   thumbTitle: string;
   thumbDescription: string;
   image: string | null;
+  /** 슬라이드마다 다른 버튼. 비우면 기본 버튼이 나온다. */
+  links: HeroLink[];
   order: number;
+}
+
+export interface HeroLink {
+  label: string;
+  href: string;
 }
 
 export interface Faq {

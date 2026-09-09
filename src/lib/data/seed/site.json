@@ -56,37 +56,76 @@
     {
       "id": "hs1",
       "eyebrow": "원주청년소상공인협회",
-      "title": "원주에서,\n청년으로,\n소상공인으로 살아가는 사람들.",
-      "highlight": ["원주", "청년", "소상공인"],
-      "description": "서로 다른 자리에서 사업하지만\n우리는 연결되어 함께 앞으로 나아갑니다.",
-      "note": "좋은 일이,\n좋은 사람들과\n원주에서 :)",
-      "thumbTitle": "원주에서,\n청년으로,\n소상공인으로\n살아가는 사람들.",
-      "thumbDescription": "",
+      "title": "원주에서 함께 성장하는\n청년 소상공인 네트워크",
+      "highlight": [
+        "원주에서",
+        "청년 소상공인"
+      ],
+      "description": "사람을 잇고, 정보를 나누고, 지역의 변화를 함께 만들어갑니다.",
+      "note": "함께 만드는\n더 나은 내일",
+      "thumbTitle": "원주에서 함께 성장하는\n청년 소상공인 네트워크",
+      "thumbDescription": "사람을 잇고, 정보를 나누고, 지역의 변화를 함께 만들어갑니다.",
       "image": null,
+      "links": [
+        {
+          "label": "협회 소개",
+          "href": "/about"
+        },
+        {
+          "label": "회원 업장 보기",
+          "href": "/business"
+        }
+      ],
       "order": 1
     },
     {
       "id": "hs2",
       "eyebrow": "원주청년소상공인협회",
-      "title": "함께하는\n원주가 더 커집니다.",
-      "highlight": ["함께하는"],
-      "description": "청년 소상공인의 도전이\n원주의 내일을 만듭니다.",
-      "note": "같이 걷는 길이\n더 멀리 갑니다 :)",
-      "thumbTitle": "함께하는\n원주가 더 커집니다.",
-      "thumbDescription": "청년 소상공인의 도전이 원주의 내일을 만듭니다.",
+      "title": "서로 배우고,\n함께 연결되는 협회",
+      "highlight": [
+        "서로",
+        "함께 연결"
+      ],
+      "description": "정기모임과 교류를 통해 청년 소상공인이 함께 성장합니다.",
+      "note": "함께 만드는\n더 나은 내일",
+      "thumbTitle": "서로 배우고,\n함께 연결되는 협회",
+      "thumbDescription": "정기모임과 교류를 통해 청년 소상공인이 함께 성장합니다.",
       "image": null,
+      "links": [
+        {
+          "label": "협회 활동",
+          "href": "/activities"
+        },
+        {
+          "label": "가입 문의",
+          "href": "/contact?kind=join"
+        }
+      ],
       "order": 2
     },
     {
       "id": "hs3",
       "eyebrow": "원주청년소상공인협회",
-      "title": "혼자가 아닌,\n함께라서 가능합니다.",
-      "highlight": ["함께라서"],
-      "description": "연결된 사람들이\n더 큰 변화를 만듭니다.",
-      "note": "혼자보다\n우리가 강합니다 :)",
-      "thumbTitle": "혼자가 아닌,\n함께라서 가능합니다.",
-      "thumbDescription": "연결된 사람들이 더 큰 변화를 만듭니다.",
+      "title": "정보는 나누고,\n기회는 함께 만듭니다",
+      "highlight": [
+        "정보",
+        "기회"
+      ],
+      "description": "지원사업, 교육, 네트워킹 소식을 빠르게 공유합니다.",
+      "note": "함께 만드는\n더 나은 내일",
+      "thumbTitle": "정보는 나누고,\n기회는 함께 만듭니다",
+      "thumbDescription": "지원사업, 교육, 네트워킹 소식을 빠르게 공유합니다.",
       "image": null,
+      "links": [
+        {
+          "label": "지원사업 안내",
+          "href": "/activities?type=notice"
+        },
+        {
+          "label": "공지사항 보기",
+          "href": "/activities"
+        }
+      ],
       "order": 3
     }
   ],
@@ -179,12 +218,48 @@
     }
   ],
   "partners": [
-    { "id": "wonju-city", "name": "원주시", "logo": "/logo/wonju-city.png", "note": "지역 소상공인 지원사업 안내 및 협력", "url": "https://www.wonju.go.kr" },
-    { "id": "wonju-council", "name": "원주시의회", "logo": "/logo/partner-wonju-council.png", "note": "", "url": null },
-    { "id": "gangwon", "name": "강원특별자치도", "logo": "/logo/partner-gangwon.png", "note": "", "url": null },
-    { "id": "semas", "name": "소상공인시장진흥공단", "logo": "/logo/partner-semas.png", "note": "", "url": null },
-    { "id": "gwcg", "name": "강원신용보증재단", "logo": "/logo/partner-gwcg.png", "note": "", "url": null },
-    { "id": "wonju-cci", "name": "원주상공회의소", "logo": "/logo/partner-wonju-cci.png", "note": "", "url": null }
+    {
+      "id": "wonju-city",
+      "name": "원주시",
+      "logo": "/logo/wonju-city.png",
+      "note": "지역 소상공인 지원사업 안내 및 협력",
+      "url": "https://www.wonju.go.kr"
+    },
+    {
+      "id": "wonju-council",
+      "name": "원주시의회",
+      "logo": "/logo/partner-wonju-council.png",
+      "note": "",
+      "url": null
+    },
+    {
+      "id": "gangwon",
+      "name": "강원특별자치도",
+      "logo": "/logo/partner-gangwon.png",
+      "note": "",
+      "url": null
+    },
+    {
+      "id": "semas",
+      "name": "소상공인시장진흥공단",
+      "logo": "/logo/partner-semas.png",
+      "note": "",
+      "url": null
+    },
+    {
+      "id": "gwcg",
+      "name": "강원신용보증재단",
+      "logo": "/logo/partner-gwcg.png",
+      "note": "",
+      "url": null
+    },
+    {
+      "id": "wonju-cci",
+      "name": "원주상공회의소",
+      "logo": "/logo/partner-wonju-cci.png",
+      "note": "",
+      "url": null
+    }
   ],
   "faqs": [
     {

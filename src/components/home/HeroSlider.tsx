@@ -3,13 +3,19 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Highlighted } from "@/components/common/PageHero";
-import type { HeroSlide } from "@/lib/types";
+import type { HeroLink, HeroSlide } from "@/lib/types";
 
 /**
  * 메인 히어로 슬라이드.
  * 슬라이드 장수와 문구는 전부 데이터에서 온다.
  */
 const AUTOPLAY_MS = 7000;
+
+/** 슬라이드에 버튼을 정해두지 않았을 때 쓰는 기본값 */
+const DEFAULT_LINKS: HeroLink[] = [
+  { label: "협회 알아보기", href: "/about" },
+  { label: "회원업장 둘러보기", href: "/business" },
+];
 
 export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [index, setIndex] = useState(0);
@@ -73,19 +79,23 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
               {slide.description}
             </p>
 
+            {/* 슬라이드마다 다른 곳으로 보낼 수 있다. 정해둔 것이 없으면 기본 두 개. */}
             <div className="mt-6 flex flex-wrap gap-2.5">
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 rounded-lg bg-brand px-6 py-3 text-[14.5px] font-bold text-white transition-colors hover:bg-brand-deep"
-              >
-                협회 알아보기 <span aria-hidden>→</span>
-              </Link>
-              <Link
-                href="/business"
-                className="inline-flex items-center gap-2 rounded-lg border border-white/50 px-6 py-3 text-[14.5px] font-bold text-white transition-colors hover:bg-white hover:text-forest"
-              >
-                회원업장 둘러보기 <span aria-hidden>→</span>
-              </Link>
+              {(slide.links?.length ? slide.links : DEFAULT_LINKS)
+                .slice(0, 2)
+                .map((link, i) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`inline-flex items-center gap-2 rounded-lg px-6 py-3 text-[14.5px] font-bold transition-colors ${
+                      i === 0
+                        ? "bg-brand text-white hover:bg-brand-deep"
+                        : "border border-white/50 text-white hover:bg-white hover:text-forest"
+                    }`}
+                  >
+                    {link.label} <span aria-hidden>→</span>
+                  </Link>
+                ))}
             </div>
 
             {/* 모바일·태블릿용 컨트롤 */}

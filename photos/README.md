@@ -44,3 +44,34 @@ node scripts/new-activity.mjs photos/운동회 --post activity-20260531-wellness
 만들어진 글은 **비공개**다. 관리자 화면에서 내용을 다듬고 공개로 바꾸면 된다.
 
 붙일 수 있는 것: `--title` `--date` `--category` `--place` `--summary` `--body`
+
+## 3. 히어로 배너 배경 사진
+
+메인홈 맨 위 슬라이드의 배경이다. 세 장을 순서대로 넣는다.
+
+```
+photos/히어로/
+  1 운동회.jpg
+  2 임원진.jpg
+  3 설명회.jpg
+```
+
+```bash
+node scripts/hero-slides.mjs --photos photos/히어로
+```
+
+한 장만 바꾸려면:
+
+```bash
+node scripts/hero-slides.mjs --photo 2=photos/새사진.jpg
+```
+
+지금 상태만 보려면 옵션 없이 실행한다.
+
+```bash
+node scripts/hero-slides.mjs
+```
+
+- **가로로 넓은 사진**을 쓴다. 2000×1100 으로 잘라 올린다
+- 왼쪽에 글씨가 얹히므로 **사람이 오른쪽에 있는 사진**이 잘 어울린다
+- 용량은 1MB 아래로 자동으로 줄인다
