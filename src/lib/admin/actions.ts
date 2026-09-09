@@ -400,6 +400,153 @@ export async function deleteInquiry(form: FormData) {
 
 /** 협회소개에서 분류 탭이 나오는 순서를 저장한다 (site_settings.orgGroupOrder) */
 /* ------------------------------------------------------------------ */
+/* 협회 정보 · 소개 글                                                   */
+/* ------------------------------------------------------------------ */
+
+async function putSetting(key: string, value: unknown): Promise<void> {
+  const db = getAdminSupabase();
+  const { error } = await db
+    .from("site_settings")
+    .upsert({ key, value, updated_at: new Date().toISOString() });
+
+  if (error) throw new Error(error.message);
+
+  refreshPublicPages();
+  revalidatePath("/admin/site");
+}
+
+/** 협회 기본 정보 — 연락처, 주소, 슬로건 */
+export async function saveSiteInfo(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+
+    const name = str(form, "name");
+    if (!name) return { ok: false, message: "협회 이름을 입력해 주세요." };
+
+    await putSetting("info", {
+      name,
+      shortName: str(form, "shortName"),
+      foundedYear: num(form, "foundedYear") ?? new Date().getFullYear(),
+      phone: str(form, "phone"),
+      phoneOwner: str(form, "phoneOwner"),
+      email: str(form, "email"),
+      address: str(form, "address"),
+      addressDetail: str(form, "addressDetail"),
+      officeHours: str(form, "officeHours"),
+      transport: str(form, "transport"),
+      parking: str(form, "parking"),
+      mapUrl: str(form, "mapUrl"),
+      instagramUrl: str(form, "instagramUrl"),
+      youtubeUrl: str(form, "youtubeUrl"),
+      tagline: str(form, "tagline"),
+      slogan: str(form, "slogan"),
+    });
+
+    return { ok: true, message: "저장했습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+/** 협회 이야기 — 협회소개 가운데 글 */
+export async function saveStory(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+
+    await putSetting("story", {
+      heading: str(form, "heading"),
+      lead: str(form, "lead"),
+      note: str(form, "note"),
+      // 빈 줄로 문단을 나눈다. 글 쓰듯 적으면 그대로 문단이 된다.
+      paragraphs: str(form, "paragraphs")
+        .split(/\n\s*\n/)
+        .map((t) => t.trim())
+        .filter(Boolean),
+    });
+
+    return { ok: true, message: "저장했습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+/** 회장 인사말 */
+export async function savePresidentMessage(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+
+    await putSetting("president_message", {
+      quote: str(form, "quote"),
+      note: str(form, "note"),
+      plaque: str(form, "plaque"),
+      body: str(form, "body"),
+    });
+
+    return { ok: true, message: "저장했습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+/**
+ * 여러 줄짜리 항목 — 주요사업 / 연혁 / 자주 묻는 질문.
+ *
+ * 화면에서 줄을 더하고 지운 결과를 JSON 으로 받는다.
+ * 관리자만 부를 수 있지만, 아는 항목만 남기고 나머지는 버린다.
+ */
+export async function saveSiteList(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+
+    const key = str(form, "key");
+    const allowed = ["programs", "history", "faqs", "stats"];
+    if (!allowed.includes(key)) return { ok: false, message: "알 수 없는 항목입니다." };
+
+    let rows: Record<string, unknown>[];
+    try {
+      const parsed = JSON.parse(str(form, "rows"));
+      if (!Array.isArray(parsed)) throw new Error("목록이 아닙니다");
+      rows = parsed;
+    } catch {
+      return { ok: false, message: "내용을 읽지 못했습니다. 화면을 새로고침해 주세요." };
+    }
+
+    const pick = (row: Record<string, unknown>, fields: string[]) =>
+      Object.fromEntries(fields.map((f) => [f, String(row[f] ?? "")]));
+
+    const cleaned = rows.map((row, i) => {
+      const id = String(row.id ?? `${key}-${i + 1}`);
+
+      if (key === "programs") return { id, ...pick(row, ["title", "description", "icon"]) };
+      if (key === "history") {
+        return { id, ...pick(row, ["year", "title", "text"]), upcoming: row.upcoming === true };
+      }
+      if (key === "stats") {
+        return { id, ...pick(row, ["value", "label", "description", "icon"]), order: i + 1 };
+      }
+      return { id, ...pick(row, ["question", "answer"]) };
+    });
+
+    await putSetting(key, cleaned);
+    return { ok: true, message: `${cleaned.length}개를 저장했습니다.` };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* 히어로 슬라이드 — 메인홈 맨 위 배너                                   */
 /* ------------------------------------------------------------------ */
 

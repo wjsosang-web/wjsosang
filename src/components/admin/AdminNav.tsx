@@ -11,6 +11,7 @@ const ITEMS = [
   { href: "/admin/org", label: "조직도" },
   { href: "/admin/popups", label: "팝업관리" },
   { href: "/admin/inquiries", label: "문의관리" },
+  { href: "/admin/site", label: "협회 정보" },
 ];
 
 export default function AdminNav() {
