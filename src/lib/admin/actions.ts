@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { refreshPublicPages } from "@/lib/admin/revalidate";
 import { redirect } from "next/navigation";
 import { requireAdmin, requirePermission } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
@@ -24,13 +25,6 @@ export interface ActionResult {
 }
 
 /** 공개 사이트 캐시를 비운다. 저장하면 바로 반영되도록. */
-function refreshPublicPages() {
-  for (const path of ["/", "/about", "/business", "/activities", "/contact"]) {
-    revalidatePath(path, "page");
-  }
-  revalidatePath("/business/[slug]", "page");
-  revalidatePath("/activities/[slug]", "page");
-}
 
 const str = (form: FormData, key: string): string => String(form.get(key) ?? "").trim();
 const nullable = (form: FormData, key: string): string | null => str(form, key) || null;

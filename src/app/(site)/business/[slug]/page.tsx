@@ -9,7 +9,12 @@ import { resolveBusinessCover } from "@/lib/images";
 import { getBusinessBySlug, getPublicBusinesses } from "@/lib/repo";
 import { absoluteUrl, siteUrl } from "@/lib/siteUrl";
 
-export const revalidate = 86400;
+/**
+ * 관리자가 저장하면 그 즉시 새로 만들어진다(refreshPublicPages).
+ * 이 값은 혹시 그 갱신을 놓쳤을 때를 위한 안전망이다.
+ * 하루로 두면 한 번 놓쳤을 때 꼬박 하루가 지나야 고쳐지므로 1분으로 둔다.
+ */
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   const businesses = await getPublicBusinesses();
