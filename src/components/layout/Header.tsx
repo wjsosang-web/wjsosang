@@ -49,7 +49,9 @@ export default function Header({ logo, phone }: Props) {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
+    /* 팝업(z-80)보다 위에 둔다.
+       공지 팝업은 알림일 뿐인데 그 아래에 헤더가 깔리면 메뉴가 눌리지 않는다. */
+    <header className="sticky top-0 z-[90] border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-[68px] max-w-[1180px] items-center gap-4 px-5 md:h-[76px]">
         <Link href="/" aria-label="원주청년소상공인협회 메인홈" className="shrink-0">
           {/* 가로로 긴 로고를 기준으로 잡았다. 세로가 긴 파일이 들어와도
@@ -157,48 +159,58 @@ export default function Header({ logo, phone }: Props) {
         </div>
       )}
 
-      {/* 모바일 메뉴 */}
+      {/* 모바일 메뉴 — 화면을 다 덮지 않고 헤더 아래로 펼쳐진다.
+          전체를 덮으면 어디에 있었는지 감이 끊기고, 닫으려면 버튼을 찾아야 한다. */}
       {open && (
-        <nav
-          id="mobile-nav"
-          aria-label="모바일 메뉴"
-          className="fixed inset-x-0 bottom-0 top-[68px] overflow-y-auto border-t border-line bg-white md:hidden"
-        >
-          <ul className="px-5">
-            {NAV.map((item) => (
-              <li key={item.href} className="border-b border-line">
-                <Link
-                  href={item.href}
-                  aria-current={isActive(item.href) ? "page" : undefined}
-                  className={`flex items-center justify-between py-4 text-[17px] font-bold ${
-                    isActive(item.href) ? "text-brand" : "text-ink"
-                  }`}
-                >
-                  {item.label}
-                  <span aria-hidden className="text-[15px] text-line-strong">
-                    →
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <>
+          <button
+            type="button"
+            aria-label="메뉴 닫기"
+            onClick={() => setOpen(false)}
+            className="fixed inset-x-0 bottom-0 top-[68px] bg-forest/40 md:hidden"
+          />
 
-          <div className="space-y-2.5 px-5 py-6">
-            <Link
-              href="/contact"
-              className="flex items-center justify-center gap-2 rounded-lg bg-brand py-4 text-[16px] font-bold text-white"
-            >
-              <MailIcon />
-              문의하기
-            </Link>
-            <a
-              href={`tel:${phone.replace(/-/g, "")}`}
-              className="block rounded-lg border border-line py-4 text-center text-[16px] font-bold text-ink"
-            >
-              협회 전화 {phone}
-            </a>
-          </div>
-        </nav>
+          <nav
+            id="mobile-nav"
+            aria-label="모바일 메뉴"
+            className="absolute inset-x-0 top-full max-h-[calc(100vh-68px)] overflow-y-auto border-t border-line bg-white shadow-[0_12px_28px_rgba(22,36,31,0.16)] md:hidden"
+          >
+            <ul className="px-5 pt-1">
+              {NAV.map((item) => (
+                <li key={item.href} className="border-b border-line last:border-0">
+                  <Link
+                    href={item.href}
+                    aria-current={isActive(item.href) ? "page" : undefined}
+                    className={`flex items-center justify-between py-3.5 text-[15.5px] font-bold ${
+                      isActive(item.href) ? "text-brand" : "text-ink"
+                    }`}
+                  >
+                    {item.label}
+                    <span aria-hidden className="text-[14px] text-line-strong">
+                      →
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex gap-2 border-t border-line px-5 py-3.5">
+              <Link
+                href="/contact"
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-brand py-3 text-[14px] font-bold text-white"
+              >
+                <MailIcon />
+                문의하기
+              </Link>
+              <a
+                href={`tel:${phone.replace(/-/g, "")}`}
+                className="flex flex-1 items-center justify-center rounded-lg border border-line py-3 text-[14px] font-bold text-ink"
+              >
+                전화 걸기
+              </a>
+            </div>
+          </nav>
+        </>
       )}
     </header>
   );

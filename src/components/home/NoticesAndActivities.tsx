@@ -28,15 +28,19 @@ export default function NoticesAndActivities({
           <ul className="mt-5">
             {notices.map((n) => (
               <li key={n.id} className="border-b border-line first:border-t">
+                {/* 좁은 화면에서는 제목을 두 줄까지 쓰고 날짜를 아래로 내린다.
+                    한 줄로 밀어 넣으면 제목이 거의 다 잘려 무슨 공지인지 알 수 없다. */}
                 <Link
                   href={`/activities/${n.slug}`}
-                  className="group flex items-center gap-3 py-3.5"
+                  className="group block py-3.5 sm:flex sm:items-center sm:gap-3"
                 >
-                  <Badge label={n.category ?? "공지"} />
-                  <span className="min-w-0 flex-1 truncate text-[14.5px] font-semibold text-ink transition-colors group-hover:text-brand">
-                    {n.title}
+                  <span className="flex items-start gap-2 sm:contents">
+                    <Badge label={n.category ?? "공지"} className="mt-0.5 sm:mt-0" />
+                    <span className="min-w-0 flex-1 text-[14px] font-semibold leading-snug text-ink transition-colors group-hover:text-brand sm:truncate sm:text-[14.5px]">
+                      {n.title}
+                    </span>
                   </span>
-                  <span className="tnum shrink-0 text-[12.5px] text-muted">
+                  <span className="tnum mt-1.5 block pl-[52px] text-[12px] text-muted sm:mt-0 sm:block sm:shrink-0 sm:pl-0 sm:text-[12.5px]">
                     {formatDate(n.date)}
                   </span>
                 </Link>

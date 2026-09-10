@@ -112,7 +112,7 @@ export default function SitePopup({
       // 그 자리가 하필 헤더의 메뉴 버튼 자리다. 닫을 방법이 버튼뿐이면
       // 메뉴가 눌리지 않는 것처럼 보인다.
       onClick={() => close(item.id, false)}
-      className="fixed inset-0 z-[80] flex items-end justify-center bg-forest/60 p-4 sm:items-center"
+      className="fixed inset-0 z-[80] flex items-end justify-center bg-forest/60 p-4 pt-[76px] sm:items-center"
       role="dialog"
       aria-modal="true"
       aria-labelledby="popup-title"
