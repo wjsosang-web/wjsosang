@@ -30,7 +30,18 @@ export default function ActivityTabs({
   const [tab, setTab] = useState<Tab>("전체");
 
   // 전체 탭에서는 대표 활동 하나를 크게 보여준다.
-  const featured = activities[0] ?? null;
+  /**
+   * 공지사항 옆 큰 카드.
+   *
+   * 관리자가 «주요활동 자리에 띄우기» 로 고른 글을 먼저 쓴다.
+   * 종류는 가리지 않는다 — 공지든 행사든 지금 알리고 싶은 것을 올린다.
+   * 고른 글이 없으면 가장 최근 활동소식이 나온다.
+   */
+  const pinned = [...notices, ...activities, ...events]
+    .filter((p) => p.pinned)
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  const featured = pinned[0] ?? activities[0] ?? null;
   const rest = activities.slice(1);
 
   return (
@@ -105,7 +116,7 @@ export default function ActivityTabs({
                   ) : (
                     <div aria-hidden className="ph h-full w-full" />
                   )}
-                  <Badge label="주요활동" className="absolute left-3 top-3" />
+                  <Badge label={featured.pinned ? "주요" : "주요활동"} className="absolute left-3 top-3" />
                 </div>
 
                 <div className="p-5">

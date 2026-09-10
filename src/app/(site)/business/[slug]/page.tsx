@@ -16,6 +16,15 @@ import { absoluteUrl, siteUrl } from "@/lib/siteUrl";
  */
 export const revalidate = 60;
 
+/** 주소가 퍼센트 인코딩으로 넘어오는 경우를 되돌린다 */
+function safeDecode(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
 export async function generateStaticParams() {
   const businesses = await getPublicBusinesses();
   return businesses.map((b) => ({ slug: b.slug }));
@@ -27,7 +36,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const business = await getBusinessBySlug(slug);
+  const business = await getBusinessBySlug(safeDecode(slug));
   if (!business) return { title: "회원업장" };
 
   // 카톡·페이스북으로 보낼 때 뜨는 미리보기 카드.
@@ -64,7 +73,7 @@ export default async function BusinessDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const business = await getBusinessBySlug(slug);
+  const business = await getBusinessBySlug(safeDecode(slug));
   if (!business) notFound();
 
   // 회원이 올린 사진 → 회원 사진 첫 장 → 플레이스 대표사진 순

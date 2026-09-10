@@ -314,17 +314,26 @@ export default function PostForm({ type, post }: { type: PostType; post?: Post }
             </select>
           </div>
 
+          {/* 상단 고정은 글 종류와 상관없이 쓸 수 있다.
+              공지든 활동이든 행사든, 지금 가장 알리고 싶은 것을 올려두는 자리다. */}
+          <label className="flex items-start gap-2 self-end pb-3 text-[13.5px] sm:col-span-2">
+            <input
+              type="checkbox"
+              name="pinned"
+              defaultChecked={post?.pinned}
+              className="mt-0.5 h-4 w-4 accent-[color:var(--color-brand)]"
+            />
+            <span>
+              협회활동 화면 «주요활동» 자리에 띄우기
+              <span className="mt-0.5 block text-[11.5px] font-normal text-muted">
+                공지사항 옆 큰 카드에 이 글이 나옵니다. 여러 개를 고르면 가장 최근 글이
+                나오고, 아무것도 고르지 않으면 최근 활동소식이 나옵니다.
+              </span>
+            </span>
+          </label>
+
           {type === "notice" && (
             <>
-              <label className="flex items-center gap-2 self-end pb-3 text-[13.5px]">
-                <input
-                  type="checkbox"
-                  name="pinned"
-                  defaultChecked={post?.pinned}
-                  className="h-4 w-4 accent-[color:var(--color-brand)]"
-                />
-                상단 고정
-              </label>
               <label className="flex items-center gap-2 self-end pb-3 text-[13.5px]">
                 <input
                   type="checkbox"

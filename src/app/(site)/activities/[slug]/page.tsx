@@ -15,6 +15,15 @@ import { absoluteUrl, siteUrl } from "@/lib/siteUrl";
  */
 export const revalidate = 60;
 
+/** 이미 풀린 주소를 다시 풀면 오류가 나므로 감싸 둔다 */
+function safeDecode(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
 const formatDate = (iso: string) => iso.replace(/-/g, ".");
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -35,7 +44,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  // 주소가 퍼센트 인코딩으로 넘어오는 경우가 있어 되돌려서 찾는다.
+  const post = await getPostBySlug(safeDecode(slug));
   if (!post) return { title: "협회활동" };
 
   // 대표사진이 없으면 첫 번째 활동사진을 쓴다
@@ -74,7 +84,8 @@ export default async function PostDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  // 주소가 퍼센트 인코딩으로 넘어오는 경우가 있어 되돌려서 찾는다.
+  const post = await getPostBySlug(safeDecode(slug));
   if (!post) notFound();
 
   const photos = post.photos.slice().sort((a, b) => a.order - b.order);
