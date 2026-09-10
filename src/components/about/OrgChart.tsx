@@ -78,39 +78,50 @@ export default function OrgChart({ org }: { org: OrgMember[] }) {
           </p>
         </div>
 
-        {/* 회장 ── 부회장 */}
-        <div className="mt-10 flex flex-col items-center gap-4 lg:flex-row lg:justify-center lg:gap-0">
-          <div className="relative w-full max-w-[380px] overflow-hidden rounded-2xl bg-gradient-to-br from-forest via-[#12352b] to-brand-deep px-7 py-7 text-center shadow-[0_16px_40px_rgba(22,36,31,0.22)]">
+        {/* 회장 ── 부회장
+            둘을 같은 가로 모양으로 맞춘다. 회장만 세로로 크게 두면
+            부회장이 곁다리처럼 보이고 높이도 안 맞는다.
+            회장은 진한 바탕과 한 치수 큰 글씨로만 구분한다. */}
+        <div className="mt-10 flex flex-col items-center gap-3 lg:flex-row lg:items-stretch lg:justify-center lg:gap-0">
+          <div className="relative w-full max-w-[340px] overflow-hidden rounded-2xl bg-gradient-to-br from-forest via-[#12352b] to-brand-deep px-6 py-5 shadow-[0_12px_30px_rgba(22,36,31,0.2)]">
             <span
               aria-hidden
-              className="absolute -bottom-14 -right-10 block h-40 w-40 rounded-full bg-brand-light/10"
+              className="absolute -bottom-12 -right-8 block h-32 w-32 rounded-full bg-brand-light/10"
             />
-            <span
-              aria-hidden
-              className="mx-auto grid h-14 w-14 place-items-center rounded-full border border-amber/50 bg-white/10 text-amber"
-            >
-              <Icon name="crown" className="h-[22px] w-[22px]" />
-            </span>
-            <p className="mt-3.5 text-[12px] font-bold tracking-[0.14em] text-brand-light">회장</p>
-            <p className="mt-1 text-[26px] font-bold leading-tight text-white">
-              {president?.name ?? "—"}
-            </p>
-            {president?.intro && (
-              <p className="mt-2.5 text-[12.5px] leading-relaxed text-white/60">
-                {president.intro}
-              </p>
-            )}
+            <div className="relative flex items-center gap-3.5">
+              <span
+                aria-hidden
+                className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-amber/50 bg-white/10 text-amber"
+              >
+                <Icon name="crown" className="h-[19px] w-[19px]" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[11.5px] font-bold tracking-[0.14em] text-brand-light">
+                  회장
+                </span>
+                <span className="mt-0.5 block text-[22px] font-bold leading-tight text-white">
+                  {president?.name ?? "—"}
+                </span>
+                {president?.intro && (
+                  <span className="mt-0.5 block truncate text-[12px] text-white/55">
+                    {president.intro}
+                  </span>
+                )}
+              </span>
+            </div>
           </div>
 
           {vices.length > 0 && (
             <>
-              <span aria-hidden className="hidden h-px w-14 bg-line-strong lg:block" />
+              <span aria-hidden className="hidden w-12 self-center lg:block">
+                <span className="block h-px w-full bg-line-strong" />
+              </span>
 
-              <ul className="flex w-full max-w-[380px] flex-col gap-3 lg:w-[320px]">
+              <ul className="flex w-full max-w-[340px] flex-col gap-3">
                 {vices.map((v) => (
                   <li
                     key={v.id}
-                    className="flex items-center gap-3.5 rounded-2xl border border-line bg-white px-5 py-4 shadow-[0_6px_20px_rgba(22,36,31,0.05)]"
+                    className="flex h-full items-center gap-3.5 rounded-2xl border border-line bg-white px-6 py-5 shadow-[0_6px_20px_rgba(22,36,31,0.05)]"
                   >
                     <span
                       aria-hidden
@@ -122,7 +133,7 @@ export default function OrgChart({ org }: { org: OrgMember[] }) {
                       <span className="block text-[11.5px] font-bold tracking-[0.12em] text-brand">
                         부회장
                       </span>
-                      <span className="mt-0.5 block text-[19px] font-bold leading-tight">
+                      <span className="mt-0.5 block text-[20px] font-bold leading-tight">
                         {v.name}
                       </span>
                       {v.intro && (
