@@ -7,6 +7,11 @@ import { requireAdmin, requirePermission } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { STORAGE_BUCKET } from "@/lib/supabase/config";
 import { importFromPlaceUrl } from "@/lib/place/import";
+import {
+  broadcastTelegram,
+  fetchTelegramContacts,
+  hasTelegram,
+} from "@/lib/telegram";
 import { getHeroSlides } from "@/lib/repo";
 import { ORG_GROUPS, REMOVE_IMAGE } from "@/lib/types";
 import type { HeroSlide, OrgGroup, PlaceImportResult } from "@/lib/types";
@@ -393,6 +398,215 @@ export async function deleteInquiry(form: FormData) {
 /* ------------------------------------------------------------------ */
 
 /** 협회소개에서 분류 탭이 나오는 순서를 저장한다 (site_settings.orgGroupOrder) */
+/* ------------------------------------------------------------------ */
+/* 텔레그램 — 회원·임원 알림                                             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * 봇에게 말을 건 사람을 회원과 연결한다.
+ *
+ * 회원이 봇에서 /start 를 누르면 그 기록이 텔레그램에 남는다.
+ * 그 목록을 받아와 이름으로 우리 회원과 맞춘다.
+ * 이름이 같은 사람이 둘 이상이면 자동으로 잇지 않고 넘어간다.
+ */
+export async function linkTelegramContacts(): Promise<ActionResult> {
+  try {
+    await requirePermission("members.approve");
+
+    const contacts = await fetchTelegramContacts();
+    if (contacts.length === 0) {
+      return {
+        ok: false,
+        message:
+          "봇에게 말을 건 사람이 아직 없습니다. 회원분들께 봇에서 /start 를 눌러달라고 안내해 주세요.",
+      };
+    }
+
+    const db = getAdminSupabase();
+    const { data: members } = await db.from("members").select("id, name, telegram_chat_id");
+
+    let linked = 0;
+    const unmatched: string[] = [];
+
+    for (const c of contacts) {
+      // 이미 연결된 사람은 건너뛴다
+      if ((members ?? []).some((m) => m.telegram_chat_id === c.chatId)) continue;
+
+      // 이름은 "/start 홍길동" 처럼 보내거나, 텔레그램 이름을 그대로 쓴다
+      const typed = c.text.replace(/^\/start\s*/, "").trim();
+      const candidate = typed || c.firstName;
+
+      const matches = (members ?? []).filter((m) => String(m.name).trim() === candidate);
+
+      if (matches.length !== 1) {
+        unmatched.push(candidate || c.chatId);
+        continue;
+      }
+
+      await db
+        .from("members")
+        .update({
+          telegram_chat_id: c.chatId,
+          telegram_username: c.username,
+          telegram_linked_at: new Date().toISOString(),
+        })
+        .eq("id", matches[0].id);
+
+      linked += 1;
+    }
+
+    revalidatePath("/admin/members");
+
+    const tail =
+      unmatched.length > 0
+        ? ` 이름을 못 맞춘 ${unmatched.length}명은 직접 연결해 주세요 (${unmatched.slice(0, 3).join(", ")}).`
+        : "";
+
+    return { ok: true, message: `${linked}명을 연결했습니다.${tail}` };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+/** 텔레그램을 등록한 모든 회원에게 알림을 보낸다 */
+export async function broadcastNotice(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requirePermission("posts.manage");
+
+    const text = str(form, "message");
+    if (!text) return { ok: false, message: "보낼 내용을 적어 주세요." };
+    if (!hasTelegram()) {
+      return { ok: false, message: "텔레그램 봇 토큰이 등록되지 않았습니다." };
+    }
+
+    const db = getAdminSupabase();
+    const { data } = await db
+      .from("members")
+      .select("telegram_chat_id")
+      .not("telegram_chat_id", "is", null);
+
+    const ids = (data ?? []).map((m) => m.telegram_chat_id as string);
+    if (ids.length === 0) {
+      return { ok: false, message: "텔레그램을 등록한 회원이 아직 없습니다." };
+    }
+
+    const { sent, failed } = await broadcastTelegram(ids, text);
+
+    return {
+      ok: sent > 0,
+      message:
+        failed > 0
+          ? `${sent}명에게 보냈습니다. ${failed}명은 실패했습니다(봇을 차단했을 수 있습니다).`
+          : `${sent}명에게 보냈습니다.`,
+    };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* 회원 가입 승인 — 인사국이 쓴다                                        */
+/* ------------------------------------------------------------------ */
+
+/** 가입 신청을 승인한다 */
+export async function approveMember(form: FormData) {
+  const admin = await requirePermission("members.approve");
+  const db = getAdminSupabase();
+
+  const id = String(form.get("id") ?? "");
+  if (!id) return;
+
+  await db
+    .from("members")
+    .update({
+      status: "active",
+      approved_at: new Date().toISOString(),
+      approved_by: admin.memberId,
+      reject_reason: null,
+      joined_at: new Date().toISOString().slice(0, 10),
+    })
+    .eq("id", id);
+
+  revalidatePath("/admin/members");
+}
+
+/** 가입 신청을 되돌린다. 이유를 적어두면 본인 화면에 보인다. */
+export async function rejectMember(form: FormData) {
+  await requirePermission("members.approve");
+  const db = getAdminSupabase();
+
+  const id = String(form.get("id") ?? "");
+  if (!id) return;
+
+  await db
+    .from("members")
+    .update({
+      status: "pending",
+      approved_at: null,
+      reject_reason: String(form.get("reason") ?? "").trim() || "가입 조건을 다시 확인해 주세요.",
+    })
+    .eq("id", id);
+
+  revalidatePath("/admin/members");
+}
+
+/**
+ * 권한 등급을 바꾼다.
+ *
+ * 운영자만 할 수 있다. 임원진이 스스로를 운영자로 올리는 길을 막아야 하고,
+ * 마지막 남은 운영자가 스스로를 내려버리면 아무도 못 들어가므로 그것도 막는다.
+ */
+export async function changeMemberRole(form: FormData): Promise<void> {
+  const admin = await requirePermission("members.role");
+  const db = getAdminSupabase();
+
+  const id = String(form.get("id") ?? "");
+  const role = String(form.get("role") ?? "");
+  if (!id || !["superadmin", "admin", "officer", "member"].includes(role)) return;
+
+  if (id === admin.memberId && role !== "admin" && role !== "superadmin") {
+    const { count } = await db
+      .from("members")
+      .select("id", { count: "exact", head: true })
+      .in("role", ["admin", "superadmin"]);
+
+    // 운영자가 나 하나뿐이면 스스로 내려올 수 없다
+    if ((count ?? 0) <= 1) return;
+  }
+
+  await db.from("members").update({ role }).eq("id", id);
+  revalidatePath("/admin/members");
+}
+
+/** 승인 권한을 갖는 직책 목록을 바꾼다 */
+export async function saveApproverTitles(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requirePermission("members.role");
+
+    const titles = str(form, "titles")
+      .split(/[,\n]/)
+      .map((t) => t.trim())
+      .filter(Boolean);
+
+    if (titles.length === 0) {
+      return { ok: false, message: "직책을 하나 이상 남겨 주세요. 비우면 아무도 승인할 수 없습니다." };
+    }
+
+    await putSetting("approver_titles", titles);
+    revalidatePath("/admin/members");
+
+    return { ok: true, message: `${titles.length}개 직책에 권한을 주었습니다.` };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* 회원 전용 자료 — 협회 정관                                            */
 /* ------------------------------------------------------------------ */
