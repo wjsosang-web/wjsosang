@@ -137,7 +137,14 @@ export default function SitePopup({
           </p>
         ) : item.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={item.imageUrl} alt="" className="aspect-[16/9] w-full shrink-0 object-cover" />
+          /* 관리자가 자른 그대로 보여준다.
+             여기서 비율을 다시 정하면 홍보 이미지가 두 번 잘려서 글자가 날아간다.
+             아주 긴 세로 이미지만 화면을 다 먹지 않도록 높이를 제한한다. */
+          <img
+            src={item.imageUrl}
+            alt=""
+            className="max-h-[42vh] w-full shrink-0 bg-mist object-contain"
+          />
         ) : (
           <div aria-hidden className="ph aspect-[16/7] w-full shrink-0" />
         )}

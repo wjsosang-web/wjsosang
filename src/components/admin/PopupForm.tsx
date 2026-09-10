@@ -30,6 +30,14 @@ function today(): string {
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 }
 
+/** 홍보 이미지를 자를 모양. 만들어 오는 모양이 제각각이라 고르게 한다. */
+const SHAPES = [
+  { label: "가로형", aspect: 4 / 3, hint: "일반적인 안내 이미지에 맞습니다." },
+  { label: "정사각형", aspect: 1, hint: "인스타그램에 올리던 카드 이미지에 맞습니다." },
+  { label: "세로형", aspect: 4 / 5, hint: "포스터처럼 세로로 긴 이미지에 맞습니다." },
+  { label: "자르지 않기", aspect: 0, hint: "올린 그대로 씁니다. 이미 크기를 맞춰 오셨다면 이걸 고르세요." },
+];
+
 function toDateInput(iso: string): string {
   return iso ? new Date(iso).toISOString().slice(0, 10) : "";
 }
@@ -51,6 +59,7 @@ export default function PopupForm({
   const [linkLabel, setLinkLabel] = useState(popup?.linkLabel ?? "");
   const [startDate, setStartDate] = useState(popup ? toDateInput(popup.startAt) : today());
   const [endDate, setEndDate] = useState(popup ? toDateInput(popup.endAt) : today());
+  const [shape, setShape] = useState(SHAPES[0]);
 
   const field =
     "w-full rounded-lg border border-line bg-white px-4 py-2.5 text-[14px] outline-none transition-colors focus:border-brand";
@@ -251,16 +260,41 @@ export default function PopupForm({
 
       <section className="rounded-xl border border-line bg-white p-5">
         <h2 className="text-[15px] font-bold">홍보 이미지 (선택)</h2>
-        <p className="mt-1 text-[12.5px] text-muted">
-          넣지 않아도 됩니다. 넣으면 제목 위에 크게 나옵니다.
+        <p className="mt-1 text-[12.5px] leading-[1.75] text-muted">
+          넣지 않아도 됩니다. 넣으면 제목 위에 나옵니다.
+          <br />
+          <b className="text-ink">여기서 자른 모습 그대로</b> 팝업에 나옵니다. 팝업이 다시
+          자르지 않으니, 글자가 잘리지 않게 맞춰 주세요.
+          <br />
+          카드처럼 만든 홍보 이미지는 자르기 창에서{" "}
+          <b className="text-ink">[전체 보기]</b> 를 누르면 전부 담깁니다.
         </p>
+
+        {/* 홍보 이미지는 만들어 온 모양이 제각각이다.
+            가로 카드도 있고 정사각형도 있어서, 자를 모양을 고르게 한다. */}
+        <div className="mt-3 flex flex-wrap gap-1 rounded-lg bg-mist p-1">
+          {SHAPES.map((s) => (
+            <button
+              key={s.label}
+              type="button"
+              onClick={() => setShape(s)}
+              className={`rounded-md px-3.5 py-2 text-[12.5px] font-bold transition-colors ${
+                shape.label === s.label ? "bg-white text-brand-deep" : "text-muted hover:text-ink"
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+        <p className="mt-1.5 text-[11.5px] text-muted">{shape.hint}</p>
 
         <div className="mt-3">
           <ImageInput
+            key={shape.label}
             name="imageFile"
             currentUrl={popup?.imageUrl}
             folder="popups"
-            aspect={4 / 3}
+            aspect={shape.aspect}
           />
         </div>
       </section>
