@@ -26,6 +26,8 @@ export interface MemberListRow {
   rejectReason: string | null;
   /** 조직도에서 맡은 직책 */
   title: string | null;
+  /** 조직 분류 — 회장단 / 이사회·감사 / 임원진 / 역대 회장 */
+  orgGroup: string | null;
   telegram: boolean;
 }
 
@@ -54,14 +56,32 @@ export default async function AdminMembersPage() {
       )
       .order("status")
       .order("name"),
-    db.from("org_members").select("member_id, title"),
+    db.from("org_members").select("member_id, title, org_group"),
     getApproverTitles(),
     getNotifyRoutes(),
   ]);
 
-  const titleByMember = new Map(
-    (org ?? []).map((o) => [o.member_id as string, o.title as string]),
-  );
+  /**
+   * 한 사람이 조직도에 두 번 나오는 경우가 있다.
+   * (이재형 대표는 지금 이사이면서 초대부회장으로도 올라 있다.)
+   * 그냥 담으면 나중 줄이 앞줄을 덮어써서 현직이 역대 회장으로 잡힌다.
+   * 그래서 지금 맡고 있는 자리를 우선한다.
+   */
+  const GROUP_RANK = ["회장단", "이사회·감사", "임원진", "역대 회장"];
+
+  const orgByMember = new Map<string, { title: string; group: string }>();
+
+  for (const o of org ?? []) {
+    const id = o.member_id as string;
+    if (!id) continue;
+
+    const next = { title: o.title as string, group: o.org_group as string };
+    const current = orgByMember.get(id);
+
+    if (!current || GROUP_RANK.indexOf(next.group) < GROUP_RANK.indexOf(current.group)) {
+      orgByMember.set(id, next);
+    }
+  }
 
   const rows: MemberListRow[] = (members ?? []).map((m) => ({
     id: m.id as string,
@@ -73,13 +93,13 @@ export default async function AdminMembersPage() {
     hasAccount: Boolean(m.account_id),
     appliedAt: (m.applied_at as string | null) ?? null,
     rejectReason: (m.reject_reason as string | null) ?? null,
-    title: titleByMember.get(m.id as string) ?? null,
+    title: orgByMember.get(m.id as string)?.title ?? null,
+    orgGroup: orgByMember.get(m.id as string)?.group ?? null,
     telegram: Boolean(m.telegram_chat_id),
   }));
 
   // 계정을 만든 사람 = 홈페이지에서 로그인한 사람. 승인 대상이다.
   const waiting = rows.filter((r) => r.hasAccount && r.status !== "active");
-  const active = rows.filter((r) => r.status === "active");
 
   const canChangeRole = can(admin.role, "members.role");
   const linkedCount = rows.filter((r) => r.telegram).length;
@@ -129,28 +149,6 @@ export default async function AdminMembersPage() {
           <ul className="mt-2.5 space-y-2">
             {waiting.map((m) => (
               <MemberRow key={m.id} member={m} canChangeRole={canChangeRole} pending />
-            ))}
-          </ul>
-        )}
-      </section>
-
-      {/* 승인된 회원 */}
-      <section>
-        <h2 className="flex items-center gap-2 text-[15px] font-bold">
-          홈페이지 이용 중
-          <span className="tnum rounded bg-mist px-2 py-0.5 text-[12px] font-bold text-muted">
-            {active.length}
-          </span>
-        </h2>
-
-        {active.length === 0 ? (
-          <p className="mt-2.5 rounded-xl border border-dashed border-line bg-white py-10 text-center text-[13.5px] text-muted">
-            아직 없습니다.
-          </p>
-        ) : (
-          <ul className="mt-2.5 space-y-2">
-            {active.map((m) => (
-              <MemberRow key={m.id} member={m} canChangeRole={canChangeRole} />
             ))}
           </ul>
         )}
