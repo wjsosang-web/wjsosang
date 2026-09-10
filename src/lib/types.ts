@@ -154,7 +154,15 @@ export interface Business {
   /** URL 슬러그 — /business/pickphone */
   slug: string;
   name: string;
+  /** 대표 업종 — 카드 배지처럼 하나만 보여줄 자리에 쓴다 */
   category: BusinessCategory;
+  /**
+   * 이 업장이 속한 모든 업종.
+   *
+   * 한 가게가 두 가지 일을 겸하는 경우가 흔하다(휴대폰 + 자동차).
+   * 하나만 고르게 하면 나머지 한쪽으로 찾는 회원에게 걸리지 않는다.
+   */
+  categories: BusinessCategory[];
   /** 한 줄 소개 (카드에 노출) */
   tagline: string;
   /** 상세 소개 */

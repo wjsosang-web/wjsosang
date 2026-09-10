@@ -214,6 +214,11 @@ export function toBusiness(r: Row): Business {
     slug: r.slug as string,
     name: r.name as string,
     category: r.category as Business["category"],
+    // 예전 자료에는 categories 가 없다. 그때는 대표 업종 하나만 있는 것으로 본다.
+    categories:
+      Array.isArray(r.categories) && r.categories.length > 0
+        ? (r.categories as Business["categories"])
+        : ([r.category].filter(Boolean) as Business["categories"]),
     tagline: (r.tagline as string) ?? "",
     description: (r.description as string) ?? "",
     ownerName: (r.owner_name as string) ?? "",

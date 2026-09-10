@@ -25,6 +25,10 @@ export default function BusinessForm({ business }: { business?: Business }) {
   );
 
   const [placeUrl, setPlaceUrl] = useState(business?.placeUrl ?? "");
+  // 업종은 여러 개 고를 수 있다. 첫 번째가 대표 업종이 된다.
+  const [categories, setCategories] = useState<string[]>(
+    business?.categories?.length ? business.categories : business?.category ? [business.category] : [],
+  );
   const [loading, setLoading] = useState(false);
   const [draft, setDraft] = useState<PlaceDraft | null>(null);
   const [importNote, setImportNote] = useState<{
@@ -222,23 +226,48 @@ export default function BusinessForm({ business }: { business?: Business }) {
             />
           </div>
 
-          <div>
-            <label htmlFor="category" className={label}>
-              업종
-            </label>
-            <select
-              id="category"
-              name="category"
-              key={`cat-${draft?.category ?? ""}`}
-              defaultValue={business?.category ?? "기타"}
-              className={field}
-            >
-              {BUSINESS_CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+          {/* 업종은 여럿 고를 수 있다. 휴대폰과 자동차를 함께 하는 가게처럼
+              한 곳이 두 가지 일을 겸하는 경우가 흔하고, 하나만 고르면
+              나머지 한쪽으로 찾는 회원에게 걸리지 않는다. */}
+          <div className="sm:col-span-2">
+            <p className={label}>
+              업종 <span className="ml-1 font-normal text-muted">(여러 개 고를 수 있습니다)</span>
+            </p>
+
+            <div className="flex flex-wrap gap-1.5">
+              {BUSINESS_CATEGORIES.map((c) => {
+                const on = categories.includes(c);
+                return (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() =>
+                      setCategories((list) =>
+                        list.includes(c) ? list.filter((x) => x !== c) : [...list, c],
+                      )
+                    }
+                    className={`rounded-lg border px-3 py-2 text-[13px] font-semibold transition-colors ${
+                      on
+                        ? "border-brand bg-brand text-white"
+                        : "border-line bg-white text-ink-soft hover:border-brand hover:text-brand"
+                    }`}
+                  >
+                    {c}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* 첫 번째로 고른 것이 대표 업종이 된다 */}
+            <input type="hidden" name="categories" value={categories.join(",")} />
+            <input type="hidden" name="category" value={categories[0] ?? "기타"} />
+
+            <p className="mt-1.5 text-[11.5px] text-muted">
+              {categories.length === 0
+                ? "하나도 고르지 않으면 기타로 저장됩니다."
+                : `대표 업종은 «${categories[0]}» 입니다. 카드 배지에 이것 하나만 나옵니다.`}
+            </p>
+
             {draft?.category && (
               <p className="mt-1 text-[11.5px] text-brand">
                 플레이스 분류: {draft.category} — 위에서 협회 업종으로 골라주세요.

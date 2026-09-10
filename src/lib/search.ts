@@ -21,6 +21,8 @@ export interface BusinessCard {
   slug: string;
   name: string;
   category: string;
+  /** 이 업장이 속한 모든 업종 */
+  categories: string[];
   tagline: string;
   district: string;
   coverImage: string | null;
@@ -75,13 +77,22 @@ export function buildBusinessCards(
         .filter((o) => o.title && o.title !== "회원")
         .sort((a, b2) => a.order - b2.order)[0]?.title ?? null;
 
-    const visible = [b.name, b.category, b.tagline, b.description, b.address, b.district];
+    // 겸업 업종도 검색어에 넣는다. "자동차"로 찾아도 휴대폰 가게가 걸려야 한다.
+    const visible = [
+      b.name,
+      ...(b.categories.length > 0 ? b.categories : [b.category]),
+      b.tagline,
+      b.description,
+      b.address,
+      b.district,
+    ];
 
     return {
       id: b.id,
       slug: b.slug,
       name: b.name,
       category: b.category,
+      categories: b.categories.length > 0 ? b.categories : [b.category].filter(Boolean),
       tagline: b.tagline,
       district: b.district,
       // 회원 사진이 없으면 플레이스 대표사진으로 대체된다
@@ -110,7 +121,8 @@ export function filterBusinessCards(
   const tokens = query.trim().split(/\s+/).filter(Boolean).map(normalize);
 
   return cards.filter((c) => {
-    if (category && c.category !== category) return false;
+    // 겸업이면 어느 쪽으로 걸러도 나와야 한다
+    if (category && !c.categories.includes(category)) return false;
     if (district && c.district !== district) return false;
     return tokens.every((t) => c.searchText.includes(t));
   });

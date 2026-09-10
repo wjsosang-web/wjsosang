@@ -87,6 +87,7 @@ const businesses = people.map((p) => ({
   slug: toSlug(p.shop, p.index),
   name: p.shop,
   category: toCategory(p.industry, p.group),
+  categories: [toCategory(p.industry, p.group)],
   tagline: "",
   description: p.industry,
   ownerName: p.name,

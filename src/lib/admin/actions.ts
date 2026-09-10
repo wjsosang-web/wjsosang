@@ -261,6 +261,14 @@ export async function saveBusiness(
       name,
       slug: nullable(form, "slug") ?? `biz-${Date.now().toString(36)}`,
       category: str(form, "category") || "기타",
+      // 겸업 업종. 화면에서 쉼표로 묶어 보낸다.
+      categories: (() => {
+        const picked = str(form, "categories")
+          .split(",")
+          .map((c) => c.trim())
+          .filter(Boolean);
+        return picked.length > 0 ? picked : [str(form, "category") || "기타"];
+      })(),
       tagline: str(form, "tagline"),
       description: str(form, "description"),
       owner_name: str(form, "ownerName"),

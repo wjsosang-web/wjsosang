@@ -41,7 +41,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "전문서비스"
+    ]
   },
   {
     "id": "b002",
@@ -85,7 +88,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "제조"
+    ]
   },
   {
     "id": "b003",
@@ -129,7 +135,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b004",
@@ -173,7 +182,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "휴대폰·통신"
+    ]
   },
   {
     "id": "b005",
@@ -217,7 +229,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b006",
@@ -261,7 +276,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "교육"
+    ]
   },
   {
     "id": "b007",
@@ -305,7 +323,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b008",
@@ -349,7 +370,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b009",
@@ -393,7 +417,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b010",
@@ -437,7 +464,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b011",
@@ -481,7 +511,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "자동차"
+    ]
   },
   {
     "id": "b012",
@@ -525,7 +558,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b013",
@@ -569,7 +605,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b014",
@@ -613,7 +652,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b015",
@@ -657,7 +699,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b016",
@@ -701,7 +746,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "기타"
+    ]
   },
   {
     "id": "b017",
@@ -745,7 +793,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b018",
@@ -789,7 +840,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "교육"
+    ]
   },
   {
     "id": "b019",
@@ -833,7 +887,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "휴대폰·통신"
+    ]
   },
   {
     "id": "b020",
@@ -877,7 +934,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "전문서비스"
+    ]
   },
   {
     "id": "b021",
@@ -921,7 +981,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b022",
@@ -965,7 +1028,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b023",
@@ -1009,7 +1075,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b024",
@@ -1053,7 +1122,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "휴대폰·통신"
+    ]
   },
   {
     "id": "b025",
@@ -1097,7 +1169,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b026",
@@ -1141,7 +1216,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b027",
@@ -1185,7 +1263,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b028",
@@ -1229,7 +1310,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b029",
@@ -1273,7 +1357,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b030",
@@ -1317,7 +1404,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b031",
@@ -1361,7 +1451,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b032",
@@ -1405,7 +1498,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b033",
@@ -1449,7 +1545,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b034",
@@ -1493,7 +1592,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b035",
@@ -1537,7 +1639,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b036",
@@ -1581,7 +1686,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b037",
@@ -1625,7 +1733,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b038",
@@ -1669,7 +1780,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b039",
@@ -1713,7 +1827,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b040",
@@ -1757,7 +1874,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b041",
@@ -1801,7 +1921,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b042",
@@ -1845,7 +1968,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b043",
@@ -1889,7 +2015,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b044",
@@ -1933,7 +2062,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b045",
@@ -1977,7 +2109,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b046",
@@ -2021,7 +2156,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b047",
@@ -2065,7 +2203,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b048",
@@ -2109,7 +2250,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b049",
@@ -2153,7 +2297,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b050",
@@ -2197,7 +2344,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b051",
@@ -2241,7 +2391,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b052",
@@ -2285,7 +2438,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b053",
@@ -2329,7 +2485,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b054",
@@ -2373,7 +2532,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b055",
@@ -2417,7 +2579,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b056",
@@ -2461,7 +2626,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b057",
@@ -2505,7 +2673,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b058",
@@ -2549,7 +2720,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b059",
@@ -2593,7 +2767,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b060",
@@ -2637,7 +2814,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b061",
@@ -2681,7 +2861,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b062",
@@ -2725,7 +2908,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b063",
@@ -2769,7 +2955,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b064",
@@ -2813,7 +3002,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b065",
@@ -2857,7 +3049,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b066",
@@ -2901,7 +3096,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "제조"
+    ]
   },
   {
     "id": "b067",
@@ -2945,7 +3143,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b068",
@@ -2989,7 +3190,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "자동차"
+    ]
   },
   {
     "id": "b069",
@@ -3033,7 +3237,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "자동차"
+    ]
   },
   {
     "id": "b070",
@@ -3077,7 +3284,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "자동차"
+    ]
   },
   {
     "id": "b071",
@@ -3121,7 +3331,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "자동차"
+    ]
   },
   {
     "id": "b072",
@@ -3165,7 +3378,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "자동차"
+    ]
   },
   {
     "id": "b073",
@@ -3209,7 +3425,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b074",
@@ -3253,7 +3472,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "기타"
+    ]
   },
   {
     "id": "b075",
@@ -3297,7 +3519,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b076",
@@ -3341,7 +3566,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "기타"
+    ]
   },
   {
     "id": "b077",
@@ -3385,7 +3613,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "전문서비스"
+    ]
   },
   {
     "id": "b078",
@@ -3429,7 +3660,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "교육"
+    ]
   },
   {
     "id": "b079",
@@ -3473,7 +3707,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "기타"
+    ]
   },
   {
     "id": "b080",
@@ -3517,7 +3754,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b081",
@@ -3561,7 +3801,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b082",
@@ -3605,7 +3848,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b083",
@@ -3649,7 +3895,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b084",
@@ -3693,7 +3942,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b085",
@@ -3737,7 +3989,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b086",
@@ -3781,7 +4036,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b087",
@@ -3825,7 +4083,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b088",
@@ -3869,7 +4130,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b089",
@@ -3913,7 +4177,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b090",
@@ -3957,7 +4224,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b091",
@@ -4001,7 +4271,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b092",
@@ -4045,7 +4318,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b093",
@@ -4089,7 +4365,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b094",
@@ -4133,7 +4412,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b095",
@@ -4177,7 +4459,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b096",
@@ -4221,7 +4506,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b097",
@@ -4265,7 +4553,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b098",
@@ -4309,7 +4600,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "전문서비스"
+    ]
   },
   {
     "id": "b099",
@@ -4353,7 +4647,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b100",
@@ -4397,7 +4694,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b101",
@@ -4441,7 +4741,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "미용·뷰티"
+    ]
   },
   {
     "id": "b102",
@@ -4485,7 +4788,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b103",
@@ -4529,7 +4835,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b104",
@@ -4573,7 +4882,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b105",
@@ -4617,7 +4929,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b106",
@@ -4661,7 +4976,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b107",
@@ -4705,7 +5023,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "기타"
+    ]
   },
   {
     "id": "b108",
@@ -4749,7 +5070,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b109",
@@ -4793,7 +5117,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "기타"
+    ]
   },
   {
     "id": "b110",
@@ -4837,7 +5164,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b111",
@@ -4881,7 +5211,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "기타"
+    ]
   },
   {
     "id": "b112",
@@ -4925,7 +5258,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b113",
@@ -4969,7 +5305,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b114",
@@ -5013,7 +5352,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b115",
@@ -5057,7 +5399,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b116",
@@ -5101,7 +5446,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b117",
@@ -5145,7 +5493,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "생활서비스"
+    ]
   },
   {
     "id": "b118",
@@ -5189,7 +5540,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "건설·인테리어"
+    ]
   },
   {
     "id": "b119",
@@ -5233,7 +5587,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b120",
@@ -5277,7 +5634,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b121",
@@ -5321,7 +5681,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "외식"
+    ]
   },
   {
     "id": "b122",
@@ -5365,7 +5728,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "세무·법무"
+    ]
   },
   {
     "id": "b123",
@@ -5409,7 +5775,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b124",
@@ -5453,7 +5822,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b125",
@@ -5497,7 +5869,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b126",
@@ -5541,7 +5916,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "휴대폰·통신"
+    ]
   },
   {
     "id": "b127",
@@ -5585,7 +5963,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "세무·법무"
+    ]
   },
   {
     "id": "b128",
@@ -5629,7 +6010,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b129",
@@ -5673,7 +6057,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "카페·디저트"
+    ]
   },
   {
     "id": "b130",
@@ -5717,7 +6104,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "휴대폰·통신"
+    ]
   },
   {
     "id": "b131",
@@ -5761,7 +6151,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b132",
@@ -5805,7 +6198,10 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   },
   {
     "id": "b133",
@@ -5847,6 +6243,9 @@
     "status": "public",
     "sourcedFromPlace": false,
     "createdAt": "2026-01-01",
-    "updatedAt": "2026-01-01"
+    "updatedAt": "2026-01-01",
+    "categories": [
+      "유통"
+    ]
   }
 ]
