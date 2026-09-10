@@ -30,12 +30,23 @@ function today(): string {
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 }
 
-/** 홍보 이미지를 자를 모양. 만들어 오는 모양이 제각각이라 고르게 한다. */
+/**
+ * 올릴 때 자를 모양.
+ *
+ * 팝업 창은 어떤 사진이 와도 늘 같은 크기다(가로 4:3 자리).
+ * 그래서 여기서 굳이 자르지 않아도 되고, 잘려서 안 보이는 부분은
+ * 회원이 사진을 눌러 원본으로 볼 수 있다.
+ * 그래도 팝업에 딱 맞게 보이길 원하면 가로형으로 잘라 올리면 된다.
+ */
 const SHAPES = [
-  { label: "가로형", aspect: 4 / 3, hint: "일반적인 안내 이미지에 맞습니다." },
+  {
+    label: "그대로 올리기",
+    aspect: 0,
+    hint: "만들어 오신 그대로 올립니다. 팝업에는 가운데가 보이고, 눌러서 전체를 봅니다.",
+  },
+  { label: "가로형 4:3", aspect: 4 / 3, hint: "팝업 사진 자리에 딱 맞습니다. 잘릴 걱정이 없습니다." },
   { label: "정사각형", aspect: 1, hint: "인스타그램에 올리던 카드 이미지에 맞습니다." },
-  { label: "세로형", aspect: 4 / 5, hint: "포스터처럼 세로로 긴 이미지에 맞습니다." },
-  { label: "자르지 않기", aspect: 0, hint: "올린 그대로 씁니다. 이미 크기를 맞춰 오셨다면 이걸 고르세요." },
+  { label: "세로형 4:5", aspect: 4 / 5, hint: "포스터처럼 세로로 긴 이미지에 맞습니다." },
 ];
 
 function toDateInput(iso: string): string {
@@ -263,11 +274,11 @@ export default function PopupForm({
         <p className="mt-1 text-[12.5px] leading-[1.75] text-muted">
           넣지 않아도 됩니다. 넣으면 제목 위에 나옵니다.
           <br />
-          <b className="text-ink">여기서 자른 모습 그대로</b> 팝업에 나옵니다. 팝업이 다시
-          자르지 않으니, 글자가 잘리지 않게 맞춰 주세요.
+          <b className="text-ink">팝업 창 크기는 사진과 상관없이 늘 같습니다.</b> 팝업이 두세
+          개 떠도 크기가 제각각이 되지 않습니다.
           <br />
-          카드처럼 만든 홍보 이미지는 자르기 창에서{" "}
-          <b className="text-ink">[전체 보기]</b> 를 누르면 전부 담깁니다.
+          사진 자리는 가로 4:3 이고, 넘치는 부분은 회원이{" "}
+          <b className="text-ink">사진을 눌러 전체를</b> 볼 수 있습니다.
         </p>
 
         {/* 홍보 이미지는 만들어 온 모양이 제각각이다.

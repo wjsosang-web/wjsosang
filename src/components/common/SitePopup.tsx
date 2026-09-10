@@ -40,6 +40,8 @@ export default function SitePopup({
   todayEvents?: Post[];
 }) {
   const [visible, setVisible] = useState<Item[]>([]);
+  /** 크게 보는 사진. null 이면 안 열려 있다. */
+  const [zoomed, setZoomed] = useState<string | null>(null);
 
   useEffect(() => {
     const items: Item[] = [
@@ -95,11 +97,17 @@ export default function SitePopup({
   useEffect(() => {
     if (visible.length === 0) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setVisible((list) => list.slice(1));
+      if (e.key !== "Escape") return;
+      // 크게 보기가 열려 있으면 그것부터 닫는다. 한 번에 다 닫히면 당황스럽다.
+      if (zoomed) {
+        setZoomed(null);
+        return;
+      }
+      setVisible((list) => list.slice(1));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [visible.length]);
+  }, [visible.length, zoomed]);
 
   if (visible.length === 0) return null;
   const item = visible[0];
@@ -136,15 +144,25 @@ export default function SitePopup({
             오늘 열리는 협회 행사입니다
           </p>
         ) : item.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          /* 관리자가 자른 그대로 보여준다.
-             여기서 비율을 다시 정하면 홍보 이미지가 두 번 잘려서 글자가 날아간다.
-             아주 긴 세로 이미지만 화면을 다 먹지 않도록 높이를 제한한다. */
-          <img
-            src={item.imageUrl}
-            alt=""
-            className="max-h-[42vh] w-full shrink-0 bg-mist object-contain"
-          />
+          /* 사진 자리는 어떤 사진이 들어와도 늘 같은 크기다.
+             팝업이 두세 개 뜰 때 크기가 제각각이면 어수선하기 때문이다.
+             대신 잘려서 안 보이는 부분은 눌러서 원본으로 볼 수 있다. */
+          <button
+            type="button"
+            onClick={() => setZoomed(item.imageUrl)}
+            className="group relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-mist"
+            aria-label="사진 크게 보기"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={item.imageUrl}
+              alt=""
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+            <span className="absolute bottom-2 right-2 rounded-md bg-forest/60 px-2 py-1 text-[11px] font-bold text-white backdrop-blur">
+              눌러서 크게 보기
+            </span>
+          </button>
         ) : (
           <div aria-hidden className="ph aspect-[16/7] w-full shrink-0" />
         )}
@@ -212,6 +230,48 @@ export default function SitePopup({
           </button>
         </div>
       </div>
+
+      {/* 사진 크게 보기 — 팝업 위에 뜬다. 여기서는 잘리지 않는다. */}
+      {zoomed && (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            setZoomed(null);
+          }}
+          className="fixed inset-0 z-[95] flex flex-col bg-forest/95"
+          role="dialog"
+          aria-modal="true"
+          aria-label="사진 크게 보기"
+        >
+          <div className="flex justify-end p-4">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setZoomed(null);
+              }}
+              aria-label="크게 보기 닫기"
+              className="grid h-10 w-10 place-items-center rounded-full border border-white/30 text-[16px] text-white transition-colors hover:bg-white/10"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="flex min-h-0 flex-1 items-center justify-center px-4 pb-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={zoomed}
+              alt=""
+              onClick={(e) => e.stopPropagation()}
+              className="max-h-full max-w-full rounded-lg object-contain"
+            />
+          </div>
+
+          <p className="pb-6 text-center text-[12.5px] text-white/70">
+            아무 곳이나 누르면 닫힙니다
+          </p>
+        </div>
+      )}
     </div>
   );
 }
