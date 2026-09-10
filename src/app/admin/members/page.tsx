@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import ApproverTitlesForm from "@/components/admin/ApproverTitlesForm";
+import MemberFilter from "@/components/admin/MemberFilter";
 import MemberRow from "@/components/admin/MemberRow";
+import RosterPanel from "@/components/admin/RosterPanel";
 import NotifyRoutesForm from "@/components/admin/NotifyRoutesForm";
 import TelegramPanel from "@/components/admin/TelegramPanel";
 import { getCurrentAdmin, getApproverTitles } from "@/lib/supabase/auth";
@@ -78,7 +80,6 @@ export default async function AdminMembersPage() {
   // 계정을 만든 사람 = 홈페이지에서 로그인한 사람. 승인 대상이다.
   const waiting = rows.filter((r) => r.hasAccount && r.status !== "active");
   const active = rows.filter((r) => r.status === "active");
-  const offline = rows.filter((r) => !r.hasAccount && r.status !== "active");
 
   const canChangeRole = can(admin.role, "members.role");
   const linkedCount = rows.filter((r) => r.telegram).length;
@@ -155,37 +156,11 @@ export default async function AdminMembersPage() {
         )}
       </section>
 
-      {/* 명부에만 있는 회원 */}
-      <section>
-        <h2 className="flex items-center gap-2 text-[15px] font-bold">
-          명부에만 있는 회원
-          <span className="tnum rounded bg-mist px-2 py-0.5 text-[12px] font-bold text-muted">
-            {offline.length}
-          </span>
-        </h2>
-        <p className="mt-1 text-[12.5px] text-muted">
-          아직 홈페이지 로그인을 만들지 않은 분들입니다. 로그인을 만들면 위 &quot;승인
-          대기&quot;로 올라옵니다.
-        </p>
+      {/* 전체 회원 — 찾기와 거르기 */}
+      <MemberFilter rows={rows} canChangeRole={canChangeRole} />
 
-        <ul className="mt-2.5 grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">
-          {offline.map((m) => (
-            <li
-              key={m.id}
-              className="flex items-center gap-2 rounded-lg border border-line bg-white px-3.5 py-2.5"
-            >
-              <span className="min-w-0 flex-1 truncate text-[13.5px] font-semibold">
-                {m.name}
-              </span>
-              {m.title && (
-                <span className="shrink-0 rounded bg-brand-tint px-1.5 py-0.5 text-[11px] font-bold text-brand-deep">
-                  {m.title}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
-      </section>
+      {/* 엑셀로 명단 올리기·내려받기 */}
+      <RosterPanel />
 
       {/* 텔레그램 — 회원·임원 모두에게 알림 */}
       <TelegramPanel

@@ -107,7 +107,7 @@ export async function notifyInquiry(inquiry: InquiryNotice): Promise<void> {
     if (chatIds.length === 0) return;
 
     const lines = [
-      `<b>[원청협] 새 문의</b>`,
+      `<b>새 문의가 들어왔습니다</b>`,
       ``,
       `종류: ${escapeHtml(inquiry.kind)}`,
       `이름: ${escapeHtml(inquiry.name)}`,

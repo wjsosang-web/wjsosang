@@ -15,6 +15,24 @@
 
 const API = "https://api.telegram.org/bot";
 
+/**
+ * 협회에서 보내는 모든 알림 앞에 붙는 이름.
+ *
+ * 회원 휴대폰에는 여러 봇의 알림이 섞여 온다. 첫 줄에 협회 이름이 없으면
+ * 무엇에 관한 알림인지 열어보기 전에는 알 수 없다.
+ * 보내는 사람이 매번 적지 않아도 되도록 여기서 자동으로 붙인다.
+ */
+const SENDER = "원주청년소상공인협회";
+
+/** 이미 협회 이름으로 시작하면 겹쳐 붙이지 않는다 */
+function withSender(text: string): string {
+  const trimmed = text.trim();
+  if (trimmed.startsWith(SENDER) || trimmed.startsWith(`<b>${SENDER}`)) return trimmed;
+  return `<b>${SENDER}</b>
+
+${trimmed}`;
+}
+
 export function hasTelegram(): boolean {
   return Boolean(process.env.TELEGRAM_BOT_TOKEN);
 }
@@ -35,7 +53,7 @@ export async function sendTelegram(chatId: string, text: string): Promise<SendRe
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         chat_id: chatId,
-        text,
+        text: withSender(text),
         parse_mode: "HTML",
         disable_web_page_preview: true,
       }),
