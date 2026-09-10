@@ -806,6 +806,32 @@ export async function saveSiteInfo(
   }
 }
 
+/** 검색 노출 설정 — 네이버·구글에 뜨는 제목·설명·사진·키워드 */
+export async function saveSeo(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requirePermission("site.manage");
+
+    await putSetting("seo", {
+      title: str(form, "title"),
+      description: str(form, "description"),
+      keywords: str(form, "keywords")
+        .split(/[,\n]/)
+        .map((k) => k.trim())
+        .filter(Boolean),
+      ogImage: await pickedImage(form, "ogImageFile", "ogImage", "site"),
+      naverVerification: str(form, "naverVerification"),
+      googleVerification: str(form, "googleVerification"),
+    });
+
+    return { ok: true, message: "저장했습니다. 검색엔진에 반영되기까지는 며칠 걸립니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
 /** 협회 이야기 — 협회소개 가운데 글 */
 export async function saveStory(
   _prev: ActionResult | null,

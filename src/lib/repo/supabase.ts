@@ -21,6 +21,7 @@ import type {
   HeroSlide,
   HistoryItem,
   JoinGuide,
+  SeoSettings,
   Member,
   MenuItem,
   OrgGroup,
@@ -97,6 +98,10 @@ export async function getHistory(): Promise<HistoryItem[]> {
 
 export async function getPartners(): Promise<PartnerOrg[]> {
   return setting("partners", seed.getPartners);
+}
+
+export async function getSeo(): Promise<SeoSettings> {
+  return setting("seo", seed.getSeo);
 }
 
 export async function getJoinGuide(): Promise<JoinGuide> {

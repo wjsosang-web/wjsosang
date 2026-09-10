@@ -1,32 +1,57 @@
 import type { Metadata } from "next";
-import { siteUrl } from "@/lib/siteUrl";
+import { absoluteUrl, siteUrl } from "@/lib/siteUrl";
+import { getSeo, getSiteInfo } from "@/lib/repo";
 import { getLogoAssets } from "@/lib/assets";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: {
-    default: "원주청년소상공인협회",
-    template: "%s | 원주청년소상공인협회",
-  },
-  description:
-    "원주에서 청년으로, 소상공인으로 살아가는 사람들. 원주청년소상공인협회 공식 홈페이지입니다.",
-  // 홈화면에 추가했을 때 앱처럼 열리게 한다
-  manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, title: "원청협", statusBarStyle: "default" },
+/**
+ * 검색 노출 정보.
+ *
+ * 관리자에서 고친 값을 쓰고, 아직 없으면 기본값으로 돈다.
+ * 화면마다 정하는 제목·설명은 각 페이지의 generateMetadata 가 덮어쓴다.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const [seo, site] = await Promise.all([getSeo(), getSiteInfo()]);
 
-  // 상대주소로 적은 이미지도 공유 카드에서 절대주소로 바뀌게 한다
-  metadataBase: new URL(siteUrl()),
-  openGraph: {
-    type: "website",
-    siteName: "원주청년소상공인협회",
-    locale: "ko_KR",
-    title: "원주청년소상공인협회",
-    description:
-      "원주에서 청년으로, 소상공인으로 살아가는 사람들. 원주청년소상공인협회 공식 홈페이지입니다.",
-    url: siteUrl(),
-    images: [{ url: "/logo/wj-horizontal.png", width: 668, height: 160 }],
-  },
-};
+  const title = seo.title || site.name;
+  const description = seo.description;
+  const image = absoluteUrl(seo.ogImage) ?? `${siteUrl()}/logo/wj-horizontal.png`;
+
+  return {
+    title: { default: title, template: `%s | ${site.name}` },
+    description,
+    keywords: seo.keywords,
+    manifest: "/manifest.webmanifest",
+    appleWebApp: { capable: true, title: site.shortName || "원청협", statusBarStyle: "default" },
+    metadataBase: new URL(siteUrl()),
+
+    // 네이버·구글 소유확인. 값이 없으면 아예 넣지 않는다.
+    verification: {
+      other: {
+        ...(seo.naverVerification ? { "naver-site-verification": seo.naverVerification } : {}),
+        ...(seo.googleVerification
+          ? { "google-site-verification": seo.googleVerification }
+          : {}),
+      },
+    },
+
+    openGraph: {
+      type: "website",
+      siteName: site.name,
+      locale: "ko_KR",
+      title,
+      description,
+      url: siteUrl(),
+      images: [{ url: image }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
 
 /**
  * 최상위 틀 — html/body 와 공통 스타일만 담당한다.

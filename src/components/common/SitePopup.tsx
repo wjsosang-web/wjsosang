@@ -112,43 +112,43 @@ export default function SitePopup({
       // 그 자리가 하필 헤더의 메뉴 버튼 자리다. 닫을 방법이 버튼뿐이면
       // 메뉴가 눌리지 않는 것처럼 보인다.
       onClick={() => close(item.id, false)}
-      className="fixed inset-0 z-[80] flex items-end justify-center bg-forest/60 p-4 pt-[76px] sm:items-center"
+      className="fixed inset-0 z-[80] flex items-end justify-center overflow-hidden bg-forest/60 p-4 pt-[80px] sm:items-center sm:pt-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="popup-title"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[420px] overflow-hidden rounded-2xl bg-white shadow-2xl"
+        className="relative flex max-h-full w-full max-w-[360px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:max-w-[400px]"
       >
         {/* 닫는 방법이 눈에 보이게 ✕ 를 둔다 */}
         <button
           type="button"
           onClick={() => close(item.id, false)}
           aria-label="닫기"
-          className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full bg-forest/45 text-[15px] text-white backdrop-blur transition-colors hover:bg-forest/70"
+          className="absolute right-2.5 top-2.5 z-10 grid h-8 w-8 place-items-center rounded-full bg-forest/45 text-[14px] text-white backdrop-blur transition-colors hover:bg-forest/70"
         >
           ✕
         </button>
 
         {isEvent ? (
-          <p className="bg-brand px-6 py-3 text-[12.5px] font-bold text-white">
+          <p className="shrink-0 bg-brand px-5 py-2.5 text-[12px] font-bold text-white">
             오늘 열리는 협회 행사입니다
           </p>
         ) : item.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={item.imageUrl} alt="" className="aspect-[4/3] w-full object-cover" />
+          <img src={item.imageUrl} alt="" className="aspect-[16/9] w-full shrink-0 object-cover" />
         ) : (
-          <div aria-hidden className="ph aspect-[16/7] w-full" />
+          <div aria-hidden className="ph aspect-[16/7] w-full shrink-0" />
         )}
 
-        <div className="p-6">
-          <h2 id="popup-title" className="text-[20px] font-bold leading-snug tracking-[-0.02em]">
+        <div className="min-h-0 flex-1 overflow-y-auto p-5">
+          <h2 id="popup-title" className="text-[17.5px] font-bold leading-snug tracking-[-0.02em]">
             {item.title}
           </h2>
 
           {(item.time || item.place) && (
-            <dl className="mt-4 space-y-2 rounded-xl bg-mist p-4 text-[13.5px]">
+            <dl className="mt-3 space-y-1.5 rounded-xl bg-mist p-3.5 text-[13px]">
               {item.time && (
                 <div className="flex items-center gap-2.5">
                   <dt className="flex w-12 shrink-0 items-center gap-1.5 text-muted">
@@ -171,7 +171,7 @@ export default function SitePopup({
           )}
 
           {item.body && (
-            <p className="mt-4 whitespace-pre-line text-[13.5px] leading-[1.75] text-ink-soft">
+            <p className="mt-3 whitespace-pre-line text-[13px] leading-[1.75] text-ink-soft">
               {item.body}
             </p>
           )}
@@ -180,18 +180,18 @@ export default function SitePopup({
             <Link
               href={item.linkUrl}
               onClick={() => close(item.id, false)}
-              className="mt-5 block rounded-lg bg-brand py-3.5 text-center text-[15px] font-bold text-white transition-colors hover:bg-brand-deep"
+              className="mt-4 block rounded-lg bg-brand py-3 text-center text-[14.5px] font-bold text-white transition-colors hover:bg-brand-deep"
             >
               {item.linkLabel ?? "자세히 보기"}
             </Link>
           )}
         </div>
 
-        <div className="flex border-t border-line text-[14px]">
+        <div className="flex shrink-0 border-t border-line text-[13.5px]">
           <button
             type="button"
             onClick={() => close(item.id, true)}
-            className="flex-1 py-3.5 font-medium text-muted transition-colors hover:bg-mist"
+            className="flex-1 py-3 font-medium text-muted transition-colors hover:bg-mist"
           >
             오늘 하루 보지 않기
           </button>
@@ -199,7 +199,7 @@ export default function SitePopup({
           <button
             type="button"
             onClick={() => close(item.id, false)}
-            className="flex-1 py-3.5 font-bold transition-colors hover:bg-mist"
+            className="flex-1 py-3 font-bold transition-colors hover:bg-mist"
           >
             닫기
           </button>

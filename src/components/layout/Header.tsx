@@ -56,7 +56,9 @@ export default function Header({ logo, phone }: Props) {
         <Link href="/" aria-label="원주청년소상공인협회 메인홈" className="shrink-0">
           {/* 가로로 긴 로고를 기준으로 잡았다. 세로가 긴 파일이 들어와도
               높이는 그대로 두고 가로만 늘어난다. */}
-          <Logo src={logo} height={40} className="max-h-[40px] w-auto max-w-[230px]" />
+          {/* 좁은 화면에서는 검색·메뉴 버튼과 겹치지 않게 가로를 먼저 줄인다.
+              비율이 유지되므로 높이도 함께 낮아진다. */}
+          <Logo src={logo} height={40} className="max-h-[40px] w-auto max-w-[186px] md:max-w-[240px]" />
         </Link>
 
         {/* PC 메뉴 — 가운데 */}

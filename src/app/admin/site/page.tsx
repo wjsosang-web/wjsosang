@@ -6,6 +6,7 @@ import { getCurrentAdmin } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import {
   savePresidentMessage,
+  saveSeo,
   saveSiteInfo,
   saveStory,
 } from "@/lib/admin/actions";
@@ -15,6 +16,7 @@ import {
   getPresidentMessage,
   getPartners,
   getPrograms,
+  getSeo,
   getSiteInfo,
   getStats,
   getStory,
@@ -28,7 +30,7 @@ const ICONS = ["users", "chart", "chat", "heart", "megaphone", "store", "calenda
 export default async function AdminSitePage() {
   if (!(await getCurrentAdmin())) redirect("/admin/login");
 
-  const [info, story, president, programs, history, faqs, stats, partners] = await Promise.all([
+  const [info, story, president, programs, history, faqs, stats, partners, seo] = await Promise.all([
     getSiteInfo(),
     getStory(),
     getPresidentMessage(),
@@ -37,6 +39,7 @@ export default async function AdminSitePage() {
     getFaqs(),
     getStats(),
     getPartners(),
+    getSeo(),
   ]);
 
   // 코드와 파일명은 관리자 화면에서만 보여준다
@@ -137,6 +140,57 @@ export default async function AdminSitePage() {
             type: "long",
             rows: 3,
             hint: "메인홈 가운데 진한 띠에 크게 나옵니다.",
+          },
+        ]}
+      />
+
+      <SiteTextForm
+        title="검색 노출 (SEO)"
+        description="네이버·구글에서 검색했을 때 뜨는 제목·설명·사진입니다."
+        action={saveSeo}
+        image={{
+          name: "ogImageFile",
+          label: "검색·카톡 공유 사진",
+          hint: "검색 결과와 카톡 미리보기에 나옵니다. 가로로 넓은 사진(1200×630)이 좋습니다.",
+          currentUrl: seo.ogImage,
+          aspect: 1200 / 630,
+        }}
+        fields={[
+          {
+            name: "title",
+            label: "검색 제목",
+            defaultValue: seo.title,
+            hint: "비우면 협회 이름이 쓰입니다.",
+          },
+          {
+            name: "description",
+            label: "검색 설명",
+            defaultValue: seo.description,
+            type: "long",
+            rows: 3,
+            hint: "검색 결과에서 제목 아래 나오는 글입니다. 150자 안팎이 적당합니다.",
+          },
+          {
+            name: "keywords",
+            label: "검색 키워드",
+            defaultValue: seo.keywords.join(", "),
+            type: "long",
+            rows: 2,
+            hint: "쉼표로 구분합니다. 사람들이 실제로 검색할 만한 말을 적어 주세요. 예: 원주 소상공인, 원주 청년 창업",
+          },
+          {
+            name: "naverVerification",
+            label: "네이버 소유확인 값",
+            defaultValue: seo.naverVerification,
+            type: "half",
+            hint: "네이버 서치어드바이저에서 받은 값. 없으면 비워 두세요.",
+          },
+          {
+            name: "googleVerification",
+            label: "구글 소유확인 값",
+            defaultValue: seo.googleVerification,
+            type: "half",
+            hint: "구글 서치콘솔에서 받은 값.",
           },
         ]}
       />

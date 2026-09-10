@@ -407,6 +407,27 @@ export interface JoinGuide {
   image: string | null;
 }
 
+/**
+ * 검색 노출 설정.
+ *
+ * 네이버·구글에 뜨는 제목·설명·사진과, 검색 로봇에게 알려줄 키워드다.
+ * 관리자에서 고칠 수 있어야 임기가 바뀌어도 손이 안 간다.
+ */
+export interface SeoSettings {
+  /** 검색 결과에 뜨는 제목. 비우면 협회 이름을 쓴다. */
+  title: string;
+  /** 검색 결과 제목 아래 설명 (150자 안팎이 적당) */
+  description: string;
+  /** 쉼표로 구분한 검색 키워드 */
+  keywords: string[];
+  /** 카톡·검색에 뜨는 대표 사진 */
+  ogImage: string | null;
+  /** 네이버 웹마스터도구 소유확인 값 */
+  naverVerification: string;
+  /** 구글 서치콘솔 소유확인 값 */
+  googleVerification: string;
+}
+
 export interface SiteInfo {
   name: string;
   shortName: string;
