@@ -89,6 +89,25 @@ export default function TelegramPanel({
         </div>
       )}
 
+      {/* 무엇을 받아야 하나 */}
+      <div className="mt-4 rounded-lg bg-brand-tint-2 p-4">
+        <p className="text-[13px] font-bold">회원에게 무엇을 받아야 하나요?</p>
+        <p className="mt-1.5 text-[12.5px] leading-[1.8] text-ink-soft">
+          <b className="text-ink">받을 것이 없습니다.</b> 회원이 봇에게 말을 걸면 번호가
+          자동으로 잡힙니다. 전화번호나 아이디를 따로 물어보지 않으셔도 됩니다.
+        </p>
+        <p className="mt-2.5 text-[12px] leading-[1.8] text-muted">
+          회원이 /start 를 보내는 순간 텔레그램이 그 사람의 <b>대화 번호</b>를 알려주는데,
+          그 번호로 알림을 보냅니다. 이렇게 생겼습니다 —{" "}
+          <code className="rounded bg-white px-1.5 py-0.5">812345678</code>{" "}
+          (숫자 9~10자리). 회원이 볼 일도, 적을 일도 없습니다.
+        </p>
+        <p className="mt-2.5 text-[12px] leading-[1.8] text-muted">
+          한글은 그대로 잘 갑니다. 제목·본문·이모지 모두 됩니다. 글자 수는 한 번에
+          4,096자까지입니다.
+        </p>
+      </div>
+
       {/* 회원 연결 */}
       <div className="mt-4 rounded-lg border border-line p-4">
         <p className="text-[13px] font-bold">회원 연결하기</p>
@@ -140,11 +159,54 @@ export default function TelegramPanel({
         <textarea
           id="tg-message"
           name="message"
-          rows={3}
+          rows={4}
           required
-          placeholder={"[원청협] 9월 정기모임 안내\n9월 30일 저녁 7시, 협회 사무국에서 모입니다."}
+          placeholder={
+            "[원청협] 9월 정기모임 안내\n\n일시: 9월 30일(화) 저녁 7시\n장소: 협회 사무국\n\n참석 여부를 사무국장에게 알려주세요."
+          }
           className="mt-2.5 w-full resize-y rounded-lg border border-line px-3.5 py-2.5 text-[14px] outline-none transition-colors focus:border-brand"
         />
+
+        <details className="mt-2.5 rounded-lg bg-mist p-3.5">
+          <summary className="cursor-pointer text-[12.5px] font-bold">
+            이렇게 쓰면 좋습니다 (예시)
+          </summary>
+
+          <div className="mt-2 space-y-3 text-[12px] leading-[1.8] text-ink-soft">
+            <p>
+              <b>공지</b>
+              <br />
+              [원청협] 9월 회비 납부 안내
+              <br />
+              9월 회비 납부 기간입니다. 신협 131-020-556458 로 입금해 주세요.
+              <br />
+              입금자명은 (성함)(업체명)연회비 로 부탁드립니다.
+            </p>
+
+            <p>
+              <b>행사</b>
+              <br />
+              [원청협] 웰니스 운동회 안내
+              <br />
+              10월 12일(일) 오전 10시, 원주생명과학고등학교
+              <br />
+              가족과 함께 오셔도 됩니다. 참석 여부를 알려주세요.
+            </p>
+
+            <p>
+              <b>긴급</b>
+              <br />
+              [원청협] 오늘 모임 장소 변경
+              <br />
+              사무국 공사로 오늘 모임은 카페인중독 원주시청점에서 합니다.
+            </p>
+
+            <p className="text-muted">
+              맨 앞에 <b>[원청협]</b> 을 붙이면 회원이 알림창에서 바로 알아봅니다. 첫 줄은
+              제목처럼 짧게, 그 아래에 자세한 내용을 적으면 읽기 편합니다.
+            </p>
+          </div>
+        </details>
 
         <button
           type="submit"

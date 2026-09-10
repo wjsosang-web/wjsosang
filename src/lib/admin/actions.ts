@@ -7,6 +7,7 @@ import { requireAdmin, requirePermission } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { STORAGE_BUCKET } from "@/lib/supabase/config";
 import { importFromPlaceUrl } from "@/lib/place/import";
+import { INQUIRY_KINDS } from "@/lib/notify";
 import {
   broadcastTelegram,
   fetchTelegramContacts,
@@ -463,6 +464,38 @@ export async function linkTelegramContacts(): Promise<ActionResult> {
         : "";
 
     return { ok: true, message: `${linked}명을 연결했습니다.${tail}` };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+/** 문의 종류마다 알림 받을 직책을 정한다 */
+export async function saveNotifyRoutes(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requirePermission("members.role");
+
+    const routes: Record<string, string[]> = {};
+
+    for (const kind of INQUIRY_KINDS) {
+      routes[kind] = str(form, `kind:${kind}`)
+        .split(/[,\n]/)
+        .map((t) => t.trim())
+        .filter(Boolean);
+    }
+
+    const empty = Object.entries(routes).filter(([, titles]) => titles.length === 0);
+    if (empty.length > 0) {
+      return {
+        ok: false,
+        message: `${empty.map(([k]) => k).join(", ")} 에 받을 사람이 없습니다. 한 명 이상 적어 주세요.`,
+      };
+    }
+
+    await putSetting("inquiry_notify", routes);
+    return { ok: true, message: "저장했습니다." };
   } catch (e) {
     return { ok: false, message: e instanceof Error ? e.message : String(e) };
   }

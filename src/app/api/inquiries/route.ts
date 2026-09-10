@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { canWriteToSupabase } from "@/lib/supabase/config";
+import { notifyInquiry } from "@/lib/notify";
 
 /**
  * 홈페이지 문의 접수.
@@ -63,6 +64,17 @@ export async function POST(request: Request) {
   if (error) {
     return NextResponse.json({ error: "접수 중 문제가 발생했습니다." }, { status: 500 });
   }
+
+  // 담당자에게 텔레그램으로 알린다.
+  // 알림이 실패해도 접수는 이미 끝났으므로 결과에 영향을 주지 않는다.
+  await notifyInquiry({
+    kind,
+    name,
+    phone,
+    company: text("company") || null,
+    email: text("email") || null,
+    message,
+  });
 
   return NextResponse.json({ ok: true });
 }

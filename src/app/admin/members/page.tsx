@@ -1,11 +1,13 @@
 import { redirect } from "next/navigation";
 import ApproverTitlesForm from "@/components/admin/ApproverTitlesForm";
 import MemberRow from "@/components/admin/MemberRow";
+import NotifyRoutesForm from "@/components/admin/NotifyRoutesForm";
 import TelegramPanel from "@/components/admin/TelegramPanel";
 import { getCurrentAdmin, getApproverTitles } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { can } from "@/lib/permissions";
 import { hasTelegram } from "@/lib/telegram";
+import { INQUIRY_KINDS, getNotifyRoutes } from "@/lib/notify";
 import type { Role } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -42,7 +44,7 @@ export default async function AdminMembersPage() {
 
   const db = getAdminSupabase();
 
-  const [{ data: members }, { data: org }, approverTitles] = await Promise.all([
+  const [{ data: members }, { data: org }, approverTitles, notifyRoutes] = await Promise.all([
     db
       .from("members")
       .select(
@@ -52,6 +54,7 @@ export default async function AdminMembersPage() {
       .order("name"),
     db.from("org_members").select("member_id, title"),
     getApproverTitles(),
+    getNotifyRoutes(),
   ]);
 
   const titleByMember = new Map(
@@ -79,6 +82,24 @@ export default async function AdminMembersPage() {
 
   const canChangeRole = can(admin.role, "members.role");
   const linkedCount = rows.filter((r) => r.telegram).length;
+
+  // 지금 조직도에 있는 직책들 — 담당자를 적을 때 오타를 막으려고 보여준다
+  const availableTitles = [
+    ...new Set((org ?? []).map((o) => o.title as string).filter(Boolean)),
+  ].sort((a, b) => a.localeCompare(b, "ko"));
+
+  // 문의 종류마다 실제로 알림이 닿는 사람이 있는지
+  const telegramByTitle = new Map<string, boolean>();
+  for (const o of org ?? []) {
+    const member = rows.find((r) => r.id === (o.member_id as string));
+    if (member?.telegram) telegramByTitle.set(o.title as string, true);
+  }
+  const reachable = Object.fromEntries(
+    INQUIRY_KINDS.map((kind) => [
+      kind,
+      (notifyRoutes[kind] ?? []).some((t) => telegramByTitle.get(t) === true),
+    ]),
+  );
 
   return (
     <div className="space-y-5">
@@ -173,6 +194,16 @@ export default async function AdminMembersPage() {
         totalCount={rows.length}
         botName={process.env.TELEGRAM_BOT_NAME ?? null}
       />
+
+      {/* 문의가 오면 누가 받을지 */}
+      {canChangeRole && (
+        <NotifyRoutesForm
+          routes={notifyRoutes}
+          kinds={INQUIRY_KINDS}
+          availableTitles={availableTitles}
+          reachable={reachable}
+        />
+      )}
 
       {/* 어떤 직책에 권한을 줄지 */}
       {canChangeRole && <ApproverTitlesForm titles={approverTitles} />}

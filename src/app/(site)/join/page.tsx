@@ -162,6 +162,43 @@ export default async function JoinPage() {
           </ol>
         </section>
 
+        {/* 텔레그램 알림 — 선택 */}
+        <section className="rounded-2xl border border-line bg-white p-6 md:p-7">
+          <p className="inline-flex items-center gap-1.5 rounded-md bg-sky-tint px-2.5 py-1 text-[11.5px] font-bold text-sky">
+            선택 사항
+          </p>
+
+          <h2 className="mt-3 text-[18px] font-bold tracking-[-0.01em] md:text-[20px]">
+            협회 소식을 텔레그램으로 받아보세요
+          </h2>
+
+          <p className="mt-2.5 text-[14px] leading-[1.85] text-ink-soft md:text-[15px]">
+            공지사항, 행사 안내, 긴급 연락을 휴대폰으로 바로 받으실 수 있습니다.
+            단톡방처럼 시끄럽지 않고, 협회에서 보내는 알림만 옵니다.
+          </p>
+
+          <div className="mt-4 rounded-xl bg-mist p-5">
+            <p className="text-[13px] font-bold">등록 방법 (1분이면 됩니다)</p>
+            <ol className="mt-2.5 space-y-1.5 text-[13.5px] leading-[1.8] text-ink-soft">
+              <li>1. 텔레그램 앱을 설치합니다.</li>
+              <li>2. 검색창에 협회 봇 아이디를 넣어 찾습니다.</li>
+              <li>
+                3. 대화방에서 <b className="text-ink">/start 홍길동</b> 처럼 본인 이름을 함께
+                보냅니다.
+              </li>
+            </ol>
+            <p className="mt-3 text-[12.5px] leading-[1.75] text-muted">
+              전화번호나 아이디를 따로 알려주지 않으셔도 됩니다. 이름만 보내주시면
+              협회에서 명부와 맞춰 연결해 드립니다.
+            </p>
+          </div>
+
+          <p className="mt-4 text-[13px] leading-[1.8] text-muted">
+            <b className="text-ink">등록하지 않으셔도 가입에는 아무 문제가 없습니다.</b>{" "}
+            어려우시면 인사국이나 관리국에 말씀해 주세요. 대신 등록해 드립니다.
+          </p>
+        </section>
+
         {/* 문의 */}
         <section className="rounded-2xl bg-brand p-6 text-white md:p-8">
           <p className="text-[18px] font-bold leading-[1.5] md:text-[21px]">준비되셨나요?</p>
