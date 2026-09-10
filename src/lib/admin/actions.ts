@@ -14,8 +14,8 @@ import {
   hasTelegram,
 } from "@/lib/telegram";
 import { getHeroSlides } from "@/lib/repo";
-import { ORG_GROUPS, REMOVE_IMAGE } from "@/lib/types";
-import type { HeroSlide, OrgGroup, PlaceImportResult } from "@/lib/types";
+import { ORG_GROUPS, PAGE_HERO_KEYS, REMOVE_IMAGE } from "@/lib/types";
+import type { HeroSlide, OrgGroup, PageHeroKey, PlaceImportResult } from "@/lib/types";
 
 /**
  * 관리자 저장 작업.
@@ -798,6 +798,47 @@ export async function saveSiteInfo(
       contactImage: await pickedImage(form, "contactImageFile", "contactImage", "site"),
       tagline: str(form, "tagline"),
       slogan: str(form, "slogan"),
+    });
+
+    return { ok: true, message: "저장했습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+/** 각 메뉴 맨 위 띠(히어로) 설정 */
+export async function savePageHero(
+  _prev: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
+  try {
+    await requirePermission("site.manage");
+
+    const key = str(form, "key");
+    if (!PAGE_HERO_KEYS.includes(key as PageHeroKey)) {
+      return { ok: false, message: "알 수 없는 화면입니다." };
+    }
+
+    const title = str(form, "title");
+    if (!title) return { ok: false, message: "제목을 입력해 주세요." };
+
+    const ctas = [1, 2]
+      .map((n) => ({ label: str(form, `ctaLabel${n}`), href: str(form, `ctaHref${n}`) }))
+      .filter((c) => c.label && c.href);
+
+    await putSetting(`page_hero_${key}`, {
+      eyebrow: str(form, "eyebrow"),
+      title,
+      highlight: str(form, "highlight")
+        .split(/[,\n]/)
+        .map((w) => w.trim())
+        .filter(Boolean),
+      description: str(form, "description"),
+      note: str(form, "note"),
+      image: await pickedImage(form, "imageFile", "image", "hero"),
+      tone: str(form, "tone") || "forest",
+      size: str(form, "size") || "sm",
+      ctas,
     });
 
     return { ok: true, message: "저장했습니다." };

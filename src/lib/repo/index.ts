@@ -15,6 +15,7 @@
 import { dataSource } from "@/lib/supabase/config";
 import * as seed from "@/lib/repo/seed";
 import * as supabase from "@/lib/repo/supabase";
+import type { PageHeroKey } from "@/lib/types";
 
 /** 요청 시점마다 판단한다. 환경변수가 늦게 들어와도 반영된다. */
 function impl() {
@@ -27,6 +28,7 @@ export { toDateKey } from "@/lib/date";
 export const getSiteInfo = () => impl().getSiteInfo();
 export const getStats = () => impl().getStats();
 export const getHeroSlides = () => impl().getHeroSlides();
+export const getPageHero = (key: PageHeroKey) => impl().getPageHero(key);
 export const getSeo = () => impl().getSeo();
 export const getJoinGuide = () => impl().getJoinGuide();
 export const getFaqs = () => impl().getFaqs();

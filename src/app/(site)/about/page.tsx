@@ -8,10 +8,11 @@ import { accentAt } from "@/lib/accents";
 import { publicFileExists } from "@/lib/assets";
 import {
   getHistory,
-  getMembers,
   getMemberDocInfo,
+  getMembers,
   getOrgGroupOrder,
   getOrgMembers,
+  getPageHero,
   getPartners,
   getPresidentMessage,
   getPrograms,
@@ -41,6 +42,7 @@ export default async function AboutPage() {
     members,
     groupOrder,
     memberDoc,
+    hero,
   ] = await Promise.all([
       getSiteInfo(),
       getStory(),
@@ -53,6 +55,7 @@ export default async function AboutPage() {
     getMembers(),
     getOrgGroupOrder(),
     getMemberDocInfo(),
+    getPageHero("about"),
   ]);
 
   const chair = org.find((o) => o.title === "회장") ?? null;
@@ -71,15 +74,15 @@ export default async function AboutPage() {
   return (
     <>
       <PageHero
-        eyebrow="원주청년소상공인협회"
-        title={story.heading}
-        highlight={["원주", "청년", "소상공인"]}
-        description={story.lead}
-        note={story.note}
-        ctas={[
-          { label: "협회 소개 영상 보기", href: "/activities" },
-          { label: "함께하는 더 큰 원주", href: "/contact", variant: "outline" },
-        ]}
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        highlight={hero.highlight}
+        description={hero.description}
+        note={hero.note}
+        image={hero.image}
+        tone={hero.tone}
+        size={hero.size}
+        ctas={hero.ctas}
       />
 
       {/* 회장 소개 */}

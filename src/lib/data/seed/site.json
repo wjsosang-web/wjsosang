@@ -329,5 +329,69 @@
     "ogImage": null,
     "naverVerification": "",
     "googleVerification": ""
+  },
+  "pageHeroes": {
+    "about": {
+      "eyebrow": "원주청년소상공인협회",
+      "title": "혼자가 아닌,\n함께 성장하는 협회",
+      "highlight": [
+        "함께 성장"
+      ],
+      "description": "원주에서 사업하는 청년들이 서로 연결되어 함께 나아갑니다.",
+      "note": "좋은 사람들이\n좋은 지역을\n만듭니다 :)",
+      "image": null,
+      "tone": "forest",
+      "size": "sm",
+      "ctas": [
+        {
+          "label": "협회 활동 보기",
+          "href": "/activities"
+        },
+        {
+          "label": "가입 문의",
+          "href": "/contact?kind=join"
+        }
+      ]
+    },
+    "business": {
+      "eyebrow": "원주청년소상공인협회",
+      "title": "원청협 회원업장을 찾아보세요.",
+      "highlight": [
+        "원청협 회원업장"
+      ],
+      "description": "원주의 청년 소상공인들이 만들어가는\n특별한 가게, 좋은 사람들과 연결됩니다.",
+      "note": "좋은 가게가\n좋은 마을을 만듭니다.\n:)",
+      "image": null,
+      "tone": "forest",
+      "size": "sm",
+      "ctas": []
+    },
+    "activities": {
+      "eyebrow": "원주청년소상공인협회",
+      "title": "협회활동\n원청협은 지금도 움직이고 있습니다.",
+      "highlight": [
+        "원청협"
+      ],
+      "description": "좋은 사람들과, 더 좋은 원주를 만들어가는\n원주청년소상공인협회의 다양한 이야기를 만나보세요.",
+      "note": "좋은 일이,\n좋은 사람들과\n원주에서 :)",
+      "image": null,
+      "tone": "forest",
+      "size": "sm",
+      "ctas": []
+    },
+    "contact": {
+      "eyebrow": "원주청년소상공인협회",
+      "title": "원청협과\n연결되고 싶으신가요?",
+      "highlight": [
+        "원청협",
+        "연결"
+      ],
+      "description": "청년 소상공인의 오늘이 더 나은 내일로 이어지도록\n원주청년소상공인협회가 언제나 함께하겠습니다.",
+      "note": "좋은 질문이\n더 좋은 변화를\n만듭니다. :)",
+      "image": null,
+      "tone": "forest",
+      "size": "sm",
+      "ctas": []
+    }
   }
 }

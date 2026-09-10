@@ -164,6 +164,36 @@ export function FormIcon({ className = "" }: IconProps) {
   );
 }
 
+/** 회장 자리에 쓰는 왕관 */
+export function CrownIcon({ className = "" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...S}>
+      <path d="M3 8.5l3.8 3 5.2-6 5.2 6 3.8-3-2 10.5H5L3 8.5Z" />
+      <path d="M5 19h14" />
+    </svg>
+  );
+}
+
+/** 기획국 — 아이디어 */
+export function BulbIcon({ className = "" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...S}>
+      <path d="M9 18h6M10 21h4" />
+      <path d="M12 3a6 6 0 0 0-3.5 10.9c.5.4.8 1 .8 1.6v.5h5.4v-.5c0-.6.3-1.2.8-1.6A6 6 0 0 0 12 3Z" />
+    </svg>
+  );
+}
+
+/** 관리국 — 톱니 */
+export function GearIcon({ className = "" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...S}>
+      <circle cx="12" cy="12" r="3.2" />
+      <path d="M12 2.8v2.4M12 18.8v2.4M4.5 12H2.1M21.9 12h-2.4M6.7 6.7 5 5M19 19l-1.7-1.7M6.7 17.3 5 19M19 5l-1.7 1.7" />
+    </svg>
+  );
+}
+
 const REGISTRY: Record<string, (p: IconProps) => React.ReactElement> = {
   calendar: CalendarIcon,
   users: UsersIcon,
@@ -182,6 +212,9 @@ const REGISTRY: Record<string, (p: IconProps) => React.ReactElement> = {
   link: LinkIcon,
   "check-user": CheckUserIcon,
   form: FormIcon,
+  crown: CrownIcon,
+  bulb: BulbIcon,
+  gear: GearIcon,
 };
 
 /** 데이터에 담긴 아이콘 이름으로 그림을 고른다. */

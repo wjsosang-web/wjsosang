@@ -3,7 +3,13 @@ import Link from "next/link";
 import PageHero from "@/components/common/PageHero";
 import { Icon } from "@/components/common/Icons";
 import BusinessFinder from "@/components/business/BusinessFinder";
-import { getDistricts, getOrgMembers, getPublicBusinesses, toDateKey } from "@/lib/repo";
+import {
+  getDistricts,
+  getOrgMembers,
+  getPageHero,
+  getPublicBusinesses,
+  toDateKey,
+} from "@/lib/repo";
 import { accentAt } from "@/lib/accents";
 import { buildBusinessCards, orderBusinessCards, seedFromDateKey } from "@/lib/search";
 import { BUSINESS_CATEGORIES } from "@/lib/types";
@@ -47,10 +53,11 @@ export default async function BusinessListPage({
 
   const today = toDateKey(new Date());
 
-  const [businesses, org, districts] = await Promise.all([
+  const [businesses, org, districts, hero] = await Promise.all([
     getPublicBusinesses(),
     getOrgMembers(),
     getDistricts(),
+    getPageHero("business"),
   ]);
 
   // 우선순위 지정 → 임원 업장 → 나머지 랜덤 (하루마다 다시 섞임)
@@ -62,12 +69,15 @@ export default async function BusinessListPage({
   return (
     <>
       <PageHero
-        eyebrow="원주청년소상공인협회"
-        title="원청협 회원업장을 찾아보세요."
-        highlight={["원청협 회원업장"]}
-        description={"원주의 청년 소상공인들이 만들어가는\n특별한 가게, 좋은 사람들과 연결됩니다."}
-        note={"좋은 가게가\n좋은 마을을 만듭니다.\n:)"}
-        size="sm"
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        highlight={hero.highlight}
+        description={hero.description}
+        note={hero.note}
+        image={hero.image}
+        tone={hero.tone}
+        size={hero.size}
+        ctas={hero.ctas}
       />
 
       <BusinessFinder

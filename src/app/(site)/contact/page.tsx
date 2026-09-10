@@ -13,7 +13,11 @@ import {
   PinIcon,
 } from "@/components/common/Icons";
 import { accentAt } from "@/lib/accents";
-import { getFaqs, getSiteInfo } from "@/lib/repo";
+import {
+  getFaqs,
+  getPageHero,
+  getSiteInfo,
+} from "@/lib/repo";
 
 export const metadata: Metadata = { title: "협회문의" };
 /**
@@ -47,10 +51,11 @@ export default async function ContactPage({
 }: {
   searchParams: Promise<{ kind?: string }>;
 }) {
-  const [{ kind }, site, faqs] = await Promise.all([
+  const [{ kind }, site, faqs, hero] = await Promise.all([
     searchParams,
     getSiteInfo(),
     getFaqs(),
+    getPageHero("contact"),
   ]);
 
   const contacts = [
@@ -87,14 +92,15 @@ export default async function ContactPage({
   return (
     <>
       <PageHero
-        eyebrow="원주청년소상공인협회"
-        title={"원청협과\n연결되고 싶으신가요?"}
-        highlight={["원청협", "연결"]}
-        description={
-          "청년 소상공인의 오늘이 더 나은 내일로 이어지도록\n원주청년소상공인협회가 언제나 함께하겠습니다.\n궁금한 점이 있다면, 편하게 문의해주세요."
-        }
-        note={"좋은 질문이\n더 좋은 변화를\n만듭니다. :)"}
-        size="sm"
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        highlight={hero.highlight}
+        description={hero.description}
+        note={hero.note}
+        image={hero.image}
+        tone={hero.tone}
+        size={hero.size}
+        ctas={hero.ctas}
       />
 
       {/* 연락처 */}

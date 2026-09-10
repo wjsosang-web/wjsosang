@@ -14,6 +14,8 @@ import type {
   PresidentMessage,
   HistoryItem,
   JoinGuide,
+  PageHeroKey,
+  PageHeroSetting,
   SeoSettings,
   PartnerOrg,
   ProgramItem,
@@ -58,6 +60,10 @@ export async function getStats(): Promise<StatItem[]> {
 /** 메인 히어로 슬라이드 */
 export async function getHeroSlides(): Promise<HeroSlide[]> {
   return (siteSeed.heroSlides as HeroSlide[]).slice().sort((a, b) => a.order - b.order);
+}
+
+export async function getPageHero(key: PageHeroKey): Promise<PageHeroSetting> {
+  return (siteSeed.pageHeroes as Record<string, PageHeroSetting>)[key];
 }
 
 export async function getSeo(): Promise<SeoSettings> {

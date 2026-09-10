@@ -1,16 +1,21 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import HeroSlideCard from "@/components/admin/HeroSlideCard";
+import PageHeroForm from "@/components/admin/PageHeroForm";
 import { getCurrentAdmin } from "@/lib/supabase/auth";
 import { addHeroSlide } from "@/lib/admin/actions";
-import { getHeroSlides } from "@/lib/repo";
+import { getHeroSlides, getPageHero } from "@/lib/repo";
+import { PAGE_HERO_KEYS, PAGE_HERO_LABEL } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminHeroPage() {
   if (!(await getCurrentAdmin())) redirect("/admin/login");
 
-  const slides = await getHeroSlides();
+  const [slides, pageHeroes] = await Promise.all([
+    getHeroSlides(),
+    Promise.all(PAGE_HERO_KEYS.map(async (k) => ({ key: k, hero: await getPageHero(k) }))),
+  ]);
 
   return (
     <div className="space-y-5">
@@ -54,6 +59,21 @@ export default async function AdminHeroPage() {
         {slides.map((slide, i) => (
           <HeroSlideCard key={slide.id} slide={slide} index={i} total={slides.length} />
         ))}
+      </div>
+
+      {/* 각 메뉴 맨 위 띠 */}
+      <div className="pt-4">
+        <h2 className="text-[18px] font-bold tracking-[-0.02em]">메뉴별 상단 띠</h2>
+        <p className="mt-1 text-[13px] leading-[1.7] text-muted">
+          협회소개·회원업장·협회활동·협회문의 화면 맨 위에 나오는 띠입니다.
+          문구·색·높이·버튼·배경사진을 여기서 바꿉니다.
+        </p>
+
+        <div className="mt-4 space-y-4">
+          {pageHeroes.map(({ key, hero }) => (
+            <PageHeroForm key={key} heroKey={key} label={PAGE_HERO_LABEL[key]} hero={hero} />
+          ))}
+        </div>
       </div>
     </div>
   );

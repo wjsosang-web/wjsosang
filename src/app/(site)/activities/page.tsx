@@ -3,7 +3,13 @@ import Link from "next/link";
 import ActivityTabs from "@/components/activities/ActivityTabs";
 import PageHero from "@/components/common/PageHero";
 import { CalendarIcon, ClockIcon, PinIcon } from "@/components/common/Icons";
-import { getActivities, getEventsByYear, getNextEvent, getNotices } from "@/lib/repo";
+import {
+  getActivities,
+  getEventsByYear,
+  getNextEvent,
+  getNotices,
+  getPageHero,
+} from "@/lib/repo";
 
 export const metadata: Metadata = { title: "협회활동" };
 /**
@@ -19,22 +25,26 @@ export default async function ActivitiesPage() {
   const now = new Date();
   const year = now.getFullYear();
 
-  const [notices, activities, events, nextEvent] = await Promise.all([
+  const [notices, activities, events, nextEvent, hero] = await Promise.all([
     getNotices(),
     getActivities(),
     getEventsByYear(year),
     getNextEvent(now),
+    getPageHero("activities"),
   ]);
 
   return (
     <>
       <PageHero
-        eyebrow="원주청년소상공인협회"
-        title={"협회활동\n원청협은 지금도 움직이고 있습니다."}
-        highlight={["원청협"]}
-        description={"좋은 사람들과, 더 좋은 원주를 만들어가는\n원주청년소상공인협회의 다양한 이야기를 만나보세요."}
-        note={"좋은 일이,\n좋은 사람들과\n원주에서 :)"}
-        size="sm"
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        highlight={hero.highlight}
+        description={hero.description}
+        note={hero.note}
+        image={hero.image}
+        tone={hero.tone}
+        size={hero.size}
+        ctas={hero.ctas}
       />
 
       <div className="pt-8" />

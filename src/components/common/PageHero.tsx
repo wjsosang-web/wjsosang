@@ -10,6 +10,14 @@ export interface HeroCta {
   variant?: "solid" | "outline";
 }
 
+/** 바탕색 — 관리자에서 고른다 */
+const TONES: Record<string, { bg: string; scrim: string }> = {
+  forest: { bg: "bg-forest", scrim: "from-forest/90 via-forest/65 to-forest/25" },
+  brand: { bg: "bg-brand-deep", scrim: "from-brand-deep/92 via-brand-deep/70 to-brand-deep/30" },
+  city: { bg: "bg-city", scrim: "from-city/92 via-city/70 to-city/30" },
+  ink: { bg: "bg-ink", scrim: "from-ink/92 via-ink/70 to-ink/30" },
+};
+
 export default function PageHero({
   eyebrow,
   title,
@@ -20,6 +28,7 @@ export default function PageHero({
   ctas = [],
   children,
   size = "md",
+  tone = "forest",
 }: {
   eyebrow?: string;
   /** 줄바꿈(\n)을 그대로 살린다 */
@@ -33,16 +42,20 @@ export default function PageHero({
   /** 히어로 하단에 겹쳐 놓을 것(회원업장 검색바 등) */
   children?: React.ReactNode;
   size?: "sm" | "md" | "lg";
+  tone?: string;
 }) {
+  // 배너가 너무 높으면 정작 볼 내용이 아래로 밀린다. 전체적으로 낮게 잡았다.
   const pad =
     size === "lg"
-      ? "pt-16 pb-20 md:pt-24 md:pb-28"
+      ? "pt-12 pb-14 md:pt-16 md:pb-20"
       : size === "sm"
-        ? "pt-12 pb-14 md:pt-16 md:pb-16"
-        : "pt-14 pb-16 md:pt-20 md:pb-24";
+        ? "pt-8 pb-9 md:pt-10 md:pb-11"
+        : "pt-10 pb-12 md:pt-12 md:pb-14";
+
+  const palette = TONES[tone] ?? TONES.forest;
 
   return (
-    <section className="relative isolate overflow-hidden bg-forest">
+    <section className={`relative isolate overflow-hidden ${palette.bg}`}>
       {image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={image} alt="" className="absolute inset-0 -z-10 h-full w-full object-cover" />
@@ -51,7 +64,7 @@ export default function PageHero({
       )}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-gradient-to-r from-forest/90 via-forest/65 to-forest/25"
+        className={`absolute inset-0 -z-10 bg-gradient-to-r ${palette.scrim}`}
       />
 
       <div className={`mx-auto max-w-[1180px] px-5 ${pad}`}>

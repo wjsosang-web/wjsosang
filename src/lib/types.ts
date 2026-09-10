@@ -413,6 +413,44 @@ export interface JoinGuide {
  * 네이버·구글에 뜨는 제목·설명·사진과, 검색 로봇에게 알려줄 키워드다.
  * 관리자에서 고칠 수 있어야 임기가 바뀌어도 손이 안 간다.
  */
+/**
+ * 각 메뉴 맨 위 띠(히어로) 설정.
+ *
+ * 문구·색·크기·버튼·배경을 관리자에서 고친다.
+ * 화면마다 코드에 박아두면 임기가 바뀔 때마다 손을 대야 한다.
+ */
+export interface PageHeroSetting {
+  eyebrow: string;
+  /** 줄바꿈을 그대로 살린다 */
+  title: string;
+  /** 강조할 단어들 */
+  highlight: string[];
+  description: string;
+  /** 오른쪽 손글씨 문구 */
+  note: string;
+  /** 배경 사진. 없으면 무늬가 나온다. */
+  image: string | null;
+  /** 바탕색 — forest(진한 초록) / brand(초록) / city(남색) / ink(먹색) */
+  tone: "forest" | "brand" | "city" | "ink";
+  /** 높이 — sm / md / lg */
+  size: "sm" | "md" | "lg";
+  /** 버튼 (최대 2개) */
+  ctas: { label: string; href: string }[];
+}
+
+/** 히어로를 두는 화면들 */
+export type PageHeroKey = "about" | "business" | "activities" | "contact";
+
+/** 히어로를 두는 화면들과 사람이 읽는 이름 */
+export const PAGE_HERO_KEYS: PageHeroKey[] = ["about", "business", "activities", "contact"];
+
+export const PAGE_HERO_LABEL: Record<PageHeroKey, string> = {
+  about: "협회소개",
+  business: "회원업장",
+  activities: "협회활동",
+  contact: "협회문의",
+};
+
 export interface SeoSettings {
   /** 검색 결과에 뜨는 제목. 비우면 협회 이름을 쓴다. */
   title: string;
