@@ -85,7 +85,9 @@ export default function PhotoGallery({ photos }: { photos: GalleryPhoto[] }) {
           role="dialog"
           aria-modal="true"
           aria-label="사진 크게 보기"
-          className="fixed inset-0 z-50 flex flex-col bg-forest/95"
+          // 헤더(z-90)보다 위에 있어야 한다. 아래에 두면 휴대폰에서 위에 붙어 있는
+          // 헤더가 닫기 버튼을 덮어 버려서, 닫을 방법이 없는 것처럼 보인다.
+          className="fixed inset-0 z-[100] flex flex-col bg-forest/95"
           onClick={() => setOpen(null)}
         >
           <div className="flex items-center justify-between px-5 py-4 text-white">
@@ -96,9 +98,12 @@ export default function PhotoGallery({ photos }: { photos: GalleryPhoto[] }) {
               type="button"
               onClick={() => setOpen(null)}
               aria-label="닫기"
-              className="grid h-9 w-9 place-items-center rounded-full border border-white/30 text-[15px] transition-colors hover:bg-white/10"
+              className="flex items-center gap-1.5 rounded-full bg-white/15 py-2 pl-4 pr-3 text-[13.5px] font-bold text-white backdrop-blur transition-colors hover:bg-white/30"
             >
-              ✕
+              닫기
+              <span aria-hidden className="text-[15px] leading-none">
+                ✕
+              </span>
             </button>
           </div>
 
@@ -139,12 +144,16 @@ export default function PhotoGallery({ photos }: { photos: GalleryPhoto[] }) {
 
           {current.caption && (
             <p
-              className="px-6 pb-6 text-center text-[13.5px] leading-[1.7] text-white/85"
+              className="px-6 text-center text-[13.5px] leading-[1.7] text-white/85"
               onClick={(e) => e.stopPropagation()}
             >
               {current.caption}
             </p>
           )}
+
+          <p className="px-6 pb-6 pt-3 text-center text-[12.5px] text-white/60">
+            사진 바깥을 눌러도 닫힙니다
+          </p>
         </div>
       )}
     </>
