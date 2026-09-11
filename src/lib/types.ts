@@ -447,16 +447,17 @@ export interface PageHeroSetting {
 }
 
 /** 히어로를 두는 화면들 */
-export type PageHeroKey = "about" | "business" | "activities" | "contact";
+export type PageHeroKey = "about" | "business" | "activities" | "contact" | "support";
 
 /** 히어로를 두는 화면들과 사람이 읽는 이름 */
-export const PAGE_HERO_KEYS: PageHeroKey[] = ["about", "business", "activities", "contact"];
+export const PAGE_HERO_KEYS: PageHeroKey[] = ["about", "business", "activities", "contact", "support"];
 
 export const PAGE_HERO_LABEL: Record<PageHeroKey, string> = {
   about: "협회소개",
   business: "회원업장",
   activities: "협회활동",
   contact: "협회문의",
+  support: "지원사업 소식",
 };
 
 export interface SeoSettings {

@@ -10,6 +10,7 @@ const ITEMS = [
   { href: "/admin/businesses", label: "회원업장" },
   { href: "/admin/org", label: "조직도" },
   { href: "/admin/popups", label: "팝업관리" },
+  { href: "/admin/feeds", label: "지원사업 소식" },
   { href: "/admin/members", label: "회원관리" },
   { href: "/admin/inquiries", label: "문의관리" },
   { href: "/admin/site", label: "협회 정보" },
