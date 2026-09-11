@@ -93,6 +93,24 @@ body {
     );
 }
 
+/*
+ * 사진이 없는 자리에 올리는 협회 세로 로고.
+ * .ph 안에 <span class="ph-logo"> 를 넣어서 쓴다.
+ *
+ * 로고 경로는 최상위 레이아웃이 --logo-vertical 로 넣어 준다.
+ * 파일이 아직 없으면 이 변수가 비어 있고, 그때는 아무것도 그리지 않는다
+ * (값이 없는 var() 는 background-image: none 과 같게 동작한다).
+ */
+.ph-logo {
+  position: absolute;
+  inset: 0;
+  background-image: var(--logo-vertical);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 54% auto;
+  opacity: 0.62;
+}
+
 .ph-dark {
   background-color: var(--color-forest);
   background-image:

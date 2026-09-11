@@ -64,7 +64,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const logo = getLogoAssets();
 
   return (
-    <html lang="ko">
+    <html
+      lang="ko"
+      // 사진이 없는 자리(.ph-logo)에 쓸 세로 로고. 파일이 없으면 넣지 않는다.
+      style={
+        logo.vertical
+          ? ({ "--logo-vertical": `url("${logo.vertical}")` } as React.CSSProperties)
+          : undefined
+      }
+    >
       <head>
         <link
           rel="stylesheet"

@@ -122,7 +122,9 @@ export default async function BusinessDetailPage({
                   className="aspect-[4/3] w-full object-cover"
                 />
               ) : (
-                <div aria-hidden className="ph aspect-[4/3] w-full" />
+                <div aria-hidden className="relative ph aspect-[4/3] w-full">
+                  <span className="ph-logo" />
+                </div>
               )}
             </div>
 

@@ -38,7 +38,10 @@ export default function BusinessCard({
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         ) : (
-          <div aria-hidden className="ph h-full w-full" />
+          /* 플레이스에 사진이 없는 업장. 빈 칸으로 두면 허전해서 협회 로고를 넣는다. */
+          <div aria-hidden className="ph h-full w-full">
+            <span className="ph-logo" />
+          </div>
         )}
 
         {variant === "large" && (
