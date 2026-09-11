@@ -7,8 +7,8 @@
  *     그리고 대표자의 협회 직함(회장·이사·감사·사무국장·재무국장 …)과 소속국
  *
  * 정렬
- *   - priority 가 지정된 업장이 먼저 (관리자가 회장단·이사진 순서를 직접 정한다)
- *   - 나머지는 랜덤. 다만 서버와 클라이언트가 같은 순서를 만들어야 하므로
+ *   - priority 가 지정된 업장이 먼저 (관리자가 직접 정한 몇 곳)
+ *   - 나머지는 임원·일반 구분 없이 전부 랜덤. 다만 서버와 클라이언트가 같은 순서를 만들어야 하므로
  *     날짜를 시드로 쓰는 결정적 셔플을 사용한다(하루 단위로 순서가 바뀐다).
  */
 
@@ -162,8 +162,11 @@ export function seedFromDateKey(dateKey: string): number {
  * 노출 순서.
  *
  *   1. 관리자가 우선순위를 매긴 업장 (숫자가 작을수록 먼저)
- *   2. 임원이 운영하는 업장
- *   3. 나머지는 랜덤
+ *   2. 그 밖의 모든 업장은 임원·일반 구분 없이 전부 랜덤
+ *
+ * 예전에는 임원 업장을 한 덩어리로 앞에 몰아 놓았는데, 임원 업장만 서른 곳이라
+ * 첫 화면(모바일 15칸)이 통째로 임원 업장으로 채워졌다. 매일 순서가 바뀌어도
+ * 나오는 얼굴이 늘 같으니 랜덤이 아닌 것처럼 보였다. 그래서 모두 같이 섞는다.
  *
  * 랜덤은 날짜를 시드로 쓰는 결정적 셔플이라 서버와 브라우저 순서가 같고,
  * 하루가 지나면 순서가 새로 섞인다. 그래서 특정 업장만 계속 위에 있지 않다.
@@ -173,8 +176,7 @@ export function orderBusinessCards(cards: BusinessCard[], seed: number): Busines
     .filter((c) => c.priority !== null)
     .sort((a, b) => (a.priority as number) - (b.priority as number));
 
-  const officers = cards.filter((c) => c.priority === null && c.isOfficer);
-  const rest = cards.filter((c) => c.priority === null && !c.isOfficer);
+  const rest = cards.filter((c) => c.priority === null);
 
-  return [...pinned, ...shuffle(officers, seed), ...shuffle(rest, seed)];
+  return [...pinned, ...shuffle(rest, seed)];
 }
