@@ -1,4 +1,4 @@
-import BusinessCard from "@/components/common/BusinessCard";
+import BusinessPreview from "@/components/business/BusinessPreview";
 import SectionHead from "@/components/common/SectionHead";
 import SitePopup from "@/components/common/SitePopup";
 import HeroSlider from "@/components/home/HeroSlider";
@@ -94,13 +94,9 @@ export default async function HomePage() {
             moreHref="/business"
           />
 
-          <ul className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {cards.slice(0, 8).map((b) => (
-              <li key={b.id}>
-                <BusinessCard business={b} />
-              </li>
-            ))}
-          </ul>
+          {/* 여덟 곳은 브라우저에서 고른다. 서버에서 고르면 모두 같은 여덟 곳을 본다.
+              검색은 여기서 하지 않으므로 검색용 텍스트는 빼고 보낸다(전송량). */}
+          <BusinessPreview cards={cards.map((c) => ({ ...c, searchText: "" }))} count={8} />
         </div>
       </section>
 

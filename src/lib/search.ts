@@ -8,8 +8,8 @@
  *
  * 정렬
  *   - priority 가 지정된 업장이 먼저 (관리자가 직접 정한 몇 곳)
- *   - 나머지는 임원·일반 구분 없이 전부 랜덤. 다만 서버와 클라이언트가 같은 순서를 만들어야 하므로
- *     날짜를 시드로 쓰는 결정적 셔플을 사용한다(하루 단위로 순서가 바뀐다).
+ *   - 나머지는 임원·일반 구분 없이 전부 랜덤이고, 화면이 뜰 때마다 다시 섞인다.
+ *     그래서 새로고침하면 순서가 바뀌고, 같은 시각에 들어온 회원끼리도 순서가 다르다.
  */
 
 import { resolveBusinessCover } from "@/lib/images";
@@ -158,25 +158,45 @@ export function seedFromDateKey(dateKey: string): number {
   return Number(dateKey.replace(/-/g, ""));
 }
 
+/** 관리자가 지정한 우선순위 업장. 언제나 맨 위에, 정한 순서 그대로. */
+function pinnedFirst(cards: BusinessCard[]): BusinessCard[] {
+  return cards
+    .filter((c) => c.priority !== null)
+    .sort((a, b) => (a.priority as number) - (b.priority as number));
+}
+
 /**
- * 노출 순서.
+ * 서버가 처음 그려 보내는 순서.
  *
  *   1. 관리자가 우선순위를 매긴 업장 (숫자가 작을수록 먼저)
  *   2. 그 밖의 모든 업장은 임원·일반 구분 없이 전부 랜덤
  *
- * 예전에는 임원 업장을 한 덩어리로 앞에 몰아 놓았는데, 임원 업장만 서른 곳이라
- * 첫 화면(모바일 15칸)이 통째로 임원 업장으로 채워졌다. 매일 순서가 바뀌어도
- * 나오는 얼굴이 늘 같으니 랜덤이 아닌 것처럼 보였다. 그래서 모두 같이 섞는다.
- *
- * 랜덤은 날짜를 시드로 쓰는 결정적 셔플이라 서버와 브라우저 순서가 같고,
- * 하루가 지나면 순서가 새로 섞인다. 그래서 특정 업장만 계속 위에 있지 않다.
+ * 이 순서는 화면이 뜨자마자 reshuffleForViewer 가 다시 섞기 때문에
+ * 회원 눈에는 거의 보이지 않는다. 검색 로봇과 자바스크립트가 꺼진 환경이
+ * 보는 순서라서, 여기서도 특정 업장만 계속 위에 있지 않도록 날짜로 섞는다.
+ * (서버와 브라우저가 같은 순서를 만들어야 해서 날짜를 시드로 쓴다.)
  */
 export function orderBusinessCards(cards: BusinessCard[], seed: number): BusinessCard[] {
-  const pinned = cards
-    .filter((c) => c.priority !== null)
-    .sort((a, b) => (a.priority as number) - (b.priority as number));
+  return [...pinnedFirst(cards), ...shuffle(cards.filter((c) => c.priority === null), seed)];
+}
 
+/**
+ * 보는 사람마다, 새로고침할 때마다 다시 섞는다.
+ *
+ * 날짜로 섞으면 같은 날 들어온 사람은 모두 같은 순서를 본다. 그러면 그날 하루는
+ * 뒤쪽 업장이 계속 뒤에 있게 된다. 그래서 진짜 무작위로 한 번 더 섞는다.
+ * 관리자가 정한 우선순위 업장만 그대로 위에 남는다.
+ *
+ * 반드시 브라우저에서(화면이 뜬 뒤에) 부른다. 서버에서 부르면 만들어 둔 화면이
+ * 그대로 저장돼서 모두 같은 순서를 보게 된다.
+ */
+export function reshuffleForViewer(cards: BusinessCard[]): BusinessCard[] {
   const rest = cards.filter((c) => c.priority === null);
 
-  return [...pinned, ...shuffle(rest, seed)];
+  for (let i = rest.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [rest[i], rest[j]] = [rest[j], rest[i]];
+  }
+
+  return [...pinnedFirst(cards), ...rest];
 }

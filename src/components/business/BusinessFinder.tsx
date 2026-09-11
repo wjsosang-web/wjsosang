@@ -3,7 +3,11 @@
 import { useMemo, useState, useEffect } from "react";
 import BusinessCard from "@/components/common/BusinessCard";
 import { Icon } from "@/components/common/Icons";
-import { filterBusinessCards, type BusinessCard as CardData } from "@/lib/search";
+import {
+  filterBusinessCards,
+  reshuffleForViewer,
+  type BusinessCard as CardData,
+} from "@/lib/search";
 
 /** 업종 칩에 붙는 아이콘. 목록에 없는 업종은 기본 아이콘이 나온다. */
 const CATEGORY_ICONS: Record<string, string> = {
@@ -69,6 +73,11 @@ export default function BusinessFinder({
   /** 필터와 결과 사이에 끼워 넣을 구간 (이달의 추천 회원업장) */
   featuredSlot?: React.ReactNode;
 }) {
+  // 화면이 뜨면 한 번 더 섞는다. 그려 보낸 화면은 모두에게 같은 것이 저장되므로,
+  // 사람마다·새로고침마다 순서를 다르게 하려면 브라우저에서 섞어야 한다.
+  const [ordered, setOrdered] = useState(cards);
+  useEffect(() => setOrdered(reshuffleForViewer(cards)), [cards]);
+
   const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState<string | null>(null);
   const [district, setDistrict] = useState<string | null>(null);
@@ -82,13 +91,13 @@ export default function BusinessFinder({
   const newCount = useMemo(() => cards.filter((c) => c.isNew).length, [cards]);
 
   const results = useMemo(() => {
-    let filtered = filterBusinessCards(cards, { query, category, district });
+    let filtered = filterBusinessCards(ordered, { query, category, district });
     if (onlyNew) filtered = filtered.filter((c) => c.isNew);
-    // 기본(recent)은 서버가 정한 순서를 그대로 쓴다.
+    // 기본은 섞인 순서를 그대로 쓴다. 검색·업종 필터를 걸어도 순서는 유지된다.
     return sort === "name"
       ? filtered.slice().sort((a, b) => a.name.localeCompare(b.name, "ko"))
       : filtered;
-  }, [cards, query, category, district, sort, onlyNew]);
+  }, [ordered, query, category, district, sort, onlyNew]);
 
   const visible = pages * pageSize;
   const shown = results.slice(0, visible);
@@ -217,7 +226,7 @@ export default function BusinessFinder({
                 onChange={(e) => setSort(e.target.value as SortKey)}
                 className="rounded-lg border border-line bg-white px-3 py-2 text-[13px] font-semibold outline-none focus:border-brand"
               >
-                <option value="recent">최신 등록순</option>
+                <option value="recent">랜덤 순서</option>
                 <option value="name">이름순</option>
               </select>
             </div>
