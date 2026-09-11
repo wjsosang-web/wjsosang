@@ -35,6 +35,16 @@ export function getLogoAssets(): LogoAssets {
   };
 }
 
+/**
+ * 이름을 주면 public/logo 에서 그 로고를 찾는다. 없으면 null.
+ *
+ * 공공 서비스 바로가기처럼 로고가 여러 개이고 나중에 늘어날 자리에 쓴다.
+ * 파일이 없어도 화면은 이름 글자로 정상 동작해야 하므로 null 을 돌려준다.
+ */
+export function findLogo(basename: string): string | null {
+  return resolve(basename);
+}
+
 /** public 아래에 파일이 실제로 있는지 확인한다. (예: "/logo/wonju-city.png") */
 export function publicFileExists(publicPath: string): boolean {
   const rel = publicPath.replace(/^\//, "");

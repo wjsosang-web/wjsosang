@@ -9,8 +9,8 @@ export interface LogoSlot {
   key: string;
   label: string;
   description: string;
-  /** 협회 로고인지 협력기관 로고인지 */
-  group: "협회 로고" | "함께하는 기관";
+  /** 협회 로고인지, 협력기관인지, 바로가기 기관인지 */
+  group: "협회 로고" | "함께하는 기관" | "지원사업 바로가기";
 }
 
 export const LOGO_SLOTS: LogoSlot[] = [
@@ -43,6 +43,22 @@ export const LOGO_SLOTS: LogoSlot[] = [
   { key: "partner-semas", label: "소상공인시장진흥공단", description: "", group: "함께하는 기관" },
   { key: "partner-gwcg", label: "강원신용보증재단", description: "", group: "함께하는 기관" },
   { key: "partner-wonju-cci", label: "원주상공회의소", description: "", group: "함께하는 기관" },
+
+  // 메인 아래 "지원사업 서비스 바로가기" 와 PC 화면 양옆 띠에 쓰인다.
+  // 파일을 넣지 않아도 기관 이름이 글자로 나오므로 화면은 깨지지 않는다.
+  {
+    key: "svc-policy-fund",
+    label: "소상공인 정책자금",
+    description: "가로로 긴 로고가 좋습니다. 높이 36px 로 그려집니다.",
+    group: "지원사업 바로가기",
+  },
+  { key: "svc-sbiz365", label: "소상공인 365", description: "", group: "지원사업 바로가기" },
+  { key: "svc-edu", label: "소상공인 지식배움터", description: "", group: "지원사업 바로가기" },
+  { key: "svc-sbiz24", label: "소상공인 24", description: "", group: "지원사업 바로가기" },
+  { key: "svc-hope", label: "희망리턴패키지", description: "", group: "지원사업 바로가기" },
+  { key: "svc-semas", label: "소상공인시장진흥공단", description: "", group: "지원사업 바로가기" },
+  { key: "svc-mss", label: "중소벤처기업부", description: "", group: "지원사업 바로가기" },
+  { key: "svc-kstartup", label: "K-Startup", description: "", group: "지원사업 바로가기" },
 ];
 
 /** 업로드를 허용하는 확장자 */

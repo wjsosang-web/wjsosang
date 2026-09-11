@@ -1,4 +1,5 @@
 import BusinessPreview from "@/components/business/BusinessPreview";
+import ServiceLinks from "@/components/home/ServiceLinks";
 import SectionHead from "@/components/common/SectionHead";
 import SitePopup from "@/components/common/SitePopup";
 import HeroSlider from "@/components/home/HeroSlider";
@@ -22,6 +23,8 @@ import {
   toDateKey,
 } from "@/lib/repo";
 import { buildBusinessCards, orderBusinessCards, seedFromDateKey } from "@/lib/search";
+import { findLogo } from "@/lib/assets";
+import { SERVICE_LINKS } from "@/lib/serviceLinks";
 import type { Post } from "@/lib/types";
 
 // 하루 단위로 다시 만든다. 회원업장 랜덤 노출 순서도 이 주기로 바뀐다.
@@ -66,6 +69,9 @@ export default async function HomePage() {
     seedFromDateKey(todayKey),
   );
 
+  // 로고 파일이 실제로 있는지는 서버에서만 볼 수 있다
+  const serviceLinks = SERVICE_LINKS.map((l) => ({ ...l, logo: findLogo(l.logoKey) }));
+
   const thisYear = now.getFullYear();
   const calendarYears = years.length > 0 ? years : [thisYear];
   const eventsByYear: Record<number, Post[]> = Object.fromEntries(
@@ -103,6 +109,9 @@ export default async function HomePage() {
       <JoinBand site={site} />
 
       <EventCalendar eventsByYear={eventsByYear} years={calendarYears} todayKey={todayKey} />
+
+      {/* 공공 서비스 바로가기 — 휴대폰에서는 여기가 유일한 자리다 */}
+      <ServiceLinks links={serviceLinks} />
     </>
   );
 }

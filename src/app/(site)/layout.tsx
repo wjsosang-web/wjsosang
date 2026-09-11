@@ -1,13 +1,18 @@
 import BrandClosing from "@/components/layout/BrandClosing";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { getLogoAssets, publicFileExists } from "@/lib/assets";
+import ServiceRail from "@/components/layout/ServiceRail";
+import { findLogo, getLogoAssets, publicFileExists } from "@/lib/assets";
+import { RAIL_LINKS } from "@/lib/serviceLinks";
 import { getPartners, getSiteInfo } from "@/lib/repo";
 
 /** 공개 사이트 공통 틀 — 헤더 / 본문 / 마무리 띠 / 푸터 */
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const [site, partners] = await Promise.all([getSiteInfo(), getPartners()]);
   const logo = getLogoAssets();
+
+  // 로고 파일이 있는지는 서버에서만 볼 수 있다. 확인해서 넘겨준다.
+  const railLinks = RAIL_LINKS.map((l) => ({ ...l, logo: findLogo(l.logoKey) }));
 
   // 푸터에는 대표 기관 한 곳(원주시)만 보여준다. 로고 파일이 없으면 이름만.
   const first = partners[0] ?? null;
@@ -24,6 +29,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         본문 바로가기
       </a>
       <Header logo={logo.horizontal} phone={site.phone} />
+      <ServiceRail links={railLinks} />
       <main id="main">{children}</main>
       <BrandClosing site={site} logo={logo.horizontal} />
       <Footer site={site} partner={footerPartner} />
