@@ -14,7 +14,8 @@
     "setup:check": "node scripts/check-setup.mjs",
     "db:migrate": "node scripts/db-migrate.mjs",
     "roster:import": "node scripts/import-roster.mjs",
-    "roster:seed": "node scripts/roster-to-seed.mjs"
+    "roster:seed": "node scripts/roster-to-seed.mjs",
+    "logo": "node scripts/install-logos.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",
