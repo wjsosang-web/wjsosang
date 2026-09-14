@@ -1,5 +1,6 @@
 import BusinessPreview from "@/components/business/BusinessPreview";
 import ServiceLinks from "@/components/home/ServiceLinks";
+import VisitRanking from "@/components/home/VisitRanking";
 import SectionHead from "@/components/common/SectionHead";
 import SitePopup from "@/components/common/SitePopup";
 import HeroSlider from "@/components/home/HeroSlider";
@@ -109,6 +110,9 @@ export default async function HomePage() {
       <JoinBand site={site} />
 
       <EventCalendar eventsByYear={eventsByYear} years={calendarYears} todayKey={todayKey} />
+
+      {/* 많이 찾아주신 회원 순위 */}
+      <VisitRanking />
 
       {/* 공공 서비스 바로가기 — 휴대폰에서는 여기가 유일한 자리다 */}
       <ServiceLinks links={serviceLinks} />

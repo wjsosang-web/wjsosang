@@ -2,6 +2,7 @@ import BrandClosing from "@/components/layout/BrandClosing";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ServiceRail from "@/components/layout/ServiceRail";
+import VisitPing from "@/components/member/VisitPing";
 import { findLogo, getLogoAssets, publicFileExists } from "@/lib/assets";
 import { RAIL_LINKS } from "@/lib/serviceLinks";
 import { getPartners, getSiteInfo } from "@/lib/repo";
@@ -28,6 +29,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       >
         본문 바로가기
       </a>
+      <VisitPing />
       <Header logo={logo.horizontal} phone={site.phone} />
       <ServiceRail links={railLinks} />
       <main id="main">{children}</main>
