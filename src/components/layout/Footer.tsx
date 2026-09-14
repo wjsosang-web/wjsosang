@@ -65,6 +65,11 @@ export default function Footer({
             <span>
               © {new Date().getFullYear()} {site.name}. All rights reserved.
             </span>
+            {/* 회원 로그인 입구. 상단 메뉴에 두기에는 찾는 사람이 적고,
+                없으면 주소를 아는 사람만 들어올 수 있어서 여기에 둔다. */}
+            <Link href="/my" className="text-white/55 transition-colors hover:text-white/80">
+              회원 로그인
+            </Link>
             <Link href="/admin/login" className="text-white/35 transition-colors hover:text-white/70">
               관리자
             </Link>
