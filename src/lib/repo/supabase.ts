@@ -494,19 +494,36 @@ export async function getTodayEvents(now = new Date()): Promise<Post[]> {
     .filter((p) => (p.endDate ?? p.startDate ?? p.date) >= today);
 }
 
+/**
+ * 메인 배너에 띄울 "다음 행사".
+ *
+ * 날짜가 아직 안 잡힌 행사(dateTbd)도 후보에 넣는다. 예전에는 빼고 골랐는데,
+ * 그러면 이달 정기모임을 건너뛰고 두 달 뒤 행사가 배너에 올라온다.
+ * 회원이 제일 궁금한 것은 "다음에 언제 모이나" 이고, 그게 아직 미정이면
+ * 미정이라고 알려주는 편이 두 달 뒤 행사를 보여주는 것보다 낫다.
+ *
+ * 날짜 미정 행사는 "○월 중" 이라는 뜻이므로, 그 달이 지나지 않았으면
+ * 아직 다가올 행사다. 저장된 날짜가 이달 1일보다 앞서지만 않으면 된다.
+ */
 export async function getNextEvent(now = new Date()): Promise<Post | null> {
   const today = toDateKey(now);
+  const monthStart = `${today.slice(0, 7)}-01`;
+
   const { data } = await db()
     .from("posts")
     .select(POST_SELECT)
     .eq("type", "event")
     .eq("status", "public")
-    .eq("date_tbd", false)
-    .gte("date", today)
+    .gte("date", monthStart)
     .order("date")
-    .limit(1)
-    .maybeSingle();
-  return data ? toPost(data as Row) : null;
+    .limit(20);
+
+  const upcoming = (data ?? [])
+    .map((r) => toPost(r as Row))
+    // 날짜가 잡힌 행사는 오늘이 지났으면 뺀다. 미정은 이달 것까지 남긴다.
+    .filter((p) => p.dateTbd || (p.endDate ?? p.startDate ?? p.date) >= today);
+
+  return upcoming[0] ?? null;
 }
 
 /* ------------------------------------------------------------------ */

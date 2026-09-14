@@ -195,8 +195,13 @@ export async function getNextEvent(now = new Date()): Promise<Post | null> {
   const today = toDateKey(now);
   return (
     posts
-      .filter((p) => p.type === "event" && isPublic(p) && !p.dateTbd)
-      .filter((p) => (p.endDate ?? p.startDate ?? p.date) >= today)
+      .filter((p) => p.type === "event" && isPublic(p))
+      // 날짜 미정은 "○월 중" 이라는 뜻이라 그 달이 지나지 않았으면 아직 남은 행사다
+      .filter((p) =>
+        p.dateTbd
+          ? p.date >= `${today.slice(0, 7)}-01`
+          : (p.endDate ?? p.startDate ?? p.date) >= today,
+      )
       .sort((a, b) => (a.startDate ?? a.date).localeCompare(b.startDate ?? b.date))[0] ?? null
   );
 }
