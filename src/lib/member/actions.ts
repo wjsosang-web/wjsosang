@@ -231,7 +231,8 @@ export async function startTelegramLink(): Promise<TelegramCodeResult> {
       return { ok: false, message: "승인된 협회원만 연결하실 수 있습니다." };
     }
 
-    const botName = process.env.TELEGRAM_BOT_USERNAME ?? "";
+    const { botUsername } = await import("@/lib/telegram");
+    const botName = botUsername() ?? "";
     if (!process.env.TELEGRAM_BOT_TOKEN) {
       return { ok: false, message: "협회 텔레그램 봇이 아직 준비되지 않았습니다. 사무국에 문의해 주세요." };
     }

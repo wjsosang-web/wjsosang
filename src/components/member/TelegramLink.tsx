@@ -79,14 +79,24 @@ export default function TelegramLink({
   return (
     <div className="mt-5">
       {!code ? (
-        <button
-          type="button"
-          onClick={() => run("start")}
-          disabled={busy !== null}
-          className="rounded-lg bg-brand px-6 py-3 text-[14.5px] font-bold text-white transition-colors hover:bg-brand-deep disabled:opacity-50"
-        >
-          {busy === "start" ? "코드 만드는 중…" : "텔레그램 연결하기"}
-        </button>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => run("start")}
+            disabled={busy !== null}
+            className="rounded-lg bg-brand px-6 py-3 text-[14.5px] font-bold text-white transition-colors hover:bg-brand-deep disabled:opacity-50"
+          >
+            {busy === "start" ? "코드 만드는 중…" : "텔레그램 연결하기"}
+          </button>
+          {/* 텔레그램은 화면이 영어라 처음 쓰는 분이 멈춘다.
+              누르면 사진처럼 따라 할 수 있는 안내로 간다. */}
+          <a
+            href="/help/telegram"
+            className="rounded-lg border border-line px-5 py-3 text-[13.5px] font-bold text-ink-soft transition-colors hover:border-brand hover:text-brand"
+          >
+            처음이신가요? 따라하기 →
+          </a>
+        </div>
       ) : (
         <ol className="space-y-3">
           <Step no={1} title="협회 봇 대화창 열기">
@@ -119,7 +129,11 @@ export default function TelegramLink({
                 복사
               </button>
             </div>
-            <p className="mt-2 text-[12.5px] text-muted">10분 안에 보내 주세요.</p>
+            <p className="mt-2 text-[12.5px] leading-[1.7] text-muted">
+              코드만 보내시면 됩니다. 이름·전화번호는 적지 않으셔도 됩니다.
+              <br />
+              10분이 지나면 만료되니 그때는 다시 받아 주세요.
+            </p>
           </Step>
 
           <Step no={3} title="보내셨으면 아래를 누르기">
@@ -132,6 +146,17 @@ export default function TelegramLink({
               {busy === "confirm" ? "확인하는 중…" : "보냈습니다"}
             </button>
           </Step>
+
+          <li className="pt-1">
+            <a
+              href="/help/telegram"
+              target="_blank"
+              rel="noreferrer"
+              className="text-[12.5px] font-semibold text-brand underline underline-offset-2"
+            >
+              화면이 영어로 나와 헷갈리시나요? 따라하기 안내 보기 ↗
+            </a>
+          </li>
         </ol>
       )}
 

@@ -89,41 +89,22 @@ export default function TelegramPanel({
         </div>
       )}
 
-      {/* 무엇을 받아야 하나 */}
-      <div className="mt-4 rounded-lg bg-brand-tint-2 p-4">
-        <p className="text-[13px] font-bold">회원에게 무엇을 받아야 하나요?</p>
-        <p className="mt-1.5 text-[12.5px] leading-[1.8] text-ink-soft">
-          <b className="text-ink">받을 것이 없습니다.</b> 회원이 봇에게 말을 걸면 번호가
-          자동으로 잡힙니다. 전화번호나 아이디를 따로 물어보지 않으셔도 됩니다.
-        </p>
-        <p className="mt-2.5 text-[12px] leading-[1.8] text-muted">
-          회원이 /start 를 보내는 순간 텔레그램이 그 사람의 <b>대화 번호</b>를 알려주는데,
-          그 번호로 알림을 보냅니다. 이렇게 생겼습니다 —{" "}
-          <code className="rounded bg-white px-1.5 py-0.5">812345678</code>{" "}
-          (숫자 9~10자리). 회원이 볼 일도, 적을 일도 없습니다.
-        </p>
-        <p className="mt-2.5 text-[12px] leading-[1.8] text-muted">
-          한글은 그대로 잘 갑니다. 제목·본문·이모지 모두 됩니다. 글자 수는 한 번에
-          4,096자까지입니다.
-        </p>
-      </div>
-
-      {/* 회원 연결 */}
+      {/* 회원 연결 — 두 가지 길이 있다 */}
       <div className="mt-4 rounded-lg border border-line p-4">
         <p className="text-[13px] font-bold">회원 연결하기</p>
-        <p className="mt-1.5 text-[12.5px] leading-[1.75] text-ink-soft">
-          회원분들께 이렇게 안내해 주세요.
-        </p>
+
         <p className="mt-2 rounded-lg bg-brand-tint-2 p-3 text-[12.5px] leading-[1.8]">
-          텔레그램에서 <b>{botName ? `@${botName}` : "협회 봇"}</b> 을 찾아 들어간 뒤,
+          <b className="text-brand-deep">기본은 회원이 직접 합니다.</b>
           <br />
-          <code className="rounded bg-white px-1.5 py-0.5">/start 홍길동</code> 처럼{" "}
-          <b>본인 이름을 함께</b> 보내주세요.
-          <br />
-          <span className="text-muted">
-            이름을 같이 보내야 명부와 맞춰서 연결됩니다. 그냥 /start 만 보내면 텔레그램에
-            등록된 이름으로 맞춰봅니다.
-          </span>
+          홈페이지 <b>[내 정보]</b> 에서 코드를 받아 봇에게 보내면 스스로 연결됩니다.
+          사무국이 할 일이 없습니다. 위의 <b>텔레그램 사용법</b> 안내문을 보내주세요.
+        </p>
+
+        <p className="mt-3 text-[12.5px] leading-[1.75] text-ink-soft">
+          <b className="text-ink">홈페이지 로그인을 안 하시는 분</b>은 아래로 연결합니다.
+          그분께 텔레그램에서 <b>{botName ? `@${botName}` : "협회 봇"}</b> 을 찾아{" "}
+          <code className="rounded bg-mist px-1.5 py-0.5">/start 홍길동</code> 처럼{" "}
+          <b>본인 이름을 함께</b> 보내달라고 한 뒤, 이 버튼을 누르시면 명부와 맞춰 연결합니다.
         </p>
 
         <button

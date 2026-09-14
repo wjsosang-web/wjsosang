@@ -138,3 +138,21 @@ export async function fetchTelegramContacts(): Promise<TelegramContact[]> {
     return [];
   }
 }
+
+/**
+ * 협회 봇 아이디 (@ 없이).
+ *
+ * 화면에서 "@wjsosang_bot 을 찾으세요" 라고 안내하거나 t.me 주소를 만들 때 쓴다.
+ * 예전 이름(TELEGRAM_BOT_NAME)으로 넣어 둔 곳이 있어 둘 다 본다.
+ */
+export function botUsername(): string | null {
+  const raw = process.env.TELEGRAM_BOT_USERNAME ?? process.env.TELEGRAM_BOT_NAME ?? "";
+  const trimmed = raw.trim().replace(/^@/, "");
+  return trimmed || null;
+}
+
+/** 봇 대화창 주소. 아이디를 모르면 null. */
+export function botUrl(): string | null {
+  const name = botUsername();
+  return name ? `https://t.me/${name}` : null;
+}

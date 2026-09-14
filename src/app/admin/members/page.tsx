@@ -5,6 +5,9 @@ import MemberRow from "@/components/admin/MemberRow";
 import RosterPanel from "@/components/admin/RosterPanel";
 import NotifyRoutesForm from "@/components/admin/NotifyRoutesForm";
 import TelegramPanel from "@/components/admin/TelegramPanel";
+import { botUsername } from "@/lib/telegram";
+import TelegramGuide from "@/components/admin/TelegramGuide";
+import { siteUrl } from "@/lib/siteUrl";
 import { getCurrentAdmin, getApproverTitles } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { can } from "@/lib/permissions";
@@ -160,12 +163,15 @@ export default async function AdminMembersPage() {
       {/* 엑셀로 명단 올리기·내려받기 */}
       <RosterPanel />
 
+      {/* 회원에게 어떻게 안내하면 되는지 */}
+      <TelegramGuide ready={hasTelegram()} botName={botUsername()} siteUrl={siteUrl()} />
+
       {/* 텔레그램 — 회원·임원 모두에게 알림 */}
       <TelegramPanel
         ready={hasTelegram()}
         linkedCount={linkedCount}
         totalCount={rows.length}
-        botName={process.env.TELEGRAM_BOT_NAME ?? null}
+        botName={botUsername()}
       />
 
       {/* 문의가 오면 누가 받을지 */}
