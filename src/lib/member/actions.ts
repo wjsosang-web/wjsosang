@@ -173,3 +173,172 @@ export async function downloadMemberDoc(): Promise<MemberActionResult> {
     return { ok: false, message: e instanceof Error ? e.message : String(e) };
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* 텔레그램 연결 — 회원이 스스로 한다                                    */
+/* ------------------------------------------------------------------ */
+
+/**
+ * chat_id 는 그 사람이 봇에게 먼저 말을 걸어야 알 수 있는 값이라,
+ * 회원이 홈페이지 칸에 적어 넣을 수가 없다. 그래서 짧은 코드로 잇는다.
+ *
+ *   1. 여기서 여섯 자리 코드를 만들어 준다
+ *   2. 회원이 그 코드를 협회 봇에게 보낸다
+ *   3. confirmTelegramLink 가 그 코드를 보낸 chat_id 를 찾아 연결한다
+ *
+ * 헷갈리는 글자(0·O, 1·I)는 빼고 만든다. 옮겨 적다가 틀리면 번거롭다.
+ */
+const CODE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+const CODE_MINUTES = 10;
+
+function makeCode(): string {
+  let out = "";
+  for (let i = 0; i < 6; i += 1) {
+    out += CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)];
+  }
+  return out;
+}
+
+/** 지금 로그인한 회원 행을 찾는다. 없으면 null. */
+async function findMyMember() {
+  const supabase = await getServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await getAdminSupabase()
+    .from("members")
+    .select("id, name, status, telegram_link_code")
+    .eq("account_id", user.id)
+    .maybeSingle();
+
+  return data ?? null;
+}
+
+export interface TelegramCodeResult extends MemberActionResult {
+  code?: string;
+  /** 봇 주소. 눌러서 바로 대화창을 열 수 있게 한다. */
+  botUrl?: string;
+  botName?: string;
+}
+
+export async function startTelegramLink(): Promise<TelegramCodeResult> {
+  try {
+    const me = await findMyMember();
+    if (!me) return { ok: false, message: "로그인이 필요합니다." };
+    if (me.status !== "active") {
+      return { ok: false, message: "승인된 협회원만 연결하실 수 있습니다." };
+    }
+
+    const botName = process.env.TELEGRAM_BOT_USERNAME ?? "";
+    if (!process.env.TELEGRAM_BOT_TOKEN) {
+      return { ok: false, message: "협회 텔레그램 봇이 아직 준비되지 않았습니다. 사무국에 문의해 주세요." };
+    }
+
+    const code = makeCode();
+    const expires = new Date(Date.now() + CODE_MINUTES * 60 * 1000).toISOString();
+
+    const { error } = await getAdminSupabase()
+      .from("members")
+      .update({ telegram_link_code: code, telegram_link_expires: expires })
+      .eq("id", me.id as string);
+
+    if (error) throw new Error(error.message);
+
+    return {
+      ok: true,
+      message: `${CODE_MINUTES}분 안에 협회 봇에게 이 코드를 보내 주세요.`,
+      code,
+      botName,
+      botUrl: botName ? `https://t.me/${botName.replace(/^@/, "")}` : undefined,
+    };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+export async function confirmTelegramLink(): Promise<MemberActionResult> {
+  try {
+    const me = await findMyMember();
+    if (!me) return { ok: false, message: "로그인이 필요합니다." };
+
+    const code = me.telegram_link_code as string | null;
+    if (!code) return { ok: false, message: "먼저 [연결 시작] 을 눌러 코드를 받아 주세요." };
+
+    const db = getAdminSupabase();
+
+    // 코드가 아직 살아 있는지 다시 확인한다
+    const { data: fresh } = await db
+      .from("members")
+      .select("telegram_link_expires")
+      .eq("id", me.id as string)
+      .maybeSingle();
+
+    const expires = fresh?.telegram_link_expires as string | null;
+    if (!expires || new Date(expires) < new Date()) {
+      return { ok: false, message: "코드가 만료되었습니다. 다시 받아 주세요." };
+    }
+
+    const { fetchTelegramContacts } = await import("@/lib/telegram");
+    const contacts = await fetchTelegramContacts();
+
+    const found = contacts.find((c) => c.text.toUpperCase().includes(code));
+    if (!found) {
+      return {
+        ok: false,
+        message: "아직 코드를 받지 못했습니다. 봇에게 코드를 보내신 뒤 다시 눌러 주세요.",
+      };
+    }
+
+    // 같은 텔레그램을 두 사람이 쓰면 알림이 엉킨다. 먼저 떼어 낸다.
+    await db
+      .from("members")
+      .update({ telegram_chat_id: null, telegram_username: null })
+      .eq("telegram_chat_id", found.chatId)
+      .neq("id", me.id as string);
+
+    const { error } = await db
+      .from("members")
+      .update({
+        telegram_chat_id: found.chatId,
+        telegram_username: found.username,
+        telegram_linked_at: new Date().toISOString(),
+        telegram_link_code: null,
+        telegram_link_expires: null,
+      })
+      .eq("id", me.id as string);
+
+    if (error) throw new Error(error.message);
+
+    revalidatePath("/my");
+    return { ok: true, message: "연결되었습니다. 이제 협회 알림을 받으실 수 있습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+export async function unlinkTelegram(): Promise<MemberActionResult> {
+  try {
+    const me = await findMyMember();
+    if (!me) return { ok: false, message: "로그인이 필요합니다." };
+
+    const { error } = await getAdminSupabase()
+      .from("members")
+      .update({
+        telegram_chat_id: null,
+        telegram_username: null,
+        telegram_linked_at: null,
+        telegram_link_code: null,
+        telegram_link_expires: null,
+      })
+      .eq("id", me.id as string);
+
+    if (error) throw new Error(error.message);
+
+    revalidatePath("/my");
+    return { ok: true, message: "연결을 끊었습니다. 이제 알림이 가지 않습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}

@@ -492,6 +492,8 @@ export interface SiteInfo {
   mapUrl: string;
   instagramUrl: string;
   youtubeUrl: string;
+  /** 협회 공식 카카오톡 채널. 가입 문의를 여기로 받는다. 비어 있으면 버튼을 숨긴다. */
+  kakaoChannelUrl: string;
   /** 협회문의 화면에 나오는 사진 (사무국 전경 등) */
   contactImage: string | null;
   /** 푸터 우측 문구 */

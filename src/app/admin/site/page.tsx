@@ -128,6 +128,13 @@ export default async function AdminSitePage() {
             type: "half",
           },
           {
+            name: "kakaoChannelUrl",
+            label: "카카오톡 채널 주소",
+            defaultValue: info.kakaoChannelUrl,
+            placeholder: "http://pf.kakao.com/_xxxxxx",
+            type: "half",
+          },
+          {
             name: "tagline",
             label: "푸터 한 줄 문구",
             defaultValue: info.tagline,

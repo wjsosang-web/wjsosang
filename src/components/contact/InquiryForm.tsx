@@ -37,7 +37,13 @@ export default function InquiryForm({
     setBusy(true);
     setNotice(null);
 
-    const form = new FormData(e.currentTarget);
+    // 폼 요소를 지금 붙잡아 둔다.
+    // e.currentTarget 은 이 함수가 한 번 await 를 만나는 순간 null 이 된다.
+    // (브라우저가 이벤트 처리가 끝났다고 보고 치워 버린다.)
+    // 그래서 아래에서 e.currentTarget.reset() 을 부르면 오류가 나고,
+    // 문의는 저장됐는데 화면에는 "접수에 실패했습니다" 가 떴다.
+    const formEl = e.currentTarget;
+    const form = new FormData(formEl);
     const payload = {
       name: String(form.get("name") ?? ""),
       phone: String(form.get("phone") ?? ""),
@@ -53,7 +59,12 @@ export default function InquiryForm({
         headers: { "content-type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = (await res.json()) as { error?: string };
+      // 서버가 오류 화면(HTML)을 돌려줄 수도 있다. 그때 json() 은 예외를 던진다.
+      // 성공 여부는 상태 코드로 판단하고, 본문은 못 읽어도 넘어간다.
+      const data = await res
+        .json()
+        .then((v) => v as { error?: string })
+        .catch(() => ({ error: undefined }));
 
       if (!res.ok) {
         setNotice({
@@ -67,15 +78,18 @@ export default function InquiryForm({
           ok: true,
           text: "문의가 접수되었습니다. 사무국에서 확인 후 연락드리겠습니다.",
         });
-        e.currentTarget.reset();
+        formEl.reset();
         setMessage("");
         setAgreed(false);
         setKind("");
       }
     } catch {
+      // 여기는 연결 자체가 끊긴 경우다. 이미 접수됐을 수도 있으므로
+      // 무조건 다시 보내라고 하지 않는다. 같은 문의가 두 번 쌓이면
+      // 사무국이 어느 것이 진짜인지 확인하느라 더 번거롭다.
       setNotice({
         ok: false,
-        text: `접수에 실패했습니다. ${email} 로 보내주시면 사무국에서 확인합니다.`,
+        text: `연결이 끊겨 접수 여부를 확인하지 못했습니다. ${email} 또는 전화로 확인해 주세요.`,
       });
     } finally {
       setBusy(false);

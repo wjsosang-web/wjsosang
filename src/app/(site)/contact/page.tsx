@@ -195,7 +195,7 @@ export default async function ContactPage({
             </p>
 
             <Link
-              href="/about"
+              href="/join"
               className="mt-6 inline-flex items-center gap-2 rounded-lg bg-brand px-6 py-3.5 text-[14.5px] font-bold text-white transition-colors hover:bg-brand-deep"
             >
               회원가입 안내 보기 <span aria-hidden>→</span>

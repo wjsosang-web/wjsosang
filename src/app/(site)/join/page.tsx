@@ -208,6 +208,22 @@ export default async function JoinPage() {
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2.5">
+            {/* 카카오톡 채널이 등록돼 있으면 그쪽을 먼저 권한다.
+                대부분 카톡이 제일 편하고, 답도 제일 빨리 간다.
+                주소는 관리자 → 협회 정보에서 넣는다. 없으면 이 버튼은 안 나온다. */}
+            {site.kakaoChannelUrl && (
+              <a
+                href={site.kakaoChannelUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 rounded-lg bg-[#FEE500] px-7 py-3.5 text-[15px] font-bold text-[#191600] transition-opacity hover:opacity-90"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                  <path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7l-1 3.7c-.1.3.3.6.6.4l4.4-2.9c.4 0 .9.1 1.3.1 5.5 0 10-3.6 10-8S17.5 3 12 3z" />
+                </svg>
+                카카오톡으로 문의하기
+              </a>
+            )}
             <Link
               href="/contact?kind=join"
               className="rounded-lg bg-white px-7 py-3.5 text-[15px] font-bold text-brand-deep transition-colors hover:bg-mist"

@@ -5,6 +5,7 @@ import { Icon } from "@/components/common/Icons";
 import LinkAccountForm from "@/components/member/LinkAccountForm";
 import MemberDocButton from "@/components/member/MemberDocButton";
 import MemberSignOut from "@/components/member/MemberSignOut";
+import TelegramLink from "@/components/member/TelegramLink";
 import { getCurrentMember } from "@/lib/supabase/member";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { ROLE_LABEL, can } from "@/lib/permissions";
@@ -180,28 +181,18 @@ async function ActiveMember({
             <Icon name="chat" className="h-[19px] w-[19px]" />
           </span>
           <div className="min-w-0">
-            <h2 className="text-[18px] font-bold tracking-[-0.01em]">지원사업 알림</h2>
-            {detail.telegramChatId ? (
-              <p className="mt-1.5 text-[13.5px] leading-[1.75] text-ink-soft">
-                텔레그램이 연결되어 있습니다
-                {detail.telegramUsername && ` (@${detail.telegramUsername})`}. 새 지원사업·정책자금
-                공고가 올라오면 바로 알려 드립니다.
-              </p>
-            ) : (
-              <p className="mt-1.5 text-[13.5px] leading-[1.75] text-ink-soft">
-                아직 연결되지 않았습니다. 연결해 두시면 새 지원금 공고가 뜬 날 휴대폰으로 바로
-                알려 드립니다. 사무국(010-2777-0093)으로 연락 주시면 연결해 드립니다.
-              </p>
-            )}
+            <h2 className="text-[18px] font-bold tracking-[-0.01em]">텔레그램 알림</h2>
+            <p className="mt-1.5 text-[13.5px] leading-[1.75] text-ink-soft">
+              협회 공지, 행사 안내, 지원금 공고를 휴대폰으로 바로 받아보실 수 있습니다.
+              연결은 한 번만 하면 되고, 언제든 끊으실 수 있습니다.
+            </p>
           </div>
         </div>
 
-        <Link
-          href="/support"
-          className="mt-5 inline-block rounded-lg border border-line-strong px-5 py-2.5 text-[14px] font-bold transition-colors hover:border-brand hover:text-brand"
-        >
-          지금 신청할 수 있는 지원사업 보기 →
-        </Link>
+        <TelegramLink
+          linked={Boolean(detail.telegramChatId)}
+          username={detail.telegramUsername}
+        />
       </section>
 
       {/* 내 업장 */}

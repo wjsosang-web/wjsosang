@@ -803,6 +803,7 @@ export async function saveSiteInfo(
       mapUrl: str(form, "mapUrl"),
       instagramUrl: str(form, "instagramUrl"),
       youtubeUrl: str(form, "youtubeUrl"),
+      kakaoChannelUrl: str(form, "kakaoChannelUrl"),
       contactImage: await pickedImage(form, "contactImageFile", "contactImage", "site"),
       tagline: str(form, "tagline"),
       slogan: str(form, "slogan"),
