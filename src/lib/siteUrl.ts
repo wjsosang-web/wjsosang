@@ -19,6 +19,8 @@
  *     siteDisplayUrl() 사람에게 보여주는 주소 (안내문, 화면에 적는 링크)
  */
 
+import { toUnicodeUrl } from "@/lib/idn";
+
 function raw(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;
   if (explicit) return explicit.replace(/\/$/, "");
@@ -48,10 +50,14 @@ export function siteUrl(): string {
 /**
  * 사람에게 보여주는 주소. 한글 도메인이면 한글 그대로.
  *
+ * 설정값에 xn-- 형태가 들어 있어도 한글로 되돌린다. Vercel 설정 화면이
+ * 한글 도메인을 xn-- 로 보여주기 때문에, 그대로 복사해 넣기 쉽다.
+ * 사람이 설정을 정확히 넣어야만 제대로 나오는 구조는 언젠가 어긋난다.
+ *
  * 브라우저는 한글 주소를 알아서 바꿔 주므로, 링크로 써도 잘 열린다.
  */
 export function siteDisplayUrl(): string {
-  return raw();
+  return toUnicodeUrl(raw());
 }
 
 /** 상대주소를 절대주소로. 이미 절대주소면 그대로 둔다. */
