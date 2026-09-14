@@ -343,3 +343,126 @@ export async function unlinkTelegram(): Promise<MemberActionResult> {
     return { ok: false, message: e instanceof Error ? e.message : String(e) };
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* 가입 신청 — 명단에 없는 분이 홈페이지에서 직접                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * 가입 신청.
+ *
+ * 받는 것은 셋뿐이다. 이름 · 업장명 · 연락처.
+ * 많이 물어보면 안 쓴다. 사업자등록번호나 주소 같은 것은 인사국이 승인하면서
+ * 따로 받는다. 홈페이지는 "누가 신청했는지" 만 알면 된다.
+ *
+ * 신청은 곧바로 회원이 되는 것이 아니다. status 를 pending 으로 넣고,
+ * 인사국이 관리자 화면에서 승인해야 협회원이 된다.
+ */
+export async function applyForMembership(
+  _prev: MemberActionResult | null,
+  form: FormData,
+): Promise<MemberActionResult> {
+  try {
+    const supabase = await getServerSupabase();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { ok: false, message: "로그인이 필요합니다." };
+
+    const name = String(form.get("name") ?? "").trim();
+    const shopName = String(form.get("shopName") ?? "").trim();
+    const phoneRaw = String(form.get("phone") ?? "").trim();
+    const phone = digitsOf(phoneRaw);
+
+    if (!name || !shopName || !phone) {
+      return { ok: false, message: "이름·업장명·연락처를 모두 적어 주세요." };
+    }
+    if (phone.length < 10) {
+      return { ok: false, message: "휴대폰 번호를 다시 확인해 주세요." };
+    }
+
+    const db = getAdminSupabase();
+
+    // 이미 신청했거나 회원이면 또 만들지 않는다
+    const { data: mine } = await db
+      .from("members")
+      .select("id, status")
+      .eq("account_id", user.id)
+      .maybeSingle();
+
+    if (mine) {
+      return {
+        ok: true,
+        message:
+          mine.status === "active" ? "이미 협회원이십니다." : "이미 신청이 접수되어 있습니다.",
+      };
+    }
+
+    // 같은 번호가 명단에 있으면 신규 신청이 아니라 본인 확인이 맞다.
+    // 여기서 새 줄을 만들면 명단에 같은 사람이 두 번 생긴다.
+    const { data: existing } = await db.from("members").select("id, name, phone, account_id");
+    const already = (existing ?? []).find((m) => digitsOf((m.phone as string) ?? "") === phone);
+
+    if (already && !already.account_id) {
+      const { error } = await db
+        .from("members")
+        .update({ account_id: user.id, updated_at: new Date().toISOString() })
+        .eq("id", already.id as string);
+
+      if (error) throw new Error(error.message);
+
+      revalidatePath("/my");
+      return {
+        ok: true,
+        message: `이미 협회 명단에 계셔서 바로 연결해 드렸습니다. (${already.name as string} 님)`,
+      };
+    }
+    if (already) {
+      return {
+        ok: false,
+        message: "이미 등록된 번호입니다. 사무국(010-2777-0093)으로 연락 주세요.",
+      };
+    }
+
+    const now = new Date().toISOString();
+    const { error } = await db.from("members").insert({
+      account_id: user.id,
+      name,
+      shop_name: shopName,
+      phone: phoneRaw,
+      email: user.email ?? null,
+      status: "pending",
+      role: "member",
+      auth_provider: user.app_metadata?.provider ?? "email",
+      applied_at: now,
+    });
+
+    if (error) throw new Error(error.message);
+
+    // 인사국에 알린다. 알림이 실패해도 신청은 이미 접수됐다.
+    try {
+      const { notifyInquiry } = await import("@/lib/notify");
+      await notifyInquiry({
+        kind: "회원가입 문의",
+        name,
+        phone: phoneRaw,
+        company: shopName,
+        email: user.email ?? null,
+        message: "홈페이지에서 가입 신청이 들어왔습니다. 관리자 → 회원 관리에서 승인해 주세요.",
+      });
+    } catch {
+      /* 알림 실패는 넘긴다 */
+    }
+
+    revalidatePath("/my");
+    revalidatePath("/admin/members");
+
+    return {
+      ok: true,
+      message: "가입 신청이 접수되었습니다. 인사국에서 확인 후 연락드리겠습니다.",
+    };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}

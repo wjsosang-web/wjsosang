@@ -57,6 +57,8 @@ export interface Member {
   status: MemberStatus;
   phone: string | null;
   email: string | null;
+  /** 홈페이지에서 가입 신청할 때 적은 업장명. 승인 전에는 이것만 안다. */
+  shopName: string | null;
   joinedAt: string | null;
   /** 회원 본인이 올리는 프로필 사진. 임원 카드에서 사진이 없으면 이 값을 쓴다. */
   profileImage: string | null;

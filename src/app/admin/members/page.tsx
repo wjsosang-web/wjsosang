@@ -7,7 +7,7 @@ import NotifyRoutesForm from "@/components/admin/NotifyRoutesForm";
 import TelegramPanel from "@/components/admin/TelegramPanel";
 import { botUsername } from "@/lib/telegram";
 import TelegramGuide from "@/components/admin/TelegramGuide";
-import { siteUrl } from "@/lib/siteUrl";
+import { siteDisplayUrl } from "@/lib/siteUrl";
 import { getCurrentAdmin, getApproverTitles } from "@/lib/supabase/auth";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { can } from "@/lib/permissions";
@@ -22,6 +22,8 @@ export interface MemberListRow {
   name: string;
   email: string | null;
   phone: string | null;
+  /** 가입 신청할 때 적은 업장명 */
+  shopName: string | null;
   role: Role;
   status: string;
   hasAccount: boolean;
@@ -55,7 +57,7 @@ export default async function AdminMembersPage() {
     db
       .from("members")
       .select(
-        "id, name, email, phone, role, status, account_id, applied_at, reject_reason, telegram_chat_id",
+        "id, name, email, phone, shop_name, role, status, account_id, applied_at, reject_reason, telegram_chat_id",
       )
       .order("status")
       .order("name"),
@@ -91,6 +93,7 @@ export default async function AdminMembersPage() {
     name: m.name as string,
     email: (m.email as string | null) ?? null,
     phone: (m.phone as string | null) ?? null,
+    shopName: (m.shop_name as string | null) ?? null,
     role: m.role as Role,
     status: m.status as string,
     hasAccount: Boolean(m.account_id),
@@ -164,7 +167,7 @@ export default async function AdminMembersPage() {
       <RosterPanel />
 
       {/* 회원에게 어떻게 안내하면 되는지 */}
-      <TelegramGuide ready={hasTelegram()} botName={botUsername()} siteUrl={siteUrl()} />
+      <TelegramGuide ready={hasTelegram()} botName={botUsername()} siteUrl={siteDisplayUrl()} />
 
       {/* 텔레그램 — 회원·임원 모두에게 알림 */}
       <TelegramPanel

@@ -47,7 +47,8 @@ export default function MemberRow({
           </span>
 
           <span className="mt-0.5 block truncate text-[12.5px] text-muted">
-            {[member.email, member.phone].filter(Boolean).join(" · ") || "연락처 없음"}
+            {[member.shopName, member.phone, member.email].filter(Boolean).join(" · ") ||
+              "연락처 없음"}
           </span>
 
           {member.rejectReason && (

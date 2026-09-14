@@ -131,6 +131,7 @@ export async function listMembers(): Promise<Member[]> {
     status: r.status as Member["status"],
     phone: (r.phone as string | null) ?? null,
     email: (r.email as string | null) ?? null,
+    shopName: (r.shop_name as string | null) ?? null,
     joinedAt: (r.joined_at as string | null) ?? null,
     profileImage: (r.profile_image as string | null) ?? null,
     consents: [],
