@@ -466,3 +466,119 @@ export async function applyForMembership(
     return { ok: false, message: e instanceof Error ? e.message : String(e) };
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* 내 업장 고치기 — 본인 업장만                                          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * 이 업장을 고칠 수 있는 사람인지 확인한다.
+ *
+ * 명단과 업장은 대표자명으로 이어져 있다. 내 이름이 그 업장의 대표자명과
+ * 같을 때만 통과시킨다. 업장 번호만 받아서 고치게 두면, 번호를 바꿔 넣어
+ * 남의 가게를 고칠 수 있다.
+ *
+ * 승인된 회원만 가능하다.
+ */
+async function assertMyBusiness(businessId: string) {
+  const me = await findMyMember();
+  if (!me) throw new Error("로그인이 필요합니다.");
+  if (me.status !== "active") throw new Error("승인된 협회원만 고치실 수 있습니다.");
+
+  const db = getAdminSupabase();
+  const { data: shop } = await db
+    .from("businesses")
+    .select("id, owner_name, name")
+    .eq("id", businessId)
+    .maybeSingle();
+
+  if (!shop) throw new Error("업장을 찾지 못했습니다.");
+  if ((shop.owner_name as string) !== (me.name as string)) {
+    throw new Error("본인 업장만 고치실 수 있습니다.");
+  }
+
+  return { db, shop, me };
+}
+
+/** 회원이 고칠 수 있는 항목만 추린다. 상호·주소·공개여부는 협회가 관리한다. */
+export async function saveMyBusiness(
+  _prev: MemberActionResult | null,
+  form: FormData,
+): Promise<MemberActionResult> {
+  try {
+    const id = String(form.get("id") ?? "");
+    if (!id) return { ok: false, message: "어느 업장인지 알 수 없습니다." };
+
+    const { db } = await assertMyBusiness(id);
+
+    const text = (key: string) => String(form.get(key) ?? "").trim();
+    const orNull = (key: string) => text(key) || null;
+
+    const patch: Record<string, unknown> = {
+      tagline: text("tagline"),
+      description: text("description"),
+      phone: orNull("phone"),
+      phone_public: form.get("phonePublic") === "on",
+      hours: orNull("hours"),
+      homepage_url: orNull("homepageUrl"),
+      instagram_url: orNull("instagramUrl"),
+      blog_url: orNull("blogUrl"),
+      benefit: orNull("benefit"),
+      updated_at: new Date().toISOString(),
+    };
+
+    // 회원이 직접 고친 값은 나중에 플레이스 동기화가 덮어쓰지 않도록 표시해 둔다
+    const { data: current } = await db
+      .from("businesses")
+      .select("field_sources")
+      .eq("id", id)
+      .maybeSingle();
+
+    const sources = { ...((current?.field_sources as Record<string, string>) ?? {}) };
+    for (const key of ["tagline", "description", "phone", "hours", "benefit"]) {
+      sources[key] = "manual";
+    }
+    patch.field_sources = sources;
+
+    const { error } = await db.from("businesses").update(patch).eq("id", id);
+    if (error) throw new Error(error.message);
+
+    // 홈페이지에 바로 반영되게 한다
+    const { refreshPublicPages } = await import("@/lib/admin/revalidate");
+    refreshPublicPages();
+    revalidatePath("/my");
+
+    return { ok: true, message: "저장했습니다. 홈페이지에 바로 반영됩니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+/** 대표사진 바꾸기. 사진은 브라우저에서 저장소로 바로 올리고 주소만 온다. */
+export async function saveMyBusinessCover(
+  _prev: MemberActionResult | null,
+  form: FormData,
+): Promise<MemberActionResult> {
+  try {
+    const id = String(form.get("id") ?? "");
+    const url = String(form.get("coverImage") ?? "").trim();
+    if (!id) return { ok: false, message: "어느 업장인지 알 수 없습니다." };
+
+    const { db } = await assertMyBusiness(id);
+
+    const { error } = await db
+      .from("businesses")
+      .update({ cover_image: url || null, updated_at: new Date().toISOString() })
+      .eq("id", id);
+
+    if (error) throw new Error(error.message);
+
+    const { refreshPublicPages } = await import("@/lib/admin/revalidate");
+    refreshPublicPages();
+    revalidatePath("/my");
+
+    return { ok: true, message: url ? "대표사진을 바꿨습니다." : "대표사진을 지웠습니다." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : String(e) };
+  }
+}

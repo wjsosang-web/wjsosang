@@ -6,6 +6,7 @@ import LinkAccountForm from "@/components/member/LinkAccountForm";
 import MemberDocButton from "@/components/member/MemberDocButton";
 import MemberSignOut from "@/components/member/MemberSignOut";
 import TelegramLink from "@/components/member/TelegramLink";
+import MyBusinessForm, { type MyBusiness } from "@/components/member/MyBusinessForm";
 import { getCurrentMember } from "@/lib/supabase/member";
 import { getAdminSupabase } from "@/lib/supabase/server";
 import { ROLE_LABEL, can } from "@/lib/permissions";
@@ -42,7 +43,13 @@ async function loadExtras(memberId: string, name: string) {
       .select("phone, joined_at, telegram_chat_id, telegram_username")
       .eq("id", memberId)
       .maybeSingle(),
-    db.from("businesses").select("slug, name").eq("owner_name", name).eq("status", "public"),
+    db
+      .from("businesses")
+      .select(
+        "id, slug, name, tagline, description, phone, phone_public, hours, homepage_url, instagram_url, blog_url, benefit, cover_image",
+      )
+      .eq("owner_name", name)
+      .eq("status", "public"),
     db.from("site_settings").select("value").eq("key", "member_doc").maybeSingle(),
   ]);
 
@@ -57,7 +64,23 @@ async function loadExtras(memberId: string, name: string) {
       telegramChatId: (me?.telegram_chat_id as string | null) ?? null,
       telegramUsername: (me?.telegram_username as string | null) ?? null,
     } satisfies Detail,
-    shops: (shops ?? []).map((s) => ({ slug: s.slug as string, name: s.name as string })),
+    shops: (shops ?? []).map(
+      (s): MyBusiness => ({
+        id: s.id as string,
+        slug: s.slug as string,
+        name: s.name as string,
+        tagline: (s.tagline as string) ?? "",
+        description: (s.description as string) ?? "",
+        phone: (s.phone as string | null) ?? null,
+        phonePublic: Boolean(s.phone_public),
+        hours: (s.hours as string | null) ?? null,
+        homepageUrl: (s.homepage_url as string | null) ?? null,
+        instagramUrl: (s.instagram_url as string | null) ?? null,
+        blogUrl: (s.blog_url as string | null) ?? null,
+        benefit: (s.benefit as string | null) ?? null,
+        coverImage: (s.cover_image as string | null) ?? null,
+      }),
+    ),
     doc: doc?.path ? doc : null,
   };
 }
@@ -199,24 +222,15 @@ async function ActiveMember({
       {shops.length > 0 && (
         <section className="rounded-2xl border border-line bg-white p-6 md:p-7">
           <h2 className="text-[18px] font-bold tracking-[-0.01em]">내 업장</h2>
-          <ul className="mt-4 space-y-2">
-            {shops.map((shop) => (
-              <li key={shop.slug}>
-                <Link
-                  href={`/business/${shop.slug}`}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-line px-4 py-3.5 text-[14.5px] font-bold transition-colors hover:border-brand hover:text-brand"
-                >
-                  {shop.name}
-                  <span aria-hidden className="text-muted">
-                    →
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-[12.5px] leading-[1.7] text-muted">
-            사진·소개글·영업시간을 고치시려면 사무국으로 연락 주세요.
+          <p className="mt-1.5 text-[13px] leading-[1.75] text-ink-soft">
+            소개글·연락처·영업시간·사진을 직접 고치실 수 있습니다. 저장하면 홈페이지에
+            바로 반영됩니다.
           </p>
+          <div className="mt-4 space-y-2.5">
+            {shops.map((shop) => (
+              <MyBusinessForm key={shop.id} shop={shop} />
+            ))}
+          </div>
         </section>
       )}
 

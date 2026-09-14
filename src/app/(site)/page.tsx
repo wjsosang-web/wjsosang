@@ -101,9 +101,13 @@ export default async function HomePage() {
             moreHref="/business"
           />
 
-          {/* 여덟 곳은 브라우저에서 고른다. 서버에서 고르면 모두 같은 여덟 곳을 본다.
-              검색은 여기서 하지 않으므로 검색용 텍스트는 빼고 보낸다(전송량). */}
-          <BusinessPreview cards={cards.map((c) => ({ ...c, searchText: "" }))} count={8} />
+          {/* 보여줄 곳은 브라우저에서 고른다. 서버에서 고르면 모두 같은 곳을 본다.
+              검색은 회원업장 화면이 하므로 검색용 텍스트는 빼고 보낸다(전송량). */}
+          <BusinessPreview
+            cards={cards.map((c) => ({ ...c, searchText: "" }))}
+            count={15}
+            total={cards.length}
+          />
         </div>
       </section>
 

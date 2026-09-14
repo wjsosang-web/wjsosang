@@ -97,6 +97,17 @@ export default function Header({ logo, phone }: Props) {
             <SearchIcon />
           </button>
 
+          {/* 회원 로그인 — 문의하기 옆.
+              눌러야 닿는 곳이 아니라 늘 보이는 자리에 둔다. 푸터에만 있으면
+              회원이 로그인할 수 있는 줄을 모른다.
+              문의하기와 같은 폭 규칙을 따른다(태블릿에서는 가로 메뉴가 자리를 다 쓴다). */}
+          <Link
+            href="/my"
+            className="hidden shrink-0 items-center rounded-lg border border-line-strong px-4 py-2.5 text-[14px] font-bold text-ink-soft transition-colors hover:border-brand hover:text-brand sm:inline-flex md:hidden lg:inline-flex"
+          >
+            회원 로그인
+          </Link>
+
           <Link
             href="/contact"
             /* 태블릿 폭(768~1023)에서는 가로 메뉴가 자리를 다 써서 이 버튼을 뺀다.
@@ -196,7 +207,17 @@ export default function Header({ logo, phone }: Props) {
               ))}
             </ul>
 
-            <div className="flex gap-2 border-t border-line px-5 py-3.5">
+            {/* 휴대폰에서는 위쪽 버튼이 자리가 없어 여기에 둔다 */}
+            <div className="border-t border-line px-5 pt-3.5">
+              <Link
+                href="/my"
+                className="flex items-center justify-center rounded-lg border border-line-strong py-3 text-[14px] font-bold text-ink"
+              >
+                회원 로그인
+              </Link>
+            </div>
+
+            <div className="flex gap-2 px-5 py-3.5">
               <Link
                 href="/contact"
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-brand py-3 text-[14px] font-bold text-white"
